@@ -2,5 +2,7 @@ overrides:
   postcss: 8.5.26
 
 onlyBuiltDependencies:
+  - "@tailwindcss/oxide"
+  - esbuild
   - sharp
   - unrs-resolver
