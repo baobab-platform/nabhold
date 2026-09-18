@@ -1,6 +1,6 @@
 {
   "name": "Nabhold Digital Estate",
-  "image": "ghcr.io/nabhold/baobab-dev:1.2.6-frontend",
+  "image": "ghcr.io/nabhold/baobab-dev:1.4.1-frontend",
   "remoteUser": "vscode",
   "updateRemoteUserUID": true,
   "init": true,
@@ -25,9 +25,8 @@
     "onAutoForward": "silent",
     "visibility": "private"
   },
-  "updateContentCommand": "corepack enable && pnpm install --frozen-lockfile",
+  "updateContentCommand": "pnpm install --frozen-lockfile",
   "postCreateCommand": "baobab-verify --contract && pnpm typecheck && pnpm test",
-  "postStartCommand": "corepack enable",
   "waitFor": "postCreateCommand",
   "customizations": {
     "codespaces": {
