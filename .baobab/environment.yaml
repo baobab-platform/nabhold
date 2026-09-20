@@ -1,15 +1,15 @@
 # Nabhold development-environment declaration
 #
 # Conforms to:
-#   nabhold/shared/contracts/development-environment/schema.yaml (v1.0)
+#   baobab-platform/shared/contracts/development-environment/schema.yaml (v1.0)
 # Governing decision:
-#   nabhold/shared/docs/adr/ADR-0001
+#   baobab-platform/shared/docs/adr/ADR-0001
 #
 # The application and entity identifiers are repository-specific. The
 # environment profile and compatibility policy are organisational standards.
 
 schema:
-  name: "nabhold-development-environment-contract"
+  name: "baobab-platform-development-environment-contract"
   version: "1.0"
 
 application:
@@ -53,6 +53,6 @@ validation:
       reason: "Image signing belongs to the baobab-dev publication pipeline."
 
 notes:
-  - "GitHub Codespaces and local Dev Containers use ghcr.io/nabhold/baobab-dev:1.4.2-frontend."
+  - "GitHub Codespaces and local Dev Containers use ghcr.io/baobab-platform/baobab-dev:1.4.2-frontend."
   - "Browser-dependent CI uses the separately published 1.4.2-frontend-e2e profile."
   - "This repository consumes Baobab capabilities through APIs and canonical contracts; it never accesses Baobab-owned databases."
