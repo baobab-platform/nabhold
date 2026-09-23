@@ -16,7 +16,12 @@ LABEL org.opencontainers.image.source="https://github.com/baobab-platform/nabhol
       org.opencontainers.image.version="${VERSION}" \
       org.opencontainers.image.revision="${REVISION}"
 ENV NODE_ENV=production
-RUN addgroup --system --gid 1001 nodejs && adduser --system --uid 1001 nextjs
+# The runtime only starts Next.js through corepack-managed pnpm and never
+# needs the npm CLI bundled with the Node base image; removing it drops
+# npm's own vulnerable dependencies (tar, pacote, sigstore, ...) from the
+# shipped image.
+RUN rm -rf /usr/local/lib/node_modules/npm /usr/local/bin/npm /usr/local/bin/npx \
+  && addgroup --system --gid 1001 nodejs && adduser --system --uid 1001 nextjs
 COPY --from=build --chown=nextjs:nodejs /app ./
 USER nextjs
 EXPOSE 3000
