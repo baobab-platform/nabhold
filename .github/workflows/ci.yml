@@ -61,13 +61,13 @@ jobs:
 
   action-pinning:
     name: Enforce action pinning
-    uses: nabhold/shared/.github/workflows/enforce-action-pinning.yml@498c431ea7eb76eb038975bc49e7087499d30d48 # shared main, 2026-08-26
+    uses: baobab-platform/shared/.github/workflows/enforce-action-pinning.yml@498c431ea7eb76eb038975bc49e7087499d30d48 # shared main, 2026-08-26
     permissions:
       contents: read
 
   dependabot-policy:
     name: Enforce Dependabot policy
-    uses: nabhold/shared/.github/workflows/enforce-dependabot-config.yml@498c431ea7eb76eb038975bc49e7087499d30d48 # shared main, 2026-08-26
+    uses: baobab-platform/shared/.github/workflows/enforce-dependabot-config.yml@498c431ea7eb76eb038975bc49e7087499d30d48 # shared main, 2026-08-26
     permissions:
       contents: read
     with:
