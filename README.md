@@ -36,13 +36,13 @@ pnpm build
 pnpm test:e2e
 ```
 
-GitHub CI runs the same gates using the `baobab-dev:1.2.6-frontend-e2e` profile.
+GitHub CI runs the same gates using the `baobab-dev:1.4.4-frontend-e2e` profile.
 
 See [architecture](docs/architecture.md), [Pulse integration](docs/integrations/pulse.md), [Payload CMS integration](docs/integrations/payload.md), [content model](docs/content-model.md), and [deployment](docs/deployment.md).
 
 ## Foundation 4
 
-Codespaces uses `ghcr.io/nabhold/baobab-dev:1.2.6-frontend`. The SHA-pinned
+Codespaces uses `ghcr.io/baobab-platform/baobab-dev:1.4.4-frontend`. The SHA-pinned
 Foundation gate validates contract compatibility and reproducibility and scans
 source, dependencies, secrets, configuration, and the deployable image.
 Fixable transitive dependencies are constrained through reviewed pnpm overrides
