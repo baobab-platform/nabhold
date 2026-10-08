@@ -15,7 +15,7 @@ Masterplan work item 04 (G03 input). It lists what the Nabhold estate would cons
 
 ## Sponsor direction on providing engines
 
-On 8 October 2026 the sponsor stated that Nabhold will consume from the IAM, CMS, ERP and Pulse engines, including finance, accounts, HR and payroll. So, for the R1 rows below, the intended provider is the ERP engine for `finance.*`, `procurement.*`, `asset.*`, `workforce.*` and `payroll.*`; IAM for `identity.*`; CMS for `content.*`; Pulse for `intelligence.*`. This is intent, not a decision: see `register.md` section 5. The status codes below do not change.
+On 8 October 2026 the sponsor stated that Nabhold will consume from the IAM, CMS, ERP, Pulse, Subscriptions and Payments engines, including finance, accounts, HR and payroll. So, for the R1 rows below, the intended provider is the ERP engine for `finance.*`, `procurement.*`, `asset.*`, `workforce.*` and `payroll.*`; IAM for `identity.*`; CMS for `content.*`; Pulse for `intelligence.*`; Subscriptions for `billing.*`; Payments for `payment.*`. This is intent, not a decision: see `register.md` section 5. The status codes below do not change.
 
 ## R0 Institutional (public)
 

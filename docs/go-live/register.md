@@ -108,7 +108,7 @@ Default until accepted is the masterplan §12.2 default. Record decision referen
 
 ## 5. Engines Nabhold will consume (sponsor direction, 8 October 2026)
 
-The sponsor states that Nabhold will consume capabilities from four Baobab engines, including finance, accounts, HR and payroll, with further capabilities to be identified over time.
+The sponsor states that Nabhold will consume capabilities from six Baobab engines (IAM, CMS, ERP, Pulse, Subscriptions and Payments), including finance, accounts, HR and payroll, with further capabilities to be identified over time. Subscriptions and Payments were added on 8 October 2026, after the first four.
 
 | Engine | Repo | Capability areas named | Where it stands (masterplan audit, 8 Oct 2026) |
 |---|---|---|---|
@@ -116,10 +116,13 @@ The sponsor states that Nabhold will consume capabilities from four Baobab engin
 | CMS | `baobab-cms` | public corporate content | `content.entry.resolve` CONTRACTED, no HTTP surface |
 | ERP | `baobab-erp` | finance, accounts, HR, payroll | corporate GL, AP, AR, procurement, assets, workforce and payroll are not implemented as Baobab capabilities |
 | Pulse | `baobab-pulse` | evidence, research, executive intelligence | `intelligence.evidence.search` and `intelligence.research-mission.manage` IMPLEMENTED in source; binding unverified |
+| Subscriptions | `baobab-subscriptions` | Baobab plans, subscriptions, usage metering, invoices | `billing.subscription.manage` and `billing.usage.record` IMPLEMENTED by a simulated provider only (`production_permitted: false`) |
+| Payments | `baobab-payments` | collections, refunds, settlement | `payment.intent.*`, `payment.payment.authorize/capture`, `payment.refund.create` IMPLEMENTED by a sandbox provider only |
 
 Consequences recorded here, none of them decisions:
 
 - HR and payroll are now expected to be ERP-engine work. That changes the masterplan's open provider question (B-05, B-06) into ERP scope, but the blockers remain: the ERP engine has no workforce or payroll solution today, and South African statutory payroll still needs practitioner sign-off. Any external payroll vendor would sit behind the ERP engine's contract.
-- Subscriptions, Payments, Regulations and Trade are not named in this direction. Their rows in the census and gates are unchanged, and the R2 and R3 dependencies on them stand until the sponsor says otherwise.
+- Subscriptions and Payments are now named, which confirms the masterplan's R2 assumption. Nothing else changes: both engines have only simulated or sandbox providers, so R2 stays disabled and real money may not move until a production provider (Kill Bill adapter, real PSP and merchant) is certified and bound (B-08, B-09, B-10, G10, G11). Regulations and Trade are not named; their rows and the R3 dependencies on them are unchanged.
+- The onboarding profile still requests only R0 and R1 capabilities. The masterplan (G02) allows later expansion through governed changesets, so Subscriptions and Payments keys are added then, not now.
 - "Others to be identified" is handled by the census: add a row, give it a status, and take it through G03. No capability becomes consumable because it is named.
 - Each capability still needs a canonical Shared key, an ERP (or other engine) implementation, certification and an active Control Plane binding before the estate may call it.
