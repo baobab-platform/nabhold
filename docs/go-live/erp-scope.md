@@ -18,7 +18,9 @@
 | 1 | When are HR and payroll needed? | From the financial year starting **1 March 2027**, 144 days (about 20.6 weeks) after this document | Sets the deadline for phases E6 and E7. See section 5 |
 | 2 | Who approves the accounting baseline? | **Brian Nabusiu** | Named approver recorded in `onboarding/nabhold-finance-baseline-input.json`. ERP requires a named accountable person plus evidence |
 | 3 | VAT? | **Not VAT-registered yet.** Tax reference number 9470182230 (sponsor-stated, no SARS document seen) | The baseline's tax profile is "not VAT-registered". Registration must be an effective-dated change, not an assumption in code. Recorded, not verified |
-| 4 | Who owns the Subscriptions-to-ERP invoice hand-off? | **`baobab-cp`** | Recorded. It needs one design decision: see section 9 |
+| 4 | Who owns the Subscriptions-to-ERP invoice hand-off? | **`baobab-cp`**, following **ADR-BCP-007** (confirmed 8 October) | Control Plane owns the authority and routing, and does not carry the invoice. See section 9, item 5 |
+| 5 | Headcount | **10** | Makes a native ERP payroll engine poor value; supports option C then A. See section 5 |
+| 6 | Pay calendar | Paid on the **25th** of each month, **20th in December** | Twelve dates in the 2027/28 year; three fall on a weekend (section 5) |
 
 ## 2. What exists (evidence)
 
@@ -84,7 +86,34 @@ The ERP census treats HR and payroll as separate families "so a subsidiary can u
 
 South Africa's employer tax year runs 1 March to the end of February, so a 1 March start is the cleanest point to begin. The first pay run would then be at the end of March 2027 (assuming monthly pay; to be confirmed), which leaves the parallel run in February at the latest. Employer registration with SARS (PAYE, UIF, SDL) and the Compensation Fund (COIDA) must precede the first pay run; **their status is unverified**. A tax reference number alone does not show that Nabhold is registered as an employer.
 
-Recommendation for the ADR to weigh: **A or C**, not B. Under any option payroll approval is separate from payment release, a practitioner signs the test vectors, and a person's employment record never implies system access. Headcount and the date payroll is needed (not yet given) decide between A and C.
+Recommendation for the ADR to weigh: **A or C**, not B. Under any option payroll approval is separate from payment release, a practitioner signs the test vectors, and a person's employment record never implies system access. ### With 10 employees and a fixed pay calendar
+
+Ten employees do not justify building or maintaining statutory payroll calculation inside ERP (option B), and the 144-day window rules it out anyway. The practical path:
+
+1. **From 1 March 2027:** HR records (employment, leave, joiner-mover-leaver) in ERP, and payroll calculated by a certified South African payroll provider or bureau (option C).
+2. **The ledger need not wait for a payroll capability.** Each month a payroll practitioner produces the payroll summary; finance posts it as an aggregate journal through `finance.journal.manage` (proposed in ADR-SHARED-033) with maker-checker, so wages, PAYE, UIF and SDL liabilities reach the ledger from the first month. This makes the finance journal (phase E2) a hard prerequisite for the 25 March 2027 pay run, not payroll.
+3. **Later:** replace the manual summary with a provider adapter behind an ERP-owned contract (option A) when it pays for itself.
+
+Whether PAYE, UIF and SDL apply, and at what level, depends on remuneration and registration. A payroll practitioner must confirm; this document does not.
+
+Pay calendar for the 2027/28 financial year (25th, except 20th in December). Three dates fall on a weekend. The payment-date rule for those (pay the preceding working day, or the next) is a policy decision for Nabhold, and each date must also be checked against the gazetted public holidays.
+
+| Month | Pay date | Weekday |
+|---|---|---|
+| March 2027 | 25 March | Thursday |
+| April 2027 | 25 April | **Sunday** |
+| May 2027 | 25 May | Tuesday |
+| June 2027 | 25 June | Friday |
+| July 2027 | 25 July | **Sunday** |
+| August 2027 | 25 August | Wednesday |
+| September 2027 | 25 September | **Saturday** |
+| October 2027 | 25 October | Monday |
+| November 2027 | 25 November | Thursday |
+| December 2027 | 20 December | Monday |
+| January 2028 | 25 January | Tuesday |
+| February 2028 | 25 February | Friday |
+
+The first pay run is therefore **25 March 2027**. Payroll inputs must be approved before that date, so the practical deadline for an approved employee list and tax set-up is earlier in March.
 
 ## 6. Proposed sequence
 
@@ -126,11 +155,15 @@ From masterplan §9.3, plus items this survey found:
 
 ## 9. Decisions and inputs still needed
 
-1. HR and payroll option (section 5), **headcount**, pay frequency and pay date. Headcount is still not given.
+1. Choose between option C and option A for payroll (section 5); my recommendation is C from 1 March 2027, then A. Headcount (10) and pay calendar are now known. Still needed: the provider or bureau, the weekend pay-date rule, and each employee's start date and employer (legal entity).
 2. The accounting decisions Brian Nabusiu will be asked to approve: chart of accounts, accounting schema, costing method, effective date. He is the sole director, not necessarily an accountant; the masterplan expects policy-bearing choices (depreciation, capitalisation, VAT) to be reviewed by a qualified accountant or tax practitioner, with him approving.
 3. Whether the Nabhold ledger lives in a dedicated AD_Client (ADR-ERP-021 says one per legal entity) and in which region (blocked by D-14, no AWS account yet).
 4. Evidence for the VAT and tax reference statements, and whether Nabhold is or will be registered as an employer (PAYE, UIF, SDL, COIDA).
-5. **The Subscriptions-to-ERP hand-off owned by `baobab-cp`.** Control Plane ADR-BCP-007 says it SHALL NOT proxy the business request or become a universal proxy. The workable reading is: CP owns the *authority and routing* (which legal entity and ERP assignment receive the invoice, which binding applies, whether the subscription is entitled and classified), while the invoice itself moves from Subscriptions to ERP as a canonical event. If instead CP is meant to carry the invoice, that contradicts ADR-BCP-007 and needs a CP ADR first. Shared ADR-SHARED-033 (proposed) section 9 carries this as an open decision.
+5. **Subscriptions-to-ERP hand-off: resolved in principle, per ADR-BCP-007.** `baobab-cp` owns the *authority and routing* and does not carry the invoice (ADR-BCP-007: it SHALL NOT proxy the business request or become a universal proxy). Concretely:
+   - Control Plane resolves which legal entity is payer and issuer and which ERP assignment receives the document (the existing ErpAssignment), whether the subscription is entitled and classified (INTERNAL versus COMMERCIAL), and whether a provider binding is healthy. It publishes the subscription projection to Subscriptions.
+   - Subscriptions emits the authoritative invoice as a canonical event; ERP consumes it idempotently as a receivable. The invoice never passes through Control Plane.
+   - Control Plane watches completeness: it compares expected and received hand-offs and surfaces drift and readiness. It stores no invoice.
+   Still open for the Control Plane, Subscriptions and ERP owners: the event contract (ADR-SHARED-033 section 8, `source_document`) and how Control Plane learns that an invoice was received.
 
 ## 10. Risks
 
