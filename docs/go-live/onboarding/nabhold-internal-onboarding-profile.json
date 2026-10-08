@@ -1,0 +1,47 @@
+{
+  "profile_version": "0.1.0",
+  "masterplan": "NAB-GOLIVE-MP-001",
+  "gate": "G02",
+  "status": "DRAFT",
+  "notes": [
+    "Input to the Control Plane INTERNAL admission and TenantOnboardingRequest (ADR-BCP-017/018). It is not the request itself and proves nothing about CP state.",
+    "Every null is unverified and must be filled from an authoritative source with an evidence reference; none may be guessed (masterplan G01, D-01).",
+    "Approved is not provisioned, provisioned is not READY, and READY is not ACTIVE."
+  ],
+  "organisation": {
+    "first_party_id": "NABHOLD",
+    "legal_name": "Nabhold Group Africa",
+    "role": "holding_company",
+    "jurisdiction": null,
+    "registration_identifier": null,
+    "legal_evidence_ref": null
+  },
+  "classification": {
+    "subscription_type": "INTERNAL",
+    "monetary_charge": 0,
+    "billing_required": false,
+    "usage_metering": true,
+    "entitlement_control": true,
+    "audit": true,
+    "readiness_control": true,
+    "isolation_control": true
+  },
+  "market": {
+    "operating_markets": ["ZA"],
+    "participation_activities": []
+  },
+  "digital_estate": {
+    "repository": "baobab-platform/nabhold",
+    "surfaces": ["public", "protected"],
+    "market": "ZA",
+    "domain": null
+  },
+  "requested_capabilities": {
+    "R0": ["content.entry.resolve"],
+    "R1": ["identity.authentication.perform", "identity.workload-token.issue"]
+  },
+  "approvals": {
+    "requester": null,
+    "independent_authoriser": null
+  }
+}
