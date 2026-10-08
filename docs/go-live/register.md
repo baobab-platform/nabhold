@@ -146,3 +146,15 @@ Consequences recorded here, none of them decisions:
 | Engines consumed | IAM, CMS, ERP, Pulse, Subscriptions, Payments | section 5 |
 
 SH-NAB-FIN-01: ADR-SHARED-033 (Proposed) drafted on a local `shared` branch `sh-nab-fin-01`; not yet pushed or opened as a PR.
+
+## 7. CMS track (G05)
+
+| # | Item | Repo | State |
+|---|---|---|---|
+| 1 | `content.entry.resolve` contract handler: strict request validation, tenant check against trusted context, preview gating, ADR-0014 resolution, contract response and problem details | `baobab-cms` | DONE (114 tests pass, conformance checked against the Shared schemas). Not yet a route; declaration still CONTRACTED |
+| 2 | Shared OpenAPI for content/v1: route, authentication scheme, scopes, error responses | `shared` | NOT STARTED. Blocks the route. Note: the request carries `tenant_id` in the body, so providers must treat it as a claim and verify it against the caller's context |
+| 3 | Route adapter and Payload-backed loader (Page to `ContentEntryRecord`, canonical legal-entity id from the organisation, policy per content type) | `baobab-cms` | BLOCKED on 2 |
+| 4 | Corporate content collections for the Nabhold site (home, site settings, navigation, footer, group profile, portfolio profiles, sectors, insights) matching the estate's content model | `baobab-cms` | NOT STARTED. CMS has Pages and ProductContent only |
+| 5 | Signed, idempotent publication event and revalidation compatible with `/api/revalidate` | `baobab-cms`, `nabhold` | NOT STARTED. CMS already has webhook signing; the signature format must be agreed with the estate |
+| 6 | Estate-side capability adapter behind the existing content gateway, switched by flag, Payload gateway kept as the transitional default | `nabhold` | BLOCKED on 2 and 3 (service reference resolution needs a real route) |
+| 7 | Editorial acceptance of public content, legal pages (privacy, terms) | business | NOT STARTED. Needs approved text |
