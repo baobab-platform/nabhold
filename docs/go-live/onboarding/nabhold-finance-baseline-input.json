@@ -1,0 +1,34 @@
+{
+  "input_version": "0.1.0",
+  "masterplan": "NAB-GOLIVE-MP-001",
+  "gate": "G06",
+  "status": "DRAFT",
+  "notes": [
+    "Input to ERP's controlled finance-baseline intake (ADR-ERP-008, ADR-ERP-019). The baseline itself is authored, approved and stored by ERP; this file only collects the facts ERP will need.",
+    "Every null is undecided. None may be guessed. ERP refuses a baseline without a named human approver and evidence.",
+    "Values marked sponsor-stated were given by the programme sponsor on 8 October 2026 and are not yet evidenced by a document."
+  ],
+  "legal_entity": "NABHOLD",
+  "functional_currency": "ZAR",
+  "functional_currency_basis": "proposed in the masterplan for a South African entity; not yet confirmed by the approver",
+  "fiscal_year_start_month": 3,
+  "fiscal_year_basis": "sponsor-stated: the next financial year starts on 1 March 2027",
+  "chart_of_accounts_template": null,
+  "accounting_schema": null,
+  "costing_method": null,
+  "effective_from": null,
+  "tax": {
+    "vat_registered": false,
+    "vat_basis": "sponsor-stated, 8 October 2026: no VAT registration yet",
+    "vat_registration_number": null,
+    "tax_reference_number": "9470182230",
+    "tax_reference_basis": "sponsor-stated, 8 October 2026; no SARS document seen",
+    "erp_tax_profile": null
+  },
+  "approval": {
+    "approved_by": "Brian Nabusiu",
+    "approver_basis": "sponsor-named, 8 October 2026; sole verified director",
+    "approved_at": null,
+    "evidence_reference": null
+  }
+}

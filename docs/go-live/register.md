@@ -62,11 +62,11 @@ Default until accepted is the masterplan §12.2 default. Record decision referen
 | D-03 | Platform IP owner, licences, assignments | Legal | OPEN |
 | D-04 | Subscription SaaS only, or also consulting and support | Board | OPEN |
 | D-05 | First pricing, billing period, currency, trials | Commercial and finance | OPEN |
-| D-06 | Customer geography, VAT and export treatment, merchant onboarding | Tax and payments | OPEN |
+| D-06 | Customer geography, VAT and export treatment, merchant onboarding | Tax and payments | PARTIAL: Nabhold is not VAT-registered yet (sponsor-stated; tax reference number 9470182230, unevidenced). Customer geography, export treatment and merchant onboarding open |
 | D-07 | Which subsidiary data group officers may view, and why | Boards, legal, privacy | OPEN |
 | D-08 | Consolidation standard and accountant sign-off | Finance | OPEN |
 | D-09 | HR provider and workspace boundary | HR and architecture | DIRECTION GIVEN, not decided: sponsor intends HR to be consumed from the ERP engine (see section 5). Needs an ERP ADR and a Shared contract. |
-| D-10 | Payroll provider, statutory scope, bank release | HR, payroll, finance | DIRECTION GIVEN, not decided: sponsor intends payroll to be consumed from the ERP engine. Whether the ERP engine hosts statutory calculation or fronts an external certified ZA provider is open. |
+| D-10 | Payroll provider, statutory scope, bank release | HR, payroll, finance | NEEDED FROM 1 MARCH 2027 (sponsor). DIRECTION GIVEN, not decided: sponsor intends payroll to be consumed from the ERP engine. Whether the ERP engine hosts statutory calculation or fronts an external certified ZA provider is open. |
 | D-11 | Procurement authority and thresholds | Finance and legal | OPEN |
 | D-12 | Capitalisation policy and custody owner | Finance | OPEN |
 | D-13 | Governance and DMS product, retention | Company secretary, privacy | OPEN |
@@ -127,3 +127,16 @@ Consequences recorded here, none of them decisions:
 - "Others to be identified" is handled by the census: add a row, give it a status, and take it through G03. No capability becomes consumable because it is named.
 - The ERP work needed for this direction is scoped in [erp-scope.md](erp-scope.md). ERP #58 has since merged, so its provider declaration is on ERP `main`.
 - Each capability still needs a canonical Shared key, an ERP (or other engine) implementation, certification and an active Control Plane binding before the estate may call it.
+
+## 6. Decisions received on 8 October 2026
+
+| Topic | Decision | Recorded in |
+|---|---|---|
+| HR and payroll start | From the financial year starting 1 March 2027 | `erp-scope.md` sections 1a and 5 |
+| Accounting baseline approver | Brian Nabusiu | `onboarding/nabhold-finance-baseline-input.json` |
+| VAT | Not registered; tax reference number 9470182230 (unevidenced) | same file; D-06 |
+| Subscriptions-to-ERP hand-off | `baobab-cp` is responsible; design to be settled (ADR-BCP-007 tension) | `erp-scope.md` section 9 |
+| Canonical host | `nabhold.com` | section 3b |
+| Engines consumed | IAM, CMS, ERP, Pulse, Subscriptions, Payments | section 5 |
+
+SH-NAB-FIN-01: ADR-SHARED-033 (Proposed) drafted on a local `shared` branch `sh-nab-fin-01`; not yet pushed or opened as a PR.

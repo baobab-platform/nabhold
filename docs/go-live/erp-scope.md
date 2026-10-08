@@ -11,6 +11,15 @@
 3. The sponsor's direction (HR and payroll from the ERP engine) **reverses ERP's current position**: its census classes payroll "out of scope until a staffing need" and HR as "proposed", and keeps them as separate families. That needs an ERP ADR before any code.
 4. The finance work is large but has a sound foundation: the **finance baseline** (an approved, versioned, hashed accounting configuration per legal entity) already exists in ERP and Shared. Nabhold's ledger should be built on it.
 
+## 1a. Sponsor decisions received (8 October 2026)
+
+| # | Question | Answer | Effect on this scope |
+|---|---|---|---|
+| 1 | When are HR and payroll needed? | From the financial year starting **1 March 2027**, 144 days (about 20.6 weeks) after this document | Sets the deadline for phases E6 and E7. See section 5 |
+| 2 | Who approves the accounting baseline? | **Brian Nabusiu** | Named approver recorded in `onboarding/nabhold-finance-baseline-input.json`. ERP requires a named accountable person plus evidence |
+| 3 | VAT? | **Not VAT-registered yet.** Tax reference number 9470182230 (sponsor-stated, no SARS document seen) | The baseline's tax profile is "not VAT-registered". Registration must be an effective-dated change, not an assumption in code. Recorded, not verified |
+| 4 | Who owns the Subscriptions-to-ERP invoice hand-off? | **`baobab-cp`** | Recorded. It needs one design decision: see section 9 |
+
 ## 2. What exists (evidence)
 
 | Area | State | Evidence |
@@ -69,6 +78,12 @@ The ERP census treats HR and payroll as separate families "so a subsidiary can u
 | B. ERP hosts HR and payroll natively (iDempiere HR module or extension) | One engine | Statutory PAYE, UIF, SDL, EMP201/EMP501, IRP5, COIDA correctness becomes ERP's problem; masterplan forbids a casual bespoke calculator |
 | C. HR in ERP; payroll deferred | Unblocks people records first | Payroll stays manual; fine for a very small headcount |
 
+### Against the 1 March 2027 date
+
+144 days remain. Before any HR or payroll code can exist, ERP needs: a live iDempiere (E0), an ERP ADR for this decision, Shared namespace reviews (`workforce` and `payroll` are not registered domains), contracts, an adapter, and a practitioner-signed parallel run. Option B (native payroll) is **not credible** inside that window. Option A depends on choosing a payroll provider soon. Option C (HR records from 1 March, payroll through a payroll bureau or provider portal until the integration is ready) is the only option that does not depend on every earlier phase landing on time.
+
+South Africa's employer tax year runs 1 March to the end of February, so a 1 March start is the cleanest point to begin. The first pay run would then be at the end of March 2027 (assuming monthly pay; to be confirmed), which leaves the parallel run in February at the latest. Employer registration with SARS (PAYE, UIF, SDL) and the Compensation Fund (COIDA) must precede the first pay run; **their status is unverified**. A tax reference number alone does not show that Nabhold is registered as an employer.
+
 Recommendation for the ADR to weigh: **A or C**, not B. Under any option payroll approval is separate from payment release, a practitioner signs the test vectors, and a person's employment record never implies system access. Headcount and the date payroll is needed (not yet given) decide between A and C.
 
 ## 6. Proposed sequence
@@ -109,13 +124,13 @@ From masterplan §9.3, plus items this survey found:
 | R2 | E4, plus Subscriptions and Payments production providers |
 | R3 | E8, plus subsidiary data agreements (D-07) and the consolidation model (D-08) |
 
-## 9. Decisions and inputs needed from the sponsor
+## 9. Decisions and inputs still needed
 
-1. HR and payroll option (section 5) and when payroll is first needed, with headcount.
-2. Who is the accountable finance owner who will approve the Nabhold baseline (chart of accounts, VAT status, fiscal year end, bank accounts, opening balances)?
+1. HR and payroll option (section 5), **headcount**, pay frequency and pay date. Headcount is still not given.
+2. The accounting decisions Brian Nabusiu will be asked to approve: chart of accounts, accounting schema, costing method, effective date. He is the sole director, not necessarily an accountant; the masterplan expects policy-bearing choices (depreciation, capitalisation, VAT) to be reviewed by a qualified accountant or tax practitioner, with him approving.
 3. Whether the Nabhold ledger lives in a dedicated AD_Client (ADR-ERP-021 says one per legal entity) and in which region (blocked by D-14, no AWS account yet).
-4. Whether Nabhold is VAT-registered; the code must not assume it.
-5. Which engine owns Subscriptions-to-ERP invoice hand-off.
+4. Evidence for the VAT and tax reference statements, and whether Nabhold is or will be registered as an employer (PAYE, UIF, SDL, COIDA).
+5. **The Subscriptions-to-ERP hand-off owned by `baobab-cp`.** Control Plane ADR-BCP-007 says it SHALL NOT proxy the business request or become a universal proxy. The workable reading is: CP owns the *authority and routing* (which legal entity and ERP assignment receive the invoice, which binding applies, whether the subscription is entitled and classified), while the invoice itself moves from Subscriptions to ERP as a canonical event. If instead CP is meant to carry the invoice, that contradicts ADR-BCP-007 and needs a CP ADR first. Shared ADR-SHARED-033 (proposed) section 9 carries this as an open decision.
 
 ## 10. Risks
 
