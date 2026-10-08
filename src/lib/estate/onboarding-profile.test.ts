@@ -51,6 +51,7 @@ describe("Nabhold INTERNAL onboarding profile", () => {
       "nabhold.com",
       "www.nabhold.com",
     ]);
+    expect(profile.digital_estate.canonical_domain).toBe("nabhold.com");
     expect(assessOnboardingReadiness(profile)).toEqual({
       readyToSubmit: true,
       blockers: [],
@@ -111,6 +112,13 @@ describe("Nabhold INTERNAL onboarding profile", () => {
 
       expect(onboardingProfileSchema.safeParse(raw).success).toBe(false);
     }
+  });
+
+  it("requires the canonical domain to be one of the estate domains", () => {
+    const raw = loadProfile();
+    raw.digital_estate.canonical_domain = "other.example";
+
+    expect(onboardingProfileSchema.safeParse(raw).success).toBe(false);
   });
 
   it("refuses trading activity for the holding company", () => {

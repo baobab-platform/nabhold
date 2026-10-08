@@ -43,7 +43,8 @@
     "domains": [
       "nabhold.com",
       "www.nabhold.com"
-    ]
+    ],
+    "canonical_domain": "nabhold.com"
   },
   "requested_capabilities": {
     "R0": [

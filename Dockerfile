@@ -7,6 +7,11 @@ FROM base AS dependencies
 COPY package.json pnpm-lock.yaml* pnpm-workspace.yaml ./
 RUN pnpm install --frozen-lockfile
 FROM dependencies AS build
+# NEXT_PUBLIC_* values are inlined at build time. This is the canonical public
+# origin used for metadata, canonical links, the sitemap and robots.txt; build
+# non-production images with --build-arg NEXT_PUBLIC_SITE_URL=<their origin>.
+ARG NEXT_PUBLIC_SITE_URL=https://nabhold.com
+ENV NEXT_PUBLIC_SITE_URL=${NEXT_PUBLIC_SITE_URL}
 COPY . .
 RUN pnpm build
 FROM base AS runtime

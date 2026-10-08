@@ -52,3 +52,12 @@ test("the protected workspace uses a per-request nonce and is not served while d
   expect(first.headers()["content-security-policy"]).toContain("'strict-dynamic'");
   expect(first.headers()["cache-control"]).toContain("no-store");
 });
+
+test("pages declare a canonical link on the configured site origin", async ({
+  page,
+}) => {
+  await page.goto("/portfolio");
+  const href = await page.locator('link[rel="canonical"]').getAttribute("href");
+
+  expect(href).toMatch(/\/portfolio$/);
+});

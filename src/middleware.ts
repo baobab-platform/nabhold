@@ -1,5 +1,6 @@
 import { NextResponse, type NextRequest } from "next/server";
 
+import { canonicalRedirectUrl } from "@/lib/security/canonical-host";
 import {
   buildCsp,
   cspHeaderName,
@@ -8,11 +9,19 @@ import {
 } from "@/lib/security/csp";
 
 /**
- * Applies the Content-Security-Policy. The policy is also set on the
+ * Redirects `www.<canonical host>` to the canonical host, then applies the
+ * Content-Security-Policy. The policy is also set on the
  * *request* so Next.js can read the nonce and stamp it on its own scripts
  * when it renders a dynamic page.
  */
 export function middleware(request: NextRequest) {
+  const redirectTo = canonicalRedirectUrl(
+    request.headers.get("x-forwarded-host") ?? request.headers.get("host"),
+    `${request.nextUrl.pathname}${request.nextUrl.search}`,
+    { canonicalHost: process.env.NABHOLD_CANONICAL_HOST },
+  );
+  if (redirectTo) return NextResponse.redirect(redirectTo, 308);
+
   const surface = surfaceForPath(request.nextUrl.pathname);
   const nonce = surface === "protected" ? generateNonce() : undefined;
   const policy = buildCsp({

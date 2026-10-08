@@ -16,6 +16,7 @@ export async function generateMetadata(): Promise<Metadata> {
       template: `%s | ${settings.siteName}`,
     },
     description: settings.seoDefaults?.description,
+    alternates: { canonical: "./" },
     openGraph: {
       title: settings.seoDefaults?.openGraphTitle ?? settings.siteName,
       type: "website",

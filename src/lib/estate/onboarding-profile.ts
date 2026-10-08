@@ -84,6 +84,7 @@ export const onboardingProfileSchema = z
         surfaces: z.array(z.enum(["public", "protected"])).min(1),
         market: z.literal("ZA"),
         domains: z.array(z.string().trim().min(1)).min(1),
+        canonical_domain: z.string().trim().min(1),
       })
       .strict(),
     requested_capabilities: z
@@ -101,6 +102,13 @@ export const onboardingProfileSchema = z
   })
   .strict()
   .superRefine((profile, ctx) => {
+    if (!profile.digital_estate.domains.includes(profile.digital_estate.canonical_domain)) {
+      ctx.addIssue({
+        code: "custom",
+        path: ["digital_estate", "canonical_domain"],
+        message: "canonical_domain must be one of digital_estate.domains",
+      });
+    }
     for (const [releaseClass, keys] of Object.entries(
       profile.requested_capabilities,
     )) {
