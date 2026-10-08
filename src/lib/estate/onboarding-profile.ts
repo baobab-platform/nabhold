@@ -83,7 +83,7 @@ export const onboardingProfileSchema = z
         repository: z.literal("baobab-platform/nabhold"),
         surfaces: z.array(z.enum(["public", "protected"])).min(1),
         market: z.literal("ZA"),
-        domain: nullableText,
+        domains: z.array(z.string().trim().min(1)).min(1),
       })
       .strict(),
     requested_capabilities: z
@@ -143,8 +143,8 @@ export function assessOnboardingReadiness(
   if (!organisation.legal_evidence_ref) {
     blockers.push("G01: organisation.legal_evidence_ref is missing");
   }
-  if (!digital_estate.domain) {
-    blockers.push("G02: digital_estate.domain is not decided");
+  if (digital_estate.domains.length === 0) {
+    blockers.push("G02: digital_estate.domains is not decided");
   }
   if (!approvals.requester) {
     blockers.push("G02: approvals.requester is not named");

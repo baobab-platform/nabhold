@@ -13,13 +13,15 @@
 | Registration effective | 16/01/2026 |
 | Jurisdiction | Republic of South Africa (`ZA`) |
 | Supplied by | Programme sponsor, 8 October 2026 |
+| Persons named on the certificate | Brian James Nabusiu, listed as incorporator (personal details deliberately not copied here) |
 | Reviewer sign-off | PENDING (company secretary) |
 
 The source PDF is held by the sponsor and is deliberately not committed: its cover page carries a personal e-mail address.
 
 ## Not established by this evidence
 
-- Current directors, shareholders and beneficial ownership. The certificate itself says beneficial ownership must be filed with CIPC within 10 business days of registration; filing status is unverified.
+- Current directors and shareholders. The sponsor states the director is listed on the certificate; the extract reviewed shows an incorporator entry only, so director appointment should be confirmed against CIPC records. Brenda Adams does not appear on the certificate; her role is unverified.
+- Beneficial ownership. The certificate itself says beneficial ownership must be filed with CIPC within 10 business days of registration; filing status is unverified.
 - Annual return, VAT, PAYE, POPIA and Information Officer status.
 - Subsidiary incorporation, ownership percentages and platform IP assignment (D-02, D-03).
-- Control of the domain `www.nabhold.com` (the sponsor named it as the estate domain; DNS ownership is unverified).
+- Control of `nabhold.com` and `www.nabhold.com` (named by the sponsor as the estate domains; DNS ownership is unverified).

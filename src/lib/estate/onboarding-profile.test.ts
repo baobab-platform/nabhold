@@ -40,13 +40,31 @@ describe("Nabhold INTERNAL onboarding profile", () => {
     ).toEqual([]);
   });
 
-  it("is blocked until requester and independent authoriser are named", () => {
-    const assessment = assessOnboardingReadiness(
-      onboardingProfileSchema.parse(loadProfile()),
-    );
+  it("names a requester and a distinct independent authoriser", () => {
+    const profile = onboardingProfileSchema.parse(loadProfile());
 
-    expect(assessment.readyToSubmit).toBe(false);
-    expect(assessment.blockers).toEqual([
+    expect(profile.approvals).toEqual({
+      requester: "Brenda Adams",
+      independent_authoriser: "Brian Nabusiu",
+    });
+    expect(profile.digital_estate.domains).toEqual([
+      "nabhold.com",
+      "www.nabhold.com",
+    ]);
+    expect(assessOnboardingReadiness(profile)).toEqual({
+      readyToSubmit: true,
+      blockers: [],
+    });
+  });
+
+  it("is blocked when approvals are removed", () => {
+    const raw = loadProfile();
+    raw.approvals.requester = null;
+    raw.approvals.independent_authoriser = null;
+
+    expect(
+      assessOnboardingReadiness(onboardingProfileSchema.parse(raw)).blockers,
+    ).toEqual([
       "G02: approvals.requester is not named",
       "G02: approvals.independent_authoriser is not named",
     ]);
@@ -69,16 +87,9 @@ describe("Nabhold INTERNAL onboarding profile", () => {
     );
   });
 
-  it("is ready only when every blocker is resolved by a distinct authoriser", () => {
+  it("rejects an authoriser who is the requester", () => {
     const raw = loadProfile();
-    raw.approvals.requester = "principal-a";
-    raw.approvals.independent_authoriser = "principal-b";
-
-    expect(
-      assessOnboardingReadiness(onboardingProfileSchema.parse(raw)),
-    ).toEqual({ readyToSubmit: true, blockers: [] });
-
-    raw.approvals.independent_authoriser = "principal-a";
+    raw.approvals.independent_authoriser = raw.approvals.requester;
     expect(
       assessOnboardingReadiness(onboardingProfileSchema.parse(raw)).blockers,
     ).toEqual([

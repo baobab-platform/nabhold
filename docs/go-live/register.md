@@ -10,7 +10,7 @@ Owner columns are roles from the masterplan; no individual has been appointed.
 |---|---|---|---|---|---|
 | G00 | Baseline, traceability, governance | all | IN PROGRESS | Review body not named | Registers, evidence index (this directory) |
 | G01 | Legal authority, autonomy, IP | all | PARTIAL | D-01 (ownership), D-02, D-03; sign-off | Name, number, jurisdiction recorded from the CIPC certificate ([evidence](evidence/G01/production/2026-01-16-cipc-registration.md)) |
-| G02 | INTERNAL admission, tenant, DigitalEstate | R1 to R3 | BLOCKED | G01 sign-off, named requester and authoriser, CP runtime access | Input profile and readiness check (done) |
+| G02 | INTERNAL admission, tenant, DigitalEstate | R1 to R3 | BLOCKED | G01 sign-off, mapping Brenda Adams (requester) and Brian Nabusiu (authoriser) to CP Principals, CP runtime access | Input profile and readiness check (done) |
 | G03 | Shared capability census and contracts | all | UNVERIFIED | Shared stewards | Demand census in `nabhold` (not started) |
 | G04 | IAM, OIDC/BFF, grants | R1 to R3 | BLOCKED | B-02, ADR-IAM-0033 completion | Token provider seam in `CapabilityClient` (done) |
 | G05 | CMS `content.entry.resolve` | R0 | BLOCKED | B-03, G03 | Gateway swap after CMS route exists |

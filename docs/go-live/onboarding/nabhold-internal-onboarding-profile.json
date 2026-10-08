@@ -6,7 +6,8 @@
   "notes": [
     "Input to the Control Plane INTERNAL admission and TenantOnboardingRequest (ADR-BCP-017/018). It is not the request itself and proves nothing about CP state.",
     "Every null is unverified and must be filled from an authoritative source with an evidence reference; none may be guessed (masterplan G01, D-01).",
-    "Approved is not provisioned, provisioned is not READY, and READY is not ACTIVE."
+    "Approved is not provisioned, provisioned is not READY, and READY is not ACTIVE.",
+    "approvals names a person for each role, as instructed by the programme sponsor on 8 October 2026. They must be mapped to canonical Control Plane Principals with the correct authority before submission; a name is not a Principal."
   ],
   "organisation": {
     "first_party_id": "NABHOLD",
@@ -39,7 +40,10 @@
       "protected"
     ],
     "market": "ZA",
-    "domain": "www.nabhold.com"
+    "domains": [
+      "nabhold.com",
+      "www.nabhold.com"
+    ]
   },
   "requested_capabilities": {
     "R0": [
@@ -51,7 +55,7 @@
     ]
   },
   "approvals": {
-    "requester": null,
-    "independent_authoriser": null
+    "requester": "Brenda Adams",
+    "independent_authoriser": "Brian Nabusiu"
   }
 }
