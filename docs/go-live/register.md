@@ -57,7 +57,7 @@ Default until accepted is the masterplan §12.2 default. Record decision referen
 
 | ID | Decision | Owner role | State |
 |---|---|---|---|
-| D-01 | Exact Nabhold legal registration and beneficial owners | Company secretary (interim: Brenda Adams) | PARTIAL: registration verified 8 Oct 2026; beneficial owners open. Interim roles per sponsor: Brenda Adams, Company Secretary; Brian James Nabusiu, incorporator and director (confirmed on the CIPC certificate); Brenda Adams' appointment unconfirmed |
+| D-01 | Exact Nabhold legal registration and beneficial owners | Company secretary (interim: Brenda Adams, appointment not yet formalised) | PARTIAL: registration verified 8 Oct 2026; beneficial owners open. Interim roles per sponsor: Brenda Adams, Company Secretary; Brian James Nabusiu, incorporator and director (confirmed on the CIPC certificate); Brenda Adams' Company Secretary appointment is yet to be formalised |
 | D-02 | Equity and control percentages for ZuriBeans, Thamani, Equator | Legal | OPEN |
 | D-03 | Platform IP owner, licences, assignments | Legal | OPEN |
 | D-04 | Subscription SaaS only, or also consulting and support | Board | OPEN |
@@ -65,8 +65,8 @@ Default until accepted is the masterplan §12.2 default. Record decision referen
 | D-06 | Customer geography, VAT and export treatment, merchant onboarding | Tax and payments | OPEN |
 | D-07 | Which subsidiary data group officers may view, and why | Boards, legal, privacy | OPEN |
 | D-08 | Consolidation standard and accountant sign-off | Finance | OPEN |
-| D-09 | HR provider and workspace boundary | HR and architecture | OPEN |
-| D-10 | Payroll provider, statutory scope, bank release | HR, payroll, finance | OPEN |
+| D-09 | HR provider and workspace boundary | HR and architecture | DIRECTION GIVEN, not decided: sponsor intends HR to be consumed from the ERP engine (see section 5). Needs an ERP ADR and a Shared contract. |
+| D-10 | Payroll provider, statutory scope, bank release | HR, payroll, finance | DIRECTION GIVEN, not decided: sponsor intends payroll to be consumed from the ERP engine. Whether the ERP engine hosts statutory calculation or fronts an external certified ZA provider is open. |
 | D-11 | Procurement authority and thresholds | Finance and legal | OPEN |
 | D-12 | Capitalisation policy and custody owner | Finance | OPEN |
 | D-13 | Governance and DMS product, retention | Company secretary, privacy | OPEN |
@@ -88,7 +88,7 @@ Default until accepted is the masterplan §12.2 default. Record decision referen
 
 | Item | Gate |
 |---|---|
-| Nonce-based Content-Security-Policy (baseline headers are set in `src/lib/security/headers.ts`) | G16 |
+| Content-Security-Policy: DONE (`src/lib/security/csp.ts`, `src/middleware.ts`). Strict nonce on the workspace; public pages keep `'unsafe-inline'` scripts because they are prerendered and cached. Open: move public pages to a nonce or hash policy if they become dynamic; add a violation-report endpoint; `/favicon.ico` is missing (404) | G16 |
 | Pin canonical host: `nabhold.com` versus `www.nabhold.com`, redirect and `NEXT_PUBLIC_SITE_URL` | G16, D-14 |
 
 ## 4. First ten implementation PRs (masterplan §15.2)
@@ -105,3 +105,21 @@ Default until accepted is the masterplan §12.2 default. Record decision referen
 | 08 | Nabhold CMS capability adapter | `nabhold` | BLOCKED on 07 |
 | 09 | ERP FinanceBaseline authority | `baobab-erp` | BLOCKED on G01 |
 | 10 | Corporate financial read | `shared`, `baobab-erp`, `nabhold` | BLOCKED on 09 |
+
+## 5. Engines Nabhold will consume (sponsor direction, 8 October 2026)
+
+The sponsor states that Nabhold will consume capabilities from four Baobab engines, including finance, accounts, HR and payroll, with further capabilities to be identified over time.
+
+| Engine | Repo | Capability areas named | Where it stands (masterplan audit, 8 Oct 2026) |
+|---|---|---|---|
+| IAM | `baobab-iam` | sign-in, workload tokens, session and leaver control | `identity.authentication.perform` and `identity.workload-token.issue` PARTIAL |
+| CMS | `baobab-cms` | public corporate content | `content.entry.resolve` CONTRACTED, no HTTP surface |
+| ERP | `baobab-erp` | finance, accounts, HR, payroll | corporate GL, AP, AR, procurement, assets, workforce and payroll are not implemented as Baobab capabilities |
+| Pulse | `baobab-pulse` | evidence, research, executive intelligence | `intelligence.evidence.search` and `intelligence.research-mission.manage` IMPLEMENTED in source; binding unverified |
+
+Consequences recorded here, none of them decisions:
+
+- HR and payroll are now expected to be ERP-engine work. That changes the masterplan's open provider question (B-05, B-06) into ERP scope, but the blockers remain: the ERP engine has no workforce or payroll solution today, and South African statutory payroll still needs practitioner sign-off. Any external payroll vendor would sit behind the ERP engine's contract.
+- Subscriptions, Payments, Regulations and Trade are not named in this direction. Their rows in the census and gates are unchanged, and the R2 and R3 dependencies on them stand until the sponsor says otherwise.
+- "Others to be identified" is handled by the census: add a row, give it a status, and take it through G03. No capability becomes consumable because it is named.
+- Each capability still needs a canonical Shared key, an ERP (or other engine) implementation, certification and an active Control Plane binding before the estate may call it.

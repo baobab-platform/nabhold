@@ -13,6 +13,10 @@ Masterplan work item 04 (G03 input). It lists what the Nabhold estate would cons
 
 **Provider support** is what the provider repo declares on 8 October 2026. A declaration is not certification and not an active binding.
 
+## Sponsor direction on providing engines
+
+On 8 October 2026 the sponsor stated that Nabhold will consume from the IAM, CMS, ERP and Pulse engines, including finance, accounts, HR and payroll. So, for the R1 rows below, the intended provider is the ERP engine for `finance.*`, `procurement.*`, `asset.*`, `workforce.*` and `payroll.*`; IAM for `identity.*`; CMS for `content.*`; Pulse for `intelligence.*`. This is intent, not a decision: see `register.md` section 5. The status codes below do not change.
+
 ## R0 Institutional (public)
 
 | Journey | Capability | Status | Provider support | Nabhold code today |

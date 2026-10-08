@@ -18,7 +18,8 @@ The estate must ship in independently releasable classes (R0 institutional, R1 c
 3. **Capabilities are consumed by canonical key only.** The estate requests only keys present in the Shared catalogue (`src/lib/estate/onboarding-profile.ts` holds a reviewed snapshot). Proposed keys in `docs/go-live/capability-demand-census.md` are not requested until Shared registers them (G03).
 4. **Resolution goes through the Control Plane.** `src/lib/control-plane/` implements the Shared resolution contract. It sends no tenant, legal-entity or principal identity, fails closed without a workload token provider, and refuses mismatched, expired or non-`RESOLVED` decisions. It never proxies business payloads.
 5. **Capability states are distinct.** Every capability is tracked as canonical (`C`), proposed (`P`) or active (`A`). Source code, a provider declaration or a green CI run does not make a capability `A`.
-6. **Transitional exceptions are explicit.** The direct Payload gateway and the Pulse `/v1/executive-overview` prototype remain only as recorded exceptions (B-03, B-13) until their canonical replacements exist.
+6. **The browser talks only to the estate.** All calls to IAM, CMS, ERP and Pulse are server-side. The Content-Security-Policy therefore sets `connect-src 'self'`, and adding a browser-visible origin is a deliberate change to `src/lib/security/csp.ts` with a note here. The workspace uses a per-request nonce; public pages are prerendered and cached, so they cannot carry one and keep `'unsafe-inline'` for scripts as a recorded trade-off.
+7. **Transitional exceptions are explicit.** The direct Payload gateway and the Pulse `/v1/executive-overview` prototype remain only as recorded exceptions (B-03, B-13) until their canonical replacements exist.
 
 ## Alternatives rejected
 
@@ -30,7 +31,7 @@ The estate must ship in independently releasable classes (R0 institutional, R1 c
 
 - Positive: R0 can proceed on its own path; protected routes fail closed.
 - Negative: an unset flag hides routes that preview users could previously see; local work now sets the flags in `.env.local`.
-- Follow-up: replace the transitional Payload gateway after `content.entry.resolve` is live (G05); add a nonce-based CSP.
+- Follow-up: replace the transitional Payload gateway after `content.entry.resolve` is live (G05); tighten the public CSP if public pages become dynamic.
 
 ## Supersedes / amends
 

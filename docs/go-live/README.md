@@ -19,7 +19,8 @@ The masterplan G00 names the canonical path `docs/go-live/NAB-GOLIVE-MP-001.md`.
 |---|---|---|
 | Release classes | `src/lib/release/release-class.ts` | R0 on by default; R1 to R3 off unless the flag is exactly `"true"`. `/dashboard` needs R1; the Pulse overview needs R3. Disabled routes return 404. |
 | Capability resolution | `src/lib/control-plane/` | Typed client for the Shared `resolutionRequest`/`resolution` contract. Sends no tenant or legal-entity identity. Fails closed with no workload token provider (blocked on G04), on mismatched or expired resolutions, and on any non-`RESOLVED` decision. |
-| Security headers | `src/lib/security/headers.ts` | Frame, sniffing, referrer, transport and cross-origin baseline everywhere; `/dashboard` is `noindex` and `no-store`. No CSP yet. |
+| Security headers | `src/lib/security/headers.ts` | Frame, sniffing, referrer, transport and cross-origin baseline everywhere; `/dashboard` is `noindex` and `no-store`. |
+| Content-Security-Policy | `src/lib/security/csp.ts`, `src/middleware.ts` | Workspace: per-request nonce plus `strict-dynamic`, no inline scripts. Public pages: scripts allow `'unsafe-inline'` (prerendered, cached), everything else locked down; browser may connect only to this origin. `NABHOLD_CSP_MODE=report-only` for rollout. |
 | Onboarding profile | `src/lib/estate/onboarding-profile.ts` | INTERNAL, zero charge, metering on, ZA only, canonical keys only. Reports G01/G02 blockers instead of defaulting. |
 
 None of this establishes a production-active CapabilityBinding. Enabling a flag is not acceptance.

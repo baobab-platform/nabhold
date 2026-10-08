@@ -14,14 +14,14 @@
 | Jurisdiction | Republic of South Africa (`ZA`) |
 | Supplied by | Programme sponsor, 8 October 2026 |
 | Persons named on the certificate | Brian James Nabusiu: incorporator, and director (Directors table, status ACTIVE as at the certificate). Personal details deliberately not copied here. |
-| Roles stated by the sponsor (8 Oct 2026, interim) | Brian James Nabusiu: incorporator and director (both confirmed by the certificate). Brenda Adams: Company Secretary (not shown by the certificate; unconfirmed). |
-| Reviewer sign-off | PENDING: Brenda Adams (Company Secretary) |
+| Roles stated by the sponsor (8 Oct 2026, interim) | Brian James Nabusiu: incorporator and director (both confirmed by the certificate). Brenda Adams: Company Secretary "for now"; the appointment is yet to be formalised (sponsor, 8 Oct 2026) and is not shown by the certificate. |
+| Reviewer sign-off | PENDING. Not to be given until the Company Secretary appointment is formalised; until then the director (Brian James Nabusiu) is the only verified office-holder. |
 
 The source PDF is held by the sponsor and is deliberately not committed: its cover page carries a personal e-mail address.
 
 ## Not established by this evidence
 
-- Company Secretary appointment. The sponsor states Brenda Adams is Company Secretary "for now"; the certificate does not show it. Confirm it against CIPC records, and that any appointment has been filed, before her sign-off is relied on. Director status is as at the certificate date (16/01/2026); later changes are not covered.
+- Company Secretary appointment. The sponsor states it is yet to be formalised, so Brenda Adams does not yet hold the office in a verifiable way. Confirm it against CIPC records, and that any appointment has been filed, before her sign-off is relied on. Director status is as at the certificate date (16/01/2026); later changes are not covered.
 - Shareholders.
 - Beneficial ownership. The certificate itself says beneficial ownership must be filed with CIPC within 10 business days of registration; filing status is unverified.
 - Annual return, VAT, PAYE, POPIA and Information Officer status.
@@ -30,4 +30,4 @@ The source PDF is held by the sponsor and is deliberately not committed: its cov
 
 ## Independence note
 
-Brenda Adams is both the named onboarding requester (G02) and the Company Secretary who would sign off this evidence. Brian James Nabusiu, the independent authoriser, is the sole named director. Sign-off by the requester is acceptable for the factual CIPC check, but the Control Plane maker/checker step must still be performed by two different Principals.
+Brenda Adams is the named onboarding requester (G02) and the intended Company Secretary, but that appointment is not yet formalised, so she cannot yet sign off this evidence. Brian James Nabusiu, the independent authoriser, is the verified director. If sign-off is needed before the appointment is formalised, record who gave it and in what capacity. The Control Plane maker/checker step must in any case be performed by two different Principals.
