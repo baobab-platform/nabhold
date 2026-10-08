@@ -21,6 +21,10 @@
 | 4 | Who owns the Subscriptions-to-ERP invoice hand-off? | **`baobab-cp`**, following **ADR-BCP-007** (confirmed 8 October) | Control Plane owns the authority and routing, and does not carry the invoice. See section 9, item 5 |
 | 5 | Headcount | **10** | Makes a native ERP payroll engine poor value; supports option C then A. See section 5 |
 | 6 | Pay calendar | Paid on the **25th** of each month, **20th in December** | Twelve dates in the 2027/28 year; three fall on a weekend (section 5) |
+| 7 | Payroll approach | **Provider first** (option C, then A). Provider appointment is in progress | Decided in direction. No provider named yet |
+| 8 | Weekend and public-holiday pay dates | Pay on the **preceding working day** | Applied in section 5: three 2027/28 dates move |
+| 9 | Employer and start date | **Nabhold Group Africa (Pty) Ltd** is the employer; **all 10 employees start 1 March 2027** | One employing legal entity; one cohort, one start date |
+| 10 | Employer registrations | Applied to **SARS** and the **Department of Employment and Labour**; awaiting finalisation and issue of UIF, PAYE and SDL | Not yet registered. The first pay run depends on it (section 5). Compensation Fund (COIDA) not mentioned |
 
 ## 2. What exists (evidence)
 
@@ -96,24 +100,28 @@ Ten employees do not justify building or maintaining statutory payroll calculati
 
 Whether PAYE, UIF and SDL apply, and at what level, depends on remuneration and registration. A payroll practitioner must confirm; this document does not.
 
-Pay calendar for the 2027/28 financial year (25th, except 20th in December). Three dates fall on a weekend. The payment-date rule for those (pay the preceding working day, or the next) is a policy decision for Nabhold, and each date must also be checked against the gazetted public holidays.
+Pay calendar for the 2027/28 financial year. The rule is: paid on the 25th (20th in December); if that is a weekend or a public holiday, pay on the **preceding working day**, stepping back again if that day is also off. Computed with the standard South African public holidays (fixed dates, Good Friday, Family Day, and a Sunday holiday moving to the Monday). The president can declare extra holidays, so confirm each date against the gazette before the pay run.
 
-| Month | Pay date | Weekday |
-|---|---|---|
-| March 2027 | 25 March | Thursday |
-| April 2027 | 25 April | **Sunday** |
-| May 2027 | 25 May | Tuesday |
-| June 2027 | 25 June | Friday |
-| July 2027 | 25 July | **Sunday** |
-| August 2027 | 25 August | Wednesday |
-| September 2027 | 25 September | **Saturday** |
-| October 2027 | 25 October | Monday |
-| November 2027 | 25 November | Thursday |
-| December 2027 | 20 December | Monday |
-| January 2028 | 25 January | Tuesday |
-| February 2028 | 25 February | Friday |
+| Month | Nominal date | Paid on | Why it moves |
+|---|---|---|---|
+| March 2027 | Thu 25 Mar | Thu 25 Mar | |
+| April 2027 | Sun 25 Apr | **Fri 23 Apr** | weekend |
+| May 2027 | Tue 25 May | Tue 25 May | |
+| June 2027 | Fri 25 Jun | Fri 25 Jun | |
+| July 2027 | Sun 25 Jul | **Fri 23 Jul** | weekend |
+| August 2027 | Wed 25 Aug | Wed 25 Aug | |
+| September 2027 | Sat 25 Sep | **Thu 23 Sep** | weekend, and Fri 24 Sep is Heritage Day |
+| October 2027 | Mon 25 Oct | Mon 25 Oct | |
+| November 2027 | Thu 25 Nov | Thu 25 Nov | |
+| December 2027 | Mon 20 Dec | Mon 20 Dec | |
+| January 2028 | Tue 25 Jan | Tue 25 Jan | |
+| February 2028 | Fri 25 Feb | Fri 25 Feb | |
 
-The first pay run is therefore **25 March 2027**. Payroll inputs must be approved before that date, so the practical deadline for an approved employee list and tax set-up is earlier in March.
+The first pay run is **25 March 2027**. Payroll inputs must be approved before that date, so the practical deadline for an approved employee list and tax set-up is earlier in March.
+
+### Employer registration is now on the critical path
+
+Nabhold has applied to SARS and the Department of Employment and Labour and is waiting for the PAYE, SDL and UIF registrations to be issued. A payroll provider needs those reference numbers to set up the employer, and the first monthly employer declaration to SARS (EMP201) and the UIF declaration cannot be filed without them. I do not know how long issue takes. If the numbers have not arrived early enough in March 2027 for the provider to configure and the practitioner to test, the 25 March pay run is at risk. Actions for the sponsor: chase the registrations, and ask the provider what lead time it needs after it receives them. Compensation Fund (COIDA) registration is a separate employer obligation (masterplan section 3.2) and was not mentioned; confirm whether it has been applied for.
 
 ## 6. Proposed sequence
 
@@ -155,7 +163,7 @@ From masterplan §9.3, plus items this survey found:
 
 ## 9. Decisions and inputs still needed
 
-1. Choose between option C and option A for payroll (section 5); my recommendation is C from 1 March 2027, then A. Headcount (10) and pay calendar are now known. Still needed: the provider or bureau, the weekend pay-date rule, and each employee's start date and employer (legal entity).
+1. Payroll: **decided, provider first** (option C, then A). Still needed: the appointed provider and its integration capabilities, the provider's lead time after receiving the SARS and UIF numbers, and confirmation of COIDA registration.
 2. The accounting decisions Brian Nabusiu will be asked to approve: chart of accounts, accounting schema, costing method, effective date. He is the sole director, not necessarily an accountant; the masterplan expects policy-bearing choices (depreciation, capitalisation, VAT) to be reviewed by a qualified accountant or tax practitioner, with him approving.
 3. Whether the Nabhold ledger lives in a dedicated AD_Client (ADR-ERP-021 says one per legal entity) and in which region (blocked by D-14, no AWS account yet).
 4. Evidence for the VAT and tax reference statements, and whether Nabhold is or will be registered as an employer (PAYE, UIF, SDL, COIDA).

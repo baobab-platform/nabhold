@@ -36,7 +36,7 @@ Owner columns are roles from the masterplan; no individual has been appointed.
 | B-02 | No real executive authentication; preview session only | R1 to R3 | Complete ADR-IAM-0033; OIDC/BFF client |
 | B-03 | `content.entry.resolve` is CONTRACTED only | R0 | CMS route and provider declaration |
 | B-04 | Corporate GL, AP and AR not available as Baobab capabilities | R1 to R3 | FinanceBaseline and iDempiere adapters |
-| B-05 | Payroll not implemented, no provider | R1 | Vendor due diligence |
+| B-05 | Payroll not implemented. Provider being appointed (sponsor, 8 Oct 2026). Employer PAYE, SDL and UIF registrations pending | R1 | Appoint provider; obtain registration numbers; confirm COIDA |
 | B-06 | Employment system of record undecided | R1 | Domain ADR |
 | B-07 | Procurement and assets proposed only | R1 | Contracts and adapters |
 | B-08 | Subscriptions has a simulated provider only | R2 | Kill Bill adapter and certification |
@@ -66,7 +66,7 @@ Default until accepted is the masterplan §12.2 default. Record decision referen
 | D-07 | Which subsidiary data group officers may view, and why | Boards, legal, privacy | OPEN |
 | D-08 | Consolidation standard and accountant sign-off | Finance | OPEN |
 | D-09 | HR provider and workspace boundary | HR and architecture | DIRECTION GIVEN, not decided: sponsor intends HR to be consumed from the ERP engine (see section 5). Needs an ERP ADR and a Shared contract. |
-| D-10 | Payroll provider, statutory scope, bank release | HR, payroll, finance | NEEDED FROM 1 MARCH 2027 (sponsor); headcount 10; pay day the 25th (20th in December). DIRECTION GIVEN, not decided: sponsor intends payroll to be consumed from the ERP engine. Whether the ERP engine hosts statutory calculation or fronts an external certified ZA provider is open. |
+| D-10 | Payroll provider, statutory scope, bank release | HR, payroll, finance | NEEDED FROM 1 MARCH 2027 (sponsor); headcount 10; pay day the 25th (20th in December). DECIDED 8 Oct 2026: provider first (option C, then A); provider appointment in progress. Original direction: sponsor intends payroll to be consumed from the ERP engine. Whether the ERP engine hosts statutory calculation or fronts an external certified ZA provider is open. |
 | D-11 | Procurement authority and thresholds | Finance and legal | OPEN |
 | D-12 | Capitalisation policy and custody owner | Finance | OPEN |
 | D-13 | Governance and DMS product, retention | Company secretary, privacy | OPEN |
@@ -137,6 +137,10 @@ Consequences recorded here, none of them decisions:
 | VAT | Not registered; tax reference number 9470182230 (unevidenced) | same file; D-06 |
 | Subscriptions-to-ERP hand-off | `baobab-cp` owns authority and routing per ADR-BCP-007; the invoice moves Subscriptions to ERP as an event, not through Control Plane | `erp-scope.md` section 9 |
 | Headcount | 10 | `erp-scope.md` section 5 |
+| Payroll approach | Provider first; provider being appointed | `erp-scope.md` section 5; D-10 |
+| Weekend and public-holiday pay dates | Preceding working day. 2027/28 moves: 23 Apr, 23 Jul, 23 Sep | `erp-scope.md` section 5 |
+| Employer and start date | Nabhold Group Africa (Pty) Ltd; all 10 employees start 1 March 2027 | `erp-scope.md` section 1a |
+| Employer registrations | Applied to SARS and Dept of Employment and Labour; PAYE, SDL, UIF awaited. COIDA not mentioned | `erp-scope.md` section 5 |
 | Pay calendar | 25th monthly; 20th in December. First pay run 25 March 2027 | `erp-scope.md` section 5 |
 | Canonical host | `nabhold.com` | section 3b |
 | Engines consumed | IAM, CMS, ERP, Pulse, Subscriptions, Payments | section 5 |
