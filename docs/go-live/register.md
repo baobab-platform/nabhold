@@ -103,7 +103,7 @@ Default until accepted is the masterplan §12.2 default. Record decision referen
 | 06 | OIDC confidential/BFF pilot | `baobab-iam`, `nabhold` | BLOCKED on G02 |
 | 07 | CMS canonical resolve route | `baobab-cms` | NOT STARTED |
 | 08 | Nabhold CMS capability adapter | `nabhold` | BLOCKED on 07 |
-| 09 | ERP FinanceBaseline authority | `baobab-erp` | BLOCKED on G01 |
+| 09 | ERP FinanceBaseline authority | `baobab-erp` | Scoped in [erp-scope.md](erp-scope.md) (phases E0 to E2). Needs a named finance approver for the Nabhold baseline and a live iDempiere. G01 is no longer the blocker. |
 | 10 | Corporate financial read | `shared`, `baobab-erp`, `nabhold` | BLOCKED on 09 |
 
 ## 5. Engines Nabhold will consume (sponsor direction, 8 October 2026)
@@ -125,4 +125,5 @@ Consequences recorded here, none of them decisions:
 - Subscriptions and Payments are now named, which confirms the masterplan's R2 assumption. Nothing else changes: both engines have only simulated or sandbox providers, so R2 stays disabled and real money may not move until a production provider (Kill Bill adapter, real PSP and merchant) is certified and bound (B-08, B-09, B-10, G10, G11). Regulations and Trade are not named; their rows and the R3 dependencies on them are unchanged.
 - The onboarding profile still requests only R0 and R1 capabilities. The masterplan (G02) allows later expansion through governed changesets, so Subscriptions and Payments keys are added then, not now.
 - "Others to be identified" is handled by the census: add a row, give it a status, and take it through G03. No capability becomes consumable because it is named.
+- The ERP work needed for this direction is scoped in [erp-scope.md](erp-scope.md). ERP #58 has since merged, so its provider declaration is on ERP `main`.
 - Each capability still needs a canonical Shared key, an ERP (or other engine) implementation, certification and an active Control Plane binding before the estate may call it.

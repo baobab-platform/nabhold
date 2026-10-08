@@ -9,6 +9,7 @@ The masterplan is the programme reference. It does not replace Shared, Control P
 | [register.md](register.md) | Gate status, blockers B-01 to B-18, decisions D-01 to D-18. Update with every PR that moves a gate. |
 | [evidence/README.md](evidence/README.md) | Evidence index rules. Nothing is `IMPLEMENTED`, `CERTIFIED`, `ACTIVE` or `PASS` without a pointer here. |
 | [capability-demand-census.md](capability-demand-census.md) | Per-journey capability demand with canonical / proposed / active status. |
+| [erp-scope.md](erp-scope.md) | What `baobab-erp` must gain for finance, accounts, HR and payroll, in Nabhold's order, with phases and decisions. |
 | [onboarding/](onboarding/nabhold-internal-onboarding-profile.json) | Machine-checkable G02 input profile for INTERNAL admission. Validated by `src/lib/estate/onboarding-profile.test.ts`. |
 
 The masterplan G00 names the canonical path `docs/go-live/NAB-GOLIVE-MP-001.md`. The merged file keeps its versioned name `NAB-GOLIVE-MP-001-masterplan-v1.0.md`; renaming it is a separate, reviewed change.
