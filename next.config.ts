@@ -1,5 +1,7 @@
 import type { NextConfig } from "next";
 
+import { securityHeaderRules } from "./src/lib/security/headers";
+
 /**
  * Payload-managed media (logos, corporate photography, hero images) is
  * served from the Payload origin itself. `remotePatterns` is derived from
@@ -37,22 +39,7 @@ const config: NextConfig = {
     remotePatterns: payloadRemotePattern(),
   },
   async headers() {
-    return [
-      {
-        source: "/(.*)",
-        headers: [
-          { key: "X-Content-Type-Options", value: "nosniff" },
-          {
-            key: "Referrer-Policy",
-            value: "strict-origin-when-cross-origin",
-          },
-          {
-            key: "Permissions-Policy",
-            value: "camera=(), microphone=(), geolocation=()",
-          },
-        ],
-      },
-    ];
+    return securityHeaderRules();
   },
 };
 

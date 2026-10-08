@@ -11,7 +11,7 @@ Owner columns are roles from the masterplan; no individual has been appointed.
 | G00 | Baseline, traceability, governance | all | IN PROGRESS | Review body not named | Registers, evidence index (this directory) |
 | G01 | Legal authority, autonomy, IP | all | PARTIAL | D-01 (ownership), D-02, D-03; sign-off | Name, number, jurisdiction recorded from the CIPC certificate ([evidence](evidence/G01/production/2026-01-16-cipc-registration.md)) |
 | G02 | INTERNAL admission, tenant, DigitalEstate | R1 to R3 | BLOCKED | G01 sign-off, mapping Brenda Adams (requester) and Brian Nabusiu (authoriser) to CP Principals, CP runtime access | Input profile and readiness check (done) |
-| G03 | Shared capability census and contracts | all | UNVERIFIED | Shared stewards | Demand census in `nabhold` (not started) |
+| G03 | Shared capability census and contracts | all | IN PROGRESS | Shared stewards | Demand census (done); Shared ADRs and contracts remain |
 | G04 | IAM, OIDC/BFF, grants | R1 to R3 | BLOCKED | B-02, ADR-IAM-0033 completion | Token provider seam in `CapabilityClient` (done) |
 | G05 | CMS `content.entry.resolve` | R0 | BLOCKED | B-03, G03 | Gateway swap after CMS route exists |
 | G06 | ERP finance baseline | R1 to R3 | BLOCKED | B-04, G01, G03 | None |
@@ -76,6 +76,21 @@ Default until accepted is the masterplan §12.2 default. Record decision referen
 | D-17 | Statutory interpretation (VAT, PAYE, COIDA, POPIA) | Qualified professionals | OPEN |
 | D-18 | INTERNAL status of a subsidiary after sale | CP, governance, legal | OPEN |
 
+## 3a. Nabhold ADRs
+
+| ADR | State |
+|---|---|
+| ADR-NAB-0012 Operating model | Proposed, blocked on D-01 to D-03, D-07, D-18 |
+| ADR-NAB-0013 Capability consumption and rollout classification | Proposed, implemented in code, awaiting architecture review |
+| ADR-NAB-0014 to 0022 | Not started (masterplan §9.2) |
+
+## 3b. Open engineering items
+
+| Item | Gate |
+|---|---|
+| Nonce-based Content-Security-Policy (baseline headers are set in `src/lib/security/headers.ts`) | G16 |
+| Pin canonical host: `nabhold.com` versus `www.nabhold.com`, redirect and `NEXT_PUBLIC_SITE_URL` | G16, D-14 |
+
 ## 4. First ten implementation PRs (masterplan §15.2)
 
 | # | Work item | Repo | State |
@@ -83,7 +98,7 @@ Default until accepted is the masterplan §12.2 default. Record decision referen
 | 01 | Adopt baseline, register and evidence policy | `nabhold` | DONE in this change (acceptance of the masterplan itself remains a governance decision) |
 | 02 | First-party registry reconciliation | `shared` | READY to prepare; needs company-secretary sign-off |
 | 03 | INTERNAL tenant and estate acceptance fixture | `baobab-cp` | BLOCKED on G01 |
-| 04 | Capability demand census | `nabhold` | NOT STARTED |
+| 04 | Capability demand census | `nabhold` | DONE: [capability-demand-census.md](capability-demand-census.md) |
 | 05 | Finance, HR, payroll, procurement contracts | `shared` | NOT STARTED |
 | 06 | OIDC confidential/BFF pilot | `baobab-iam`, `nabhold` | BLOCKED on G02 |
 | 07 | CMS canonical resolve route | `baobab-cms` | NOT STARTED |
