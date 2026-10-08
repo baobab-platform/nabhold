@@ -10,11 +10,11 @@
   ],
   "organisation": {
     "first_party_id": "NABHOLD",
-    "legal_name": "Nabhold Group Africa",
+    "legal_name": "NABHOLD GROUP AFRICA (Pty) Ltd",
     "role": "holding_company",
-    "jurisdiction": null,
-    "registration_identifier": null,
-    "legal_evidence_ref": null
+    "jurisdiction": "ZA",
+    "registration_identifier": "2026/029839/07",
+    "legal_evidence_ref": "docs/go-live/evidence/G01/production/2026-01-16-cipc-registration.md"
   },
   "classification": {
     "subscription_type": "INTERNAL",
@@ -27,18 +27,28 @@
     "isolation_control": true
   },
   "market": {
-    "operating_markets": ["ZA"],
+    "operating_markets": [
+      "ZA"
+    ],
     "participation_activities": []
   },
   "digital_estate": {
     "repository": "baobab-platform/nabhold",
-    "surfaces": ["public", "protected"],
+    "surfaces": [
+      "public",
+      "protected"
+    ],
     "market": "ZA",
-    "domain": null
+    "domain": "www.nabhold.com"
   },
   "requested_capabilities": {
-    "R0": ["content.entry.resolve"],
-    "R1": ["identity.authentication.perform", "identity.workload-token.issue"]
+    "R0": [
+      "content.entry.resolve"
+    ],
+    "R1": [
+      "identity.authentication.perform",
+      "identity.workload-token.issue"
+    ]
   },
   "approvals": {
     "requester": null,

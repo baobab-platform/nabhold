@@ -25,12 +25,42 @@ describe("Nabhold INTERNAL onboarding profile", () => {
     expect(onboardingProfileSchema.safeParse(loadProfile()).success).toBe(true);
   });
 
-  it("is blocked while legal facts and approvals are unverified", () => {
+  it("carries the verified CIPC facts and no longer has G01 blockers", () => {
     const profile = onboardingProfileSchema.parse(loadProfile());
-    const assessment = assessOnboardingReadiness(profile);
+
+    expect(profile.organisation).toMatchObject({
+      legal_name: "NABHOLD GROUP AFRICA (Pty) Ltd",
+      jurisdiction: "ZA",
+      registration_identifier: "2026/029839/07",
+    });
+    expect(
+      assessOnboardingReadiness(profile).blockers.filter((b) =>
+        b.startsWith("G01"),
+      ),
+    ).toEqual([]);
+  });
+
+  it("is blocked until requester and independent authoriser are named", () => {
+    const assessment = assessOnboardingReadiness(
+      onboardingProfileSchema.parse(loadProfile()),
+    );
 
     expect(assessment.readyToSubmit).toBe(false);
-    expect(assessment.blockers).toEqual(
+    expect(assessment.blockers).toEqual([
+      "G02: approvals.requester is not named",
+      "G02: approvals.independent_authoriser is not named",
+    ]);
+  });
+
+  it("reports G01 blockers when legal facts are removed", () => {
+    const raw = loadProfile();
+    raw.organisation.jurisdiction = null;
+    raw.organisation.registration_identifier = null;
+    raw.organisation.legal_evidence_ref = null;
+
+    expect(
+      assessOnboardingReadiness(onboardingProfileSchema.parse(raw)).blockers,
+    ).toEqual(
       expect.arrayContaining([
         "G01: organisation.jurisdiction is unverified",
         "G01: organisation.registration_identifier is unverified",
@@ -41,10 +71,6 @@ describe("Nabhold INTERNAL onboarding profile", () => {
 
   it("is ready only when every blocker is resolved by a distinct authoriser", () => {
     const raw = loadProfile();
-    raw.organisation.jurisdiction = "ZA";
-    raw.organisation.registration_identifier = "TEST-ONLY-ID";
-    raw.organisation.legal_evidence_ref = "evidence/G01/test";
-    raw.digital_estate.domain = "example.test";
     raw.approvals.requester = "principal-a";
     raw.approvals.independent_authoriser = "principal-b";
 

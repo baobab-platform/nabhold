@@ -9,8 +9,8 @@ Owner columns are roles from the masterplan; no individual has been appointed.
 | Gate | Scope | Releases | Status | Blocked by | Repo work available without external input |
 |---|---|---|---|---|---|
 | G00 | Baseline, traceability, governance | all | IN PROGRESS | Review body not named | Registers, evidence index (this directory) |
-| G01 | Legal authority, autonomy, IP | all | BLOCKED | B-01, D-01 to D-03 | None. Facts must come from the company secretary. |
-| G02 | INTERNAL admission, tenant, DigitalEstate | R1 to R3 | BLOCKED | G01, CP runtime access, second authoriser | Input profile and readiness check (done) |
+| G01 | Legal authority, autonomy, IP | all | PARTIAL | D-01 (ownership), D-02, D-03; sign-off | Name, number, jurisdiction recorded from the CIPC certificate ([evidence](evidence/G01/production/2026-01-16-cipc-registration.md)) |
+| G02 | INTERNAL admission, tenant, DigitalEstate | R1 to R3 | BLOCKED | G01 sign-off, named requester and authoriser, CP runtime access | Input profile and readiness check (done) |
 | G03 | Shared capability census and contracts | all | UNVERIFIED | Shared stewards | Demand census in `nabhold` (not started) |
 | G04 | IAM, OIDC/BFF, grants | R1 to R3 | BLOCKED | B-02, ADR-IAM-0033 completion | Token provider seam in `CapabilityClient` (done) |
 | G05 | CMS `content.entry.resolve` | R0 | BLOCKED | B-03, G03 | Gateway swap after CMS route exists |
@@ -32,7 +32,7 @@ Owner columns are roles from the masterplan; no individual has been appointed.
 
 | ID | Blocker | Release | Next action |
 |---|---|---|---|
-| B-01 | Shared Nabhold registry has jurisdiction and registration null | all | Legal verification, then a Shared registry PR |
+| B-01 | Shared Nabhold registry still has jurisdiction and registration null; its legal name (`Nabhold Group Africa`) lacks `(Pty) Ltd`. Facts are now verified in this repo. | all | Shared registry PR (`SH-NAB-LEGAL-01`) with the evidence reference |
 | B-02 | No real executive authentication; preview session only | R1 to R3 | Complete ADR-IAM-0033; OIDC/BFF client |
 | B-03 | `content.entry.resolve` is CONTRACTED only | R0 | CMS route and provider declaration |
 | B-04 | Corporate GL, AP and AR not available as Baobab capabilities | R1 to R3 | FinanceBaseline and iDempiere adapters |
@@ -57,7 +57,7 @@ Default until accepted is the masterplan §12.2 default. Record decision referen
 
 | ID | Decision | Owner role | State |
 |---|---|---|---|
-| D-01 | Exact Nabhold legal registration and beneficial owners | Company secretary | OPEN |
+| D-01 | Exact Nabhold legal registration and beneficial owners | Company secretary | PARTIAL: registration verified 8 Oct 2026; beneficial owners open |
 | D-02 | Equity and control percentages for ZuriBeans, Thamani, Equator | Legal | OPEN |
 | D-03 | Platform IP owner, licences, assignments | Legal | OPEN |
 | D-04 | Subscription SaaS only, or also consulting and support | Board | OPEN |
@@ -81,7 +81,7 @@ Default until accepted is the masterplan §12.2 default. Record decision referen
 | # | Work item | Repo | State |
 |---|---|---|---|
 | 01 | Adopt baseline, register and evidence policy | `nabhold` | DONE in this change (acceptance of the masterplan itself remains a governance decision) |
-| 02 | First-party registry reconciliation | `shared` | BLOCKED on G01 |
+| 02 | First-party registry reconciliation | `shared` | READY to prepare; needs company-secretary sign-off |
 | 03 | INTERNAL tenant and estate acceptance fixture | `baobab-cp` | BLOCKED on G01 |
 | 04 | Capability demand census | `nabhold` | NOT STARTED |
 | 05 | Finance, HR, payroll, procurement contracts | `shared` | NOT STARTED |
