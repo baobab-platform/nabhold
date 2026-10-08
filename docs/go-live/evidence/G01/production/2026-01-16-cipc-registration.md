@@ -14,14 +14,20 @@
 | Jurisdiction | Republic of South Africa (`ZA`) |
 | Supplied by | Programme sponsor, 8 October 2026 |
 | Persons named on the certificate | Brian James Nabusiu, listed as incorporator (personal details deliberately not copied here) |
-| Reviewer sign-off | PENDING (company secretary) |
+| Roles stated by the sponsor (8 Oct 2026, interim) | Brian James Nabusiu: incorporator and director. Brenda Adams: Company Secretary. Neither role beyond Brian's incorporator entry is shown by the certificate. |
+| Reviewer sign-off | PENDING: Brenda Adams (Company Secretary) |
 
 The source PDF is held by the sponsor and is deliberately not committed: its cover page carries a personal e-mail address.
 
 ## Not established by this evidence
 
-- Current directors and shareholders. The sponsor states the director is listed on the certificate; the extract reviewed shows an incorporator entry only, so director appointment should be confirmed against CIPC records. Brenda Adams does not appear on the certificate; her role is unverified.
+- Director appointment and Company Secretary appointment. The sponsor states Brian James Nabusiu is director and Brenda Adams is Company Secretary "for now". The certificate shows an incorporator entry for Brian only, so both appointments should be confirmed against CIPC records (and a secretary appointment, if made, filed) before sign-off relies on them.
+- Shareholders.
 - Beneficial ownership. The certificate itself says beneficial ownership must be filed with CIPC within 10 business days of registration; filing status is unverified.
 - Annual return, VAT, PAYE, POPIA and Information Officer status.
 - Subsidiary incorporation, ownership percentages and platform IP assignment (D-02, D-03).
 - Control of `nabhold.com` and `www.nabhold.com` (named by the sponsor as the estate domains; DNS ownership is unverified).
+
+## Independence note
+
+Brenda Adams is both the named onboarding requester (G02) and the Company Secretary who would sign off this evidence. Brian James Nabusiu, the independent authoriser, is the sole named director. Sign-off by the requester is acceptable for the factual CIPC check, but the Control Plane maker/checker step must still be performed by two different Principals.

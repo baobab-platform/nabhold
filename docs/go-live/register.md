@@ -57,7 +57,7 @@ Default until accepted is the masterplan §12.2 default. Record decision referen
 
 | ID | Decision | Owner role | State |
 |---|---|---|---|
-| D-01 | Exact Nabhold legal registration and beneficial owners | Company secretary | PARTIAL: registration verified 8 Oct 2026; beneficial owners open |
+| D-01 | Exact Nabhold legal registration and beneficial owners | Company secretary (interim: Brenda Adams) | PARTIAL: registration verified 8 Oct 2026; beneficial owners open. Interim roles per sponsor: Brenda Adams, Company Secretary; Brian James Nabusiu, incorporator and director (unconfirmed against CIPC) |
 | D-02 | Equity and control percentages for ZuriBeans, Thamani, Equator | Legal | OPEN |
 | D-03 | Platform IP owner, licences, assignments | Legal | OPEN |
 | D-04 | Subscription SaaS only, or also consulting and support | Board | OPEN |
