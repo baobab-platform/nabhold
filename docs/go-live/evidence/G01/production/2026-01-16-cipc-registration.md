@@ -13,15 +13,15 @@
 | Registration effective | 16/01/2026 |
 | Jurisdiction | Republic of South Africa (`ZA`) |
 | Supplied by | Programme sponsor, 8 October 2026 |
-| Persons named on the certificate | Brian James Nabusiu, listed as incorporator (personal details deliberately not copied here) |
-| Roles stated by the sponsor (8 Oct 2026, interim) | Brian James Nabusiu: incorporator and director. Brenda Adams: Company Secretary. Neither role beyond Brian's incorporator entry is shown by the certificate. |
+| Persons named on the certificate | Brian James Nabusiu: incorporator, and director (Directors table, status ACTIVE as at the certificate). Personal details deliberately not copied here. |
+| Roles stated by the sponsor (8 Oct 2026, interim) | Brian James Nabusiu: incorporator and director (both confirmed by the certificate). Brenda Adams: Company Secretary (not shown by the certificate; unconfirmed). |
 | Reviewer sign-off | PENDING: Brenda Adams (Company Secretary) |
 
 The source PDF is held by the sponsor and is deliberately not committed: its cover page carries a personal e-mail address.
 
 ## Not established by this evidence
 
-- Director appointment and Company Secretary appointment. The sponsor states Brian James Nabusiu is director and Brenda Adams is Company Secretary "for now". The certificate shows an incorporator entry for Brian only, so both appointments should be confirmed against CIPC records (and a secretary appointment, if made, filed) before sign-off relies on them.
+- Company Secretary appointment. The sponsor states Brenda Adams is Company Secretary "for now"; the certificate does not show it. Confirm it against CIPC records, and that any appointment has been filed, before her sign-off is relied on. Director status is as at the certificate date (16/01/2026); later changes are not covered.
 - Shareholders.
 - Beneficial ownership. The certificate itself says beneficial ownership must be filed with CIPC within 10 business days of registration; filing status is unverified.
 - Annual return, VAT, PAYE, POPIA and Information Officer status.

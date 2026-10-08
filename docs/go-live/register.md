@@ -46,7 +46,7 @@ Owner columns are roles from the masterplan; no individual has been appointed.
 | B-12 | No governance or DMS provider | R3 | Provider selection |
 | B-13 | Pulse `/v1/executive-overview` is not canonical | R3 | Use canonical keys or contract a new capability |
 | B-14 | Regulations has no verified ZA pack | regulatory features | Source governance |
-| B-15 | Cloud account and OIDC bootstrap unproven | all deployed | Infrastructure owner supplies verified values |
+| B-15 | No AWS account details exist yet (confirmed by the sponsor, 8 Oct 2026). Account, region, state bucket and OIDC roles are all unprovided. | all deployed | Sponsor decides the account owner (D-14); infrastructure owner supplies verified values. Nothing may be filled with fixture values. |
 | B-16 | Declared support is not an active Nabhold binding | all | EA-09 and CP readout |
 | B-17 | Node 22 and Next 15 versus wider Node 24 standard | CI, deploy | Tested upgrade or exception ADR |
 | B-18 | Subsidiary legal registration and data consent unverified | R3 | Legal documents and signed agreements |
@@ -57,7 +57,7 @@ Default until accepted is the masterplan §12.2 default. Record decision referen
 
 | ID | Decision | Owner role | State |
 |---|---|---|---|
-| D-01 | Exact Nabhold legal registration and beneficial owners | Company secretary (interim: Brenda Adams) | PARTIAL: registration verified 8 Oct 2026; beneficial owners open. Interim roles per sponsor: Brenda Adams, Company Secretary; Brian James Nabusiu, incorporator and director (unconfirmed against CIPC) |
+| D-01 | Exact Nabhold legal registration and beneficial owners | Company secretary (interim: Brenda Adams) | PARTIAL: registration verified 8 Oct 2026; beneficial owners open. Interim roles per sponsor: Brenda Adams, Company Secretary; Brian James Nabusiu, incorporator and director (confirmed on the CIPC certificate); Brenda Adams' appointment unconfirmed |
 | D-02 | Equity and control percentages for ZuriBeans, Thamani, Equator | Legal | OPEN |
 | D-03 | Platform IP owner, licences, assignments | Legal | OPEN |
 | D-04 | Subscription SaaS only, or also consulting and support | Board | OPEN |
