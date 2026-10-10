@@ -4,7 +4,7 @@ Status: Accepted
 
 ## Context
 
-ADR-0001 established `nabhold/nabhold` as one independently deployable
+ADR-0001 established `baobab-platform/nabhold` as one independently deployable
 Next.js estate with two route groups: a cacheable public corporate surface
 and a dynamic, non-indexable executive surface. At that time, corporate
 editorial content (portfolio companies, sector narratives, insights, the
@@ -12,13 +12,13 @@ homepage) was hard-coded directly in route components (`src/features/portfolio/d
 and inline JSX strings), with no external source of truth.
 
 Nabhold Group Africa operates a centrally run, headless Payload CMS
-(`nabhold/baobab-cms`) intended to serve corporate editorial content across
-digital estates. `nabhold/nabhold` should stop hard-coding editorial content
+(`baobab-platform/baobab-cms`) intended to serve corporate editorial content across
+digital estates. `baobab-platform/nabhold` should stop hard-coding editorial content
 and instead consume it from Payload — without becoming a Payload
 application, without embedding Payload, and without letting Payload become
 authoritative for anything outside editorial content.
 
-An inspection of `nabhold/baobab-cms` at the time of this decision found:
+An inspection of `baobab-platform/baobab-cms` at the time of this decision found:
 
 - It is currently a **generic, multi-tenant Baobab content engine**, not a
   Nabhold-specific corporate CMS. Its collections are `pages` (generic,
@@ -35,11 +35,11 @@ An inspection of `nabhold/baobab-cms` at the time of this decision found:
   globals (home page, footer, navigation, etc.).
 - A content-resolution engine implementing inheritance and locale fallback
   (`src/baobab/content-resolution`) exists and is fully tested, but is **not
-  yet wired to any HTTP endpoint** — `nabhold/nabhold` would be its first
+  yet wired to any HTTP endpoint** — `baobab-platform/nabhold` would be its first
   digital-estate consumer, and resolving inheritance today would have to
   happen client-side against raw candidate documents, or wait for
   `baobab-cms` to expose a resolution endpoint.
-- `nabhold/shared`'s canonical-mapping contract already anticipates this
+- `baobab-platform/shared`'s canonical-mapping contract already anticipates this
   integration: `mappingType` includes `CONTENT`, `authority` includes
   `content`, and its `ExternalReference.system_namespace` examples already
   list `"payload"` alongside `"medusa"` and `"idempiere"`.
@@ -54,7 +54,7 @@ apply regardless of how complete `baobab-cms`'s schema is on any given day.
    descriptions, insights/news/publications, careers content, navigation,
    footer, SEO metadata and homepage editorial content are owned by Payload,
    not by this repository.
-2. **`nabhold/nabhold` remains an independently deployable Next.js estate.**
+2. **`baobab-platform/nabhold` remains an independently deployable Next.js estate.**
    This decision changes what content this estate reads, not its deployment
    topology, its two-surface route structure, or its ownership of commerce,
    ERP, tenancy, identity, intelligence processing or infrastructure.
@@ -62,7 +62,7 @@ apply regardless of how complete `baobab-cms`'s schema is on any given day.
    server only. No admin UI, editor, or Payload runtime is embedded here.
 4. **Payload SHALL NOT be embedded in this repository.** There is no
    `payload.config.ts`, no Payload dependency, and no Payload database
-   connection in `nabhold/nabhold`.
+   connection in `baobab-platform/nabhold`.
 5. **Payload SHALL NOT own operational or canonical Baobab truth** — tenant,
    legal-entity, digital-estate, market, user identity, authentication,
    authorisation, financial, ERP, commerce or Pulse-analytical data. Where
@@ -92,7 +92,7 @@ apply regardless of how complete `baobab-cms`'s schema is on any given day.
     sense that this estate's cache-invalidation contract is designed to be
     triggered by Payload's own canonical content lifecycle events
     (`com.nabhold.content.{created,updated,published,unpublished,archived}.v1`,
-    per `nabhold/shared`'s CloudEvents-shaped envelope) once `baobab-cms`
+    per `baobab-platform/shared`'s CloudEvents-shaped envelope) once `baobab-cms`
     wires its outbox dispatcher to call this estate's revalidation endpoint.
     This repository does not introduce message-queue infrastructure itself.
 12. **Payload and Pulse remain separate capabilities.** Payload answers "what
@@ -117,7 +117,7 @@ apply regardless of how complete `baobab-cms`'s schema is on any given day.
   treat forward-looking fields as optional, and the gateway degrades to an
   empty/graceful result (never fabricated content) when a collection or
   field does not yet exist upstream. See `docs/integrations/payload.md` for
-  the current gap and the follow-up work this implies for `nabhold/baobab-cms`.
+  the current gap and the follow-up work this implies for `baobab-platform/baobab-cms`.
 - Homepage, navigation, footer, group profile and SEO defaults are resolved
   today through Payload's existing generic `pages` collection, keyed by
   `contentKey`, until dedicated globals-equivalent collections exist
@@ -128,9 +128,9 @@ apply regardless of how complete `baobab-cms`'s schema is on any given day.
 ## References
 
 - ADR-0001: One Next.js estate with separated route groups.
-- `nabhold/shared/contracts/control-plane/v1/canonical-mapping.schema.json`
+- `baobab-platform/shared/contracts/control-plane/v1/canonical-mapping.schema.json`
   (mapping type `CONTENT`, authority `content`).
-- `nabhold/shared/contracts/events/v1/envelope.schema.json` (event envelope
+- `baobab-platform/shared/contracts/events/v1/envelope.schema.json` (event envelope
   shape referenced by §11 above).
-- `nabhold/baobab-cms/docs/architecture/overview.md`,
+- `baobab-platform/baobab-cms/docs/architecture/overview.md`,
   `docs/content-resolution/README.md`, `docs/collections/README.md`.

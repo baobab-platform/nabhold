@@ -62,7 +62,9 @@ export async function POST(request: Request): Promise<Response> {
 
   const tags = tagsForRevalidateRequest(parsed.data);
   for (const tag of tags) {
-    revalidateTag(tag);
+    // Next 16 requires an expiry profile; { expire: 0 } keeps the previous
+    // single-argument behaviour (published content is never served stale).
+    revalidateTag(tag, { expire: 0 });
   }
 
   return NextResponse.json({ revalidated: true, tags });

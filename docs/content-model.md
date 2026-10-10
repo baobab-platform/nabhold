@@ -25,13 +25,13 @@ operating boundary (`south-africa`, `uganda`); a locale is a language/region
 rendering context (`en-ZA`, `en-UG`). The same market can render in more than
 one locale, and the same locale can serve more than one market. Neither
 implies the other. This mirrors
-`nabhold/shared/contracts/control-plane/v1/market.schema.json`, which models
+`baobab-platform/shared/contracts/control-plane/v1/market.schema.json`, which models
 `default_locale`/`supported_locales` as attributes of a market, not synonyms
 for it.
 
 **Canonical references, never redefinitions.** `organisationId`,
 `digitalEstateId` and `marketIds` are references into Baobab's own canonical
-registries (`nabhold/shared/contracts`). This repository never creates a
+registries (`baobab-platform/shared/contracts`). This repository never creates a
 cross-database relationship into another Baobab engine and never redefines
 what those ids mean.
 
