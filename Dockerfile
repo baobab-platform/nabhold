@@ -14,6 +14,9 @@ ARG NEXT_PUBLIC_SITE_URL=https://nabhold.com
 ENV NEXT_PUBLIC_SITE_URL=${NEXT_PUBLIC_SITE_URL}
 COPY . .
 RUN pnpm build
+# Ship only production dependencies: lint, test and type-check tooling must not
+# reach the runtime image (and its vulnerability surface).
+RUN pnpm prune --prod
 FROM base AS runtime
 ARG VERSION=0.0.0-dev
 ARG REVISION=unknown
