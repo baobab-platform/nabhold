@@ -12,7 +12,7 @@ Status vocabulary follows the masterplan: `EVIDENCED`, `DECLARED`, `PLANNED`, `U
 - Each repository's `origin/main` was fetched on 10 October 2026 and compared with the commit recorded in masterplan §2.1.
 - For R0, the changed contracts, registries and source were **read**, not just counted (sections 3 and 4).
 - For repositories outside R0 (ERP, Subscriptions, Payments, Pulse, Regulations, Trade, IAM) only commit counts and commit subjects were reviewed. **No claim below about those repositories is a verified status.**
-- Open pull requests were listed for `nabhold` only in the first pass. **Correction (added later on 10 Oct):** open PRs were then also reviewed for shared (none), baobab-cms (#21, #22), baobab-iam (#106), baobab-cp (#306, draft) and infrastructure (Dependabot only). The first version of this document read CMS `main` alone and so wrongly reported the CMS route as not started; sections 4.1 and 5 are corrected accordingly.
+- Open pull requests were listed for `nabhold` only in the first pass. **Correction (added later on 10 Oct):** branches were not checked for nabhold in the first pass, which missed the unmerged branch described in section 4.3; the same applies to every repository other than shared. Open PRs were then also reviewed for shared (none), baobab-cms (#21, #22), baobab-iam (#106), baobab-cp (#306, draft) and infrastructure (Dependabot only). The first version of this document read CMS `main` alone and so wrongly reported the CMS route as not started; sections 4.1 and 5 are corrected accordingly.
 
 ## 2. Repository drift since the §2.1 snapshot
 
@@ -53,7 +53,7 @@ Status vocabulary follows the masterplan: `EVIDENCED`, `DECLARED`, `PLANNED`, `U
 
 `workload-registry.yaml` on `main` registers cms, erp, pulse, trade, thamani, zuribeans, cp (three), and subscriptions. There is **no** Nabhold workload. **baobab-platform/shared #265 (open) adds `nabhold-backend`** as PROVISIONED with `context:resolve` and `content:entry:resolve` only. Nabhold's server-side client could therefore not be issued `context:resolve` or `content:entry:resolve`, and the registry says the lists are ceilings on what IAM may issue.
 
-### 4.3 The Nabhold repository is unchanged against its §2.2 defect list — `EVIDENCED`
+### 4.3 Nabhold `main` is unchanged against its §2.2 defect list — `EVIDENCED` (but see the unmerged branch below)
 
 | §2.2 item | State on 10 Oct |
 |---|---|
@@ -62,6 +62,8 @@ Status vocabulary follows the masterplan: `EVIDENCED`, `DECLARED`, `PLANNED`, `U
 | Sign-in | Page still states federated identity is not connected |
 | Runtime | Next `15.5.24`, Node `>=22 <23`, pnpm `11.24.0` |
 | Workflows | `ci.yml`, `foundation.yml`, `security.yml` only |
+
+**Unmerged branch with no PR (found later on 10 Oct):** `origin/ccr-0091ad61-xmo5ln` carries 17 commits ahead of `main`, 26 changed files under `src/` (about 2,300 added lines), and is **not** reflected in the table above. By file list, it adds: a Control Plane capability client (`src/lib/control-plane/capability-client.ts`, `resolution.ts`, with tests), a `content.entry.resolve` estate adapter and gateway (`src/integrations/baobab-content/`, with tests), a release-class guard, CSP and security headers, canonical-host handling, an onboarding profile, and G01 evidence and programme documents. Its session code still shows no real OIDC session in the head of `src/lib/auth/session.ts`, and the direct Payload integration files are still present (34 files). I have **not** run its tests or read the adapter in detail, so treat these as `EVIDENCED` for existence only, not for behaviour. Its capability client takes an injected token provider and hard-codes no client id, audience or scope list, so it does not conflict with the workload registered in shared #265.
 
 The 10 most recent open nabhold PRs are all Dependabot (#6–#12, #29–#31; the list was not paged beyond 10), including Next 16, TypeScript 6 and Vitest 5 bumps open since 31 Aug. §G15 step 2 says to decide the Node/Next upgrade deliberately and not to switch dependencies casually during go-live; those PRs should not be merged on green CI alone.
 
@@ -87,7 +89,7 @@ Ordered by dependency. PR ids are the masterplan's where they exist; the two mar
 | 4 | `CMS-CORP-02`: corporate content schemas | baobab-cms | **In review:** baobab-cms #22 (collections and DRAFT starter content) | 3 |
 | 5 | `CMS-EVENT-03`: signed publication and revalidation | baobab-cms | **In review:** baobab-cms #22 (outbox publisher; dispatcher not scheduled anywhere) | 3 |
 | 6 | G02: NABHOLD INTERNAL tenant admitted and ACTIVE under ADR-BCP-026/027; CMS provider registered and bound | baobab-cp | `UNVERIFIED` | re-plan under accepted ADRs |
-| 7 | `NAB-FE-00` / `NAB-CMS-01`: server-only capability client replacing the direct Payload adapter; public pages on contract-backed data | nabhold | not started | 1, 3, 6 |
+| 7 | `NAB-FE-00` / `NAB-CMS-01`: server-only capability client replacing the direct Payload adapter; public pages on contract-backed data | nabhold | **In progress on an unmerged branch with no PR** (`ccr-0091ad61-xmo5ln`: capability client and content adapter exist; page wiring and behaviour not verified) | 1, 3, 6 |
 | 8 | `NAB-PUBLIC-02`, `NAB-CI-01`, `INF-NAB-01`: accessibility/SEO, CI gates, Nabhold and CMS staging deployment | nabhold / infrastructure | not started | 7 |
 
 Items 1–2 are small registry changes in Shared and are the first unblockers. Item 6 is the longest unknown.
