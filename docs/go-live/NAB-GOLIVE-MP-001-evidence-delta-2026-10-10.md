@@ -12,7 +12,7 @@ Status vocabulary follows the masterplan: `EVIDENCED`, `DECLARED`, `PLANNED`, `U
 - Each repository's `origin/main` was fetched on 10 October 2026 and compared with the commit recorded in masterplan §2.1.
 - For R0, the changed contracts, registries and source were **read**, not just counted (sections 3 and 4).
 - For repositories outside R0 (ERP, Subscriptions, Payments, Pulse, Regulations, Trade, IAM) only commit counts and commit subjects were reviewed. **No claim below about those repositories is a verified status.**
-- Open pull requests were listed for `nabhold` only. Open PRs on the other repositories were not reviewed in this pass.
+- Open pull requests were listed for `nabhold` only in the first pass. **Correction (added later on 10 Oct):** open PRs were then also reviewed for shared (none), baobab-cms (#21, #22), baobab-iam (#106), baobab-cp (#306, draft) and infrastructure (Dependabot only). The first version of this document read CMS `main` alone and so wrongly reported the CMS route as not started; sections 4.1 and 5 are corrected accordingly.
 
 ## 2. Repository drift since the §2.1 snapshot
 
@@ -45,13 +45,13 @@ Status vocabulary follows the masterplan: `EVIDENCED`, `DECLARED`, `PLANNED`, `U
 
 ### 4.1 CMS cannot yet satisfy the `content.entry.resolve` contract — `BLOCKED`
 
-1. **No route.** `baobab-cms/.baobab/capability-provider.yaml` still declares the capability as planned/CONTRACTED. Its header states no route accepts `ContentResolveRequest` yet. CMS has had no commits since the snapshot.
+1. **No route on `main`; one is in an open PR.** `baobab-cms/.baobab/capability-provider.yaml` on `main` still declares the capability as planned/CONTRACTED, and CMS `main` has had no commits since the snapshot. **baobab-cms #22 (open, not draft) implements `POST /v1/content/resolve`** (JWKS-verified caller, scope checks, Control Plane context validation, Payload-backed loader, 221 unit tests), the corporate content collections, a Nabhold onboarding script, an outbox-to-revalidation publisher and a reconciliation report. It declares PARTIAL support (repository evidence only), has not run CI on its head, and states that it activates nothing. baobab-cms #21 (open) re-pins consumed Shared contracts and is blocked by 21 npm audit findings.
 2. **Stale contract lock.** `baobab-cms/contracts.lock.yaml` pins Shared commit `b63ce52…` and lists only `capabilities.yaml` and the two schemas. `content/v1/openapi.yaml` is not listed and is newer than the pin.
-3. **CMS is not registered as a context validator.** The contract requires the provider to validate `context_id` through the Control Plane for the actual caller. In Shared's `workload-registry.yaml`, `baobab-cms-workload` has `allowed_audiences: ["baobab-control-plane"]` and `allowed_scopes: ["context:resolve", "provider-migration:task"]`. It has **no** `context:validate` and **no** `validates_audiences`. The scope's own description says it is "currently allocated to ERP and Pulse".
+3. **CMS is not registered as a context validator** (addressed by baobab-platform/shared #265, open, as of 10 Oct). Until that merges, #22's route would have no registered holder of `context:validate`; #22 uses an interim `CMS_CONTEXT_VALIDATOR_TOKEN`. The contract requires the provider to validate `context_id` through the Control Plane for the actual caller. In Shared's `workload-registry.yaml`, `baobab-cms-workload` has `allowed_audiences: ["baobab-control-plane"]` and `allowed_scopes: ["context:resolve", "provider-migration:task"]`. It has **no** `context:validate` and **no** `validates_audiences`. The scope's own description says it is "currently allocated to ERP and Pulse".
 
 ### 4.2 Nabhold has no registered workload identity — `BLOCKED`
 
-`workload-registry.yaml` registers cms, erp, pulse, trade, cp (three), and subscriptions. There is **no** Nabhold workload. Nabhold's server-side client could therefore not be issued `context:resolve` or `content:entry:resolve`, and the registry says the lists are ceilings on what IAM may issue.
+`workload-registry.yaml` on `main` registers cms, erp, pulse, trade, thamani, zuribeans, cp (three), and subscriptions. There is **no** Nabhold workload. **baobab-platform/shared #265 (open) adds `nabhold-backend`** as PROVISIONED with `context:resolve` and `content:entry:resolve` only. Nabhold's server-side client could therefore not be issued `context:resolve` or `content:entry:resolve`, and the registry says the lists are ceilings on what IAM may issue.
 
 ### 4.3 The Nabhold repository is unchanged against its §2.2 defect list — `EVIDENCED`
 
@@ -81,11 +81,11 @@ Ordered by dependency. PR ids are the masterplan's where they exist; the two mar
 
 | # | Work | Repo | Status now | Depends on |
 |---|---|---|---|---|
-| 1 | Register a Nabhold workload (audiences: control-plane, cms; scopes: `context:resolve`, `content:entry:resolve`) — **new** | shared | `BLOCKED` (absent) | G01/G02 decision on tenant identity |
-| 2 | Allocate `context:validate` and `validates_audiences: ["baobab-cms"]` to `baobab-cms-workload`; confirm IAM issuance — **new** | shared / baobab-iam | `BLOCKED` (absent) | — |
-| 3 | `CMS-CONTENT-01`: bump `contracts.lock` to a Shared commit containing `content/v1/openapi.yaml`; implement `POST /v1/content/resolve`; move the capability into `providers[].support` with route and contract tests as evidence | baobab-cms | `PLANNED` | 2 |
-| 4 | `CMS-CORP-02`: corporate content schemas | baobab-cms | `PLANNED` | 3 |
-| 5 | `CMS-EVENT-03`: signed publication and revalidation | baobab-cms | `PLANNED` | 3 |
+| 1 | Register a Nabhold workload (audiences: control-plane, cms; scopes: `context:resolve`, `content:entry:resolve`) — **new** | shared | **In review:** shared #265 (PROVISIONED) | — |
+| 2 | Allocate `context:validate` and `validates_audiences: ["baobab-cms"]` to `baobab-cms-workload`; confirm IAM issuance — **new** | shared / baobab-iam | **In review:** shared #265 (registry only). IAM issuance not started | — |
+| 3 | `CMS-CONTENT-01`: bump `contracts.lock` to a Shared commit containing `content/v1/openapi.yaml`; implement `POST /v1/content/resolve`; move the capability into `providers[].support` with route and contract tests as evidence | baobab-cms | **In review:** baobab-cms #22 (route, PARTIAL declaration). `contracts.lock` bump is #21, blocked by npm audit findings | 2 |
+| 4 | `CMS-CORP-02`: corporate content schemas | baobab-cms | **In review:** baobab-cms #22 (collections and DRAFT starter content) | 3 |
+| 5 | `CMS-EVENT-03`: signed publication and revalidation | baobab-cms | **In review:** baobab-cms #22 (outbox publisher; dispatcher not scheduled anywhere) | 3 |
 | 6 | G02: NABHOLD INTERNAL tenant admitted and ACTIVE under ADR-BCP-026/027; CMS provider registered and bound | baobab-cp | `UNVERIFIED` | re-plan under accepted ADRs |
 | 7 | `NAB-FE-00` / `NAB-CMS-01`: server-only capability client replacing the direct Payload adapter; public pages on contract-backed data | nabhold | not started | 1, 3, 6 |
 | 8 | `NAB-PUBLIC-02`, `NAB-CI-01`, `INF-NAB-01`: accessibility/SEO, CI gates, Nabhold and CMS staging deployment | nabhold / infrastructure | not started | 7 |
