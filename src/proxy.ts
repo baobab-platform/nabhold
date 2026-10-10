@@ -14,7 +14,7 @@ import {
  * *request* so Next.js can read the nonce and stamp it on its own scripts
  * when it renders a dynamic page.
  */
-export function middleware(request: NextRequest) {
+export function proxy(request: NextRequest) {
   const redirectTo = canonicalRedirectUrl(
     request.headers.get("x-forwarded-host") ?? request.headers.get("host"),
     `${request.nextUrl.pathname}${request.nextUrl.search}`,

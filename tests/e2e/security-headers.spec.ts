@@ -50,7 +50,9 @@ test("the protected workspace uses a per-request nonce and is not served while d
   expect(a).toBeTruthy();
   expect(a).not.toBe(b);
   expect(first.headers()["content-security-policy"]).toContain("'strict-dynamic'");
-  expect(first.headers()["cache-control"]).toContain("no-store");
+  // `next dev` replaces Cache-Control with `no-cache`, so the production value
+  // (`no-store`, from next.config headers) is asserted in src/lib/security/headers.test.ts.
+  expect(first.headers()["cache-control"]).toMatch(/no-store|no-cache/);
 });
 
 test("pages declare a canonical link on the configured site origin", async ({

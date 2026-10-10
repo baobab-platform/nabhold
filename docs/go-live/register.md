@@ -88,8 +88,8 @@ Default until accepted is the masterplan §12.2 default. Record decision referen
 
 | Item | Gate |
 |---|---|
-| Content-Security-Policy: DONE (`src/lib/security/csp.ts`, `src/middleware.ts`). Strict nonce on the workspace; public pages keep `'unsafe-inline'` scripts because they are prerendered and cached. Open: move public pages to a nonce or hash policy if they become dynamic; add a violation-report endpoint; `/favicon.ico` is missing (404) | G16 |
-| Canonical host: DECIDED, `nabhold.com` (sponsor, 8 Oct 2026). `www.nabhold.com` redirects with a 308 in `src/middleware.ts` when `NABHOLD_CANONICAL_HOST=nabhold.com`; pages emit canonical links. Open: perform the same redirect at DNS/CDN (the app redirect is a fallback), confirm control of both domains, confirm the Docker image build is exercised in CI (not run in this environment) | G16, D-14 |
+| Content-Security-Policy: DONE (`src/lib/security/csp.ts`, `src/proxy.ts`). Strict nonce on the workspace; public pages keep `'unsafe-inline'` scripts because they are prerendered and cached. Open: move public pages to a nonce or hash policy if they become dynamic; add a violation-report endpoint; `/favicon.ico` is missing (404) | G16 |
+| Canonical host: DECIDED, `nabhold.com` (sponsor, 8 Oct 2026). `www.nabhold.com` redirects with a 308 in `src/proxy.ts` when `NABHOLD_CANONICAL_HOST=nabhold.com`; pages emit canonical links. Open: perform the same redirect at DNS/CDN (the app redirect is a fallback), confirm control of both domains, confirm the Docker image build is exercised in CI (not run in this environment) | G16, D-14 |
 
 ## 4. First ten implementation PRs (masterplan §15.2)
 
