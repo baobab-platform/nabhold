@@ -7,7 +7,10 @@
     "Input to the Control Plane INTERNAL admission and TenantOnboardingRequest (ADR-BCP-017/018). It is not the request itself and proves nothing about CP state.",
     "Every null is unverified and must be filled from an authoritative source with an evidence reference; none may be guessed (masterplan G01, D-01).",
     "Approved is not provisioned, provisioned is not READY, and READY is not ACTIVE.",
-    "approvals names a person for each role, as instructed by the programme sponsor on 8 October 2026. They must be mapped to canonical Control Plane Principals with the correct authority before submission; a name is not a Principal."
+    "approvals names a person for each role, as instructed by the programme sponsor on 8 October 2026. They must be mapped to canonical Control Plane Principals with the correct authority before submission; a name is not a Principal.",
+    "Organisation-first (ADR-BCP-027, accepted): the tenant's identity is its PRIMARY Organisation, which the Control Plane mints or recognises; first_party_id is the Shared registry reference, not a tenant key and not proof of incorporation. The CIPC registration here is a recorded claim with an evidence pointer until the Control Plane holds an independently verified case.",
+    "Founding-group documentary deferral (ADR-BCP-026, amended 9 October 2026 to 24 calendar months, one-time, named requirements only, no statutory or provider waiver) is NOT requested by this profile. The runtime for it (PEO-02) is not implemented in the Control Plane, so no deferral can be recorded or relied on.",
+    "Nabhold acting as legal actor for ZuriBeans or Equator & Estate Co. is a separate, scoped mandate (LA-04) and is not part of this profile."
   ],
   "organisation": {
     "first_party_id": "NABHOLD",
