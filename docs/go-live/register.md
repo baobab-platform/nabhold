@@ -1,0 +1,177 @@
+# Go-live register
+
+Source: NAB-GOLIVE-MP-001 v1.0, baseline 8 October 2026. Status words follow the masterplan convention: `EVIDENCED`, `DECLARED`, `PLANNED`, `UNVERIFIED`, `BLOCKED`. Never mark a row `PASS` without an evidence pointer ([evidence/README.md](evidence/README.md)).
+
+## 1. Gates
+
+Owner columns are roles from the masterplan; no individual has been appointed.
+
+| Gate | Scope | Releases | Status | Blocked by | Repo work available without external input |
+|---|---|---|---|---|---|
+| G00 | Baseline, traceability, governance | all | IN PROGRESS | Review body not named | Registers, evidence index (this directory) |
+| G01 | Legal authority, autonomy, IP | all | PARTIAL | D-01 (ownership), D-02, D-03; sign-off | Name, number, jurisdiction recorded from the CIPC certificate ([evidence](evidence/G01/production/2026-01-16-cipc-registration.md)) |
+| G02 | INTERNAL admission, tenant, DigitalEstate | R1 to R3 | BLOCKED | G01 sign-off, mapping Brenda Adams (requester) and Brian Nabusiu (authoriser) to CP Principals, CP runtime access | Input profile and readiness check (done) |
+| G03 | Shared capability census and contracts | all | IN PROGRESS | Shared stewards | Demand census (done); Shared ADRs and contracts remain |
+| G04 | IAM, OIDC/BFF, grants | R1 to R3 | BLOCKED | B-02, ADR-IAM-0033 completion | Token provider seam in `CapabilityClient` (done) |
+| G05 | CMS `content.entry.resolve` | R0 | BLOCKED | B-03, G03 | Gateway swap after CMS route exists |
+| G06 | ERP finance baseline | R1 to R3 | BLOCKED | B-04, G01, G03 | None |
+| G07 | HR system of record | R1 | BLOCKED | B-06, D-09 | None |
+| G08 | ZA payroll | R1 | BLOCKED | B-05, D-10 | None |
+| G09 | Procurement, assets, expenses | R1 | BLOCKED | B-07, G06 | None |
+| G10 | SaaS billing | R2 | BLOCKED | B-08, D-05 | None |
+| G11 | Production payments | R2 | BLOCKED | B-09, B-10 | None |
+| G12 | Group reporting | R3 | BLOCKED | B-11, B-18, D-07, D-08 | None |
+| G13 | Governance, records, risk | R3 | BLOCKED | B-12, D-13 | None |
+| G14 | Pulse and Regulations | R3 | BLOCKED | B-13, B-14 | Prototype fenced to R3 and labelled advisory (done) |
+| G15 | Frontend and composition | all | IN PROGRESS | Per-feature contracts | Release-class guard, `CapabilityClient` (done) |
+| G16 | Infrastructure and certification | all | BLOCKED | B-15, B-16, D-14 | None |
+| G17 | Pilots and acceptance | per release | NOT STARTED | G16 | None |
+| G18 | Production activation | per release | NOT STARTED | Signed G17 GO | None |
+
+## 2. Blockers (8 October source audit, not live telemetry)
+
+| ID | Blocker | Release | Next action |
+|---|---|---|---|
+| B-01 | Shared Nabhold registry still has jurisdiction and registration null; its legal name (`Nabhold Group Africa`) lacks `(Pty) Ltd`. Facts are now verified in this repo. | all | Shared registry PR (`SH-NAB-LEGAL-01`) with the evidence reference |
+| B-02 | No real executive authentication; preview session only | R1 to R3 | Complete ADR-IAM-0033; OIDC/BFF client |
+| B-03 | `content.entry.resolve` is CONTRACTED only | R0 | CMS route and provider declaration |
+| B-04 | Corporate GL, AP and AR not available as Baobab capabilities | R1 to R3 | FinanceBaseline and iDempiere adapters |
+| B-05 | Payroll not implemented. Provider being appointed (sponsor, 8 Oct 2026). Employer PAYE, SDL and UIF registrations pending | R1 | Appoint provider; obtain registration numbers; confirm COIDA |
+| B-06 | Employment system of record undecided | R1 | Domain ADR |
+| B-07 | Procurement and assets proposed only | R1 | Contracts and adapters |
+| B-08 | Subscriptions has a simulated provider only | R2 | Kill Bill adapter and certification |
+| B-09 | Payments has a sandbox provider only | R2 | Real PSP integration |
+| B-10 | Billing, payment and ERP reconciliation unproven | R2 | Signed reconciliation journey |
+| B-11 | No group reporting consent or consolidation | R3 | CP portfolio projection, ERP policy |
+| B-12 | No governance or DMS provider | R3 | Provider selection |
+| B-13 | Pulse `/v1/executive-overview` is not canonical | R3 | Use canonical keys or contract a new capability |
+| B-14 | Regulations has no verified ZA pack | regulatory features | Source governance |
+| B-15 | No AWS account details exist yet (confirmed by the sponsor, 8 Oct 2026). Account, region, state bucket and OIDC roles are all unprovided. | all deployed | Sponsor decides the account owner (D-14); infrastructure owner supplies verified values. Nothing may be filled with fixture values. |
+| B-16 | Declared support is not an active Nabhold binding | all | EA-09 and CP readout |
+| B-17 | Node 22 and Next 15 versus wider Node 24 standard | CI, deploy | Tested upgrade or exception ADR |
+| B-18 | Subsidiary legal registration and data consent unverified | R3 | Legal documents and signed agreements |
+
+## 3. Decisions that cannot be assumed
+
+Default until accepted is the masterplan §12.2 default. Record decision reference, effective date, approving role, evidence, systems affected and rollback for each.
+
+| ID | Decision | Owner role | State |
+|---|---|---|---|
+| D-01 | Exact Nabhold legal registration and beneficial owners | Company secretary (interim: Brenda Adams, appointment not yet formalised) | PARTIAL: registration verified 8 Oct 2026; beneficial owners open. Interim roles per sponsor: Brenda Adams, Company Secretary; Brian James Nabusiu, incorporator and director (confirmed on the CIPC certificate); Brenda Adams' Company Secretary appointment is yet to be formalised |
+| D-02 | Equity and control percentages for ZuriBeans, Thamani, Equator | Legal | OPEN |
+| D-03 | Platform IP owner, licences, assignments | Legal | OPEN |
+| D-04 | Subscription SaaS only, or also consulting and support | Board | OPEN |
+| D-05 | First pricing, billing period, currency, trials | Commercial and finance | OPEN |
+| D-06 | Customer geography, VAT and export treatment, merchant onboarding | Tax and payments | PARTIAL: Nabhold is not VAT-registered yet (sponsor-stated; tax reference number 9470182230, unevidenced). Customer geography, export treatment and merchant onboarding open |
+| D-07 | Which subsidiary data group officers may view, and why | Boards, legal, privacy | OPEN |
+| D-08 | Consolidation standard and accountant sign-off | Finance | OPEN |
+| D-09 | HR provider and workspace boundary | HR and architecture | DIRECTION GIVEN, not decided: sponsor intends HR to be consumed from the ERP engine (see section 5). Needs an ERP ADR and a Shared contract. |
+| D-10 | Payroll provider, statutory scope, bank release | HR, payroll, finance | NEEDED FROM 1 MARCH 2027 (sponsor); headcount 10; pay day the 25th (20th in December). DECIDED 8 Oct 2026: provider first (option C, then A); provider appointment in progress. Original direction: sponsor intends payroll to be consumed from the ERP engine. Whether the ERP engine hosts statutory calculation or fronts an external certified ZA provider is open. |
+| D-11 | Procurement authority and thresholds | Finance and legal | OPEN |
+| D-12 | Capitalisation policy and custody owner | Finance | OPEN |
+| D-13 | Governance and DMS product, retention | Company secretary, privacy | OPEN |
+| D-14 | Production AWS account, residency, DR | Infrastructure, security, legal | OPEN |
+| D-15 | Rollout scope per release and beta user list | Product sponsor | OPEN |
+| D-16 | SLOs, RTO/RPO, support, on-call | SRE and business | OPEN |
+| D-17 | Statutory interpretation (VAT, PAYE, COIDA, POPIA) | Qualified professionals | OPEN |
+| D-18 | INTERNAL status of a subsidiary after sale | CP, governance, legal | OPEN |
+
+## 3a. Nabhold ADRs
+
+| ADR | State |
+|---|---|
+| ADR-NAB-0012 Operating model | Proposed, blocked on D-01 to D-03, D-07, D-18 |
+| ADR-NAB-0013 Capability consumption and rollout classification | Proposed, implemented in code, awaiting architecture review |
+| ADR-NAB-0014 to 0022 | Not started (masterplan §9.2) |
+
+## 3b. Open engineering items
+
+| Item | Gate |
+|---|---|
+| Content-Security-Policy: DONE (`src/lib/security/csp.ts`, `src/proxy.ts`). Strict nonce on the workspace; public pages keep `'unsafe-inline'` scripts because they are prerendered and cached. Open: move public pages to a nonce or hash policy if they become dynamic; add a violation-report endpoint; `/favicon.ico` is missing (404) | G16 |
+| Canonical host: DECIDED, `nabhold.com` (sponsor, 8 Oct 2026). `www.nabhold.com` redirects with a 308 in `src/proxy.ts` when `NABHOLD_CANONICAL_HOST=nabhold.com`; pages emit canonical links. Open: perform the same redirect at DNS/CDN (the app redirect is a fallback), confirm control of both domains, confirm the Docker image build is exercised in CI (not run in this environment) | G16, D-14 |
+
+## 4. First ten implementation PRs (masterplan §15.2)
+
+| # | Work item | Repo | State |
+|---|---|---|---|
+| 01 | Adopt baseline, register and evidence policy | `nabhold` | DONE in this change (acceptance of the masterplan itself remains a governance decision) |
+| 02 | First-party registry reconciliation | `shared` | READY to prepare; needs company-secretary sign-off |
+| 03 | INTERNAL tenant and estate acceptance fixture | `baobab-cp` | BLOCKED on G01 |
+| 04 | Capability demand census | `nabhold` | DONE: [capability-demand-census.md](capability-demand-census.md) |
+| 05 | Finance, HR, payroll, procurement contracts | `shared` | NOT STARTED |
+| 06 | OIDC confidential/BFF pilot | `baobab-iam`, `nabhold` | BLOCKED on G02 |
+| 07 | CMS canonical resolve route | `baobab-cms` | NOT STARTED |
+| 08 | Nabhold CMS capability adapter | `nabhold` | BLOCKED on 07 |
+| 09 | ERP FinanceBaseline authority | `baobab-erp` | Scoped in [erp-scope.md](erp-scope.md) (phases E0 to E2). Needs a named finance approver for the Nabhold baseline and a live iDempiere. G01 is no longer the blocker. |
+| 10 | Corporate financial read | `shared`, `baobab-erp`, `nabhold` | BLOCKED on 09 |
+
+## 5. Engines Nabhold will consume (sponsor direction, 8 October 2026)
+
+The sponsor states that Nabhold will consume capabilities from six Baobab engines (IAM, CMS, ERP, Pulse, Subscriptions and Payments), including finance, accounts, HR and payroll, with further capabilities to be identified over time. Subscriptions and Payments were added on 8 October 2026, after the first four.
+
+| Engine | Repo | Capability areas named | Where it stands (masterplan audit, 8 Oct 2026) |
+|---|---|---|---|
+| IAM | `baobab-iam` | sign-in, workload tokens, session and leaver control | `identity.authentication.perform` and `identity.workload-token.issue` PARTIAL |
+| CMS | `baobab-cms` | public corporate content | `content.entry.resolve` CONTRACTED, no HTTP surface |
+| ERP | `baobab-erp` | finance, accounts, HR, payroll | corporate GL, AP, AR, procurement, assets, workforce and payroll are not implemented as Baobab capabilities |
+| Pulse | `baobab-pulse` | evidence, research, executive intelligence | `intelligence.evidence.search` and `intelligence.research-mission.manage` IMPLEMENTED in source; binding unverified |
+| Subscriptions | `baobab-subscriptions` | Baobab plans, subscriptions, usage metering, invoices | `billing.subscription.manage` and `billing.usage.record` IMPLEMENTED by a simulated provider only (`production_permitted: false`) |
+| Payments | `baobab-payments` | collections, refunds, settlement | `payment.intent.*`, `payment.payment.authorize/capture`, `payment.refund.create` IMPLEMENTED by a sandbox provider only |
+
+Consequences recorded here, none of them decisions:
+
+- HR and payroll are now expected to be ERP-engine work. That changes the masterplan's open provider question (B-05, B-06) into ERP scope, but the blockers remain: the ERP engine has no workforce or payroll solution today, and South African statutory payroll still needs practitioner sign-off. Any external payroll vendor would sit behind the ERP engine's contract.
+- Subscriptions and Payments are now named, which confirms the masterplan's R2 assumption. Nothing else changes: both engines have only simulated or sandbox providers, so R2 stays disabled and real money may not move until a production provider (Kill Bill adapter, real PSP and merchant) is certified and bound (B-08, B-09, B-10, G10, G11). Regulations and Trade are not named; their rows and the R3 dependencies on them are unchanged.
+- The onboarding profile still requests only R0 and R1 capabilities. The masterplan (G02) allows later expansion through governed changesets, so Subscriptions and Payments keys are added then, not now.
+- "Others to be identified" is handled by the census: add a row, give it a status, and take it through G03. No capability becomes consumable because it is named.
+- The ERP work needed for this direction is scoped in [erp-scope.md](erp-scope.md). ERP #58 has since merged, so its provider declaration is on ERP `main`.
+- Each capability still needs a canonical Shared key, an ERP (or other engine) implementation, certification and an active Control Plane binding before the estate may call it.
+
+## 6. Decisions received on 8 October 2026
+
+| Topic | Decision | Recorded in |
+|---|---|---|
+| HR and payroll start | From the financial year starting 1 March 2027 | `erp-scope.md` sections 1a and 5 |
+| Accounting baseline approver | Brian Nabusiu | `onboarding/nabhold-finance-baseline-input.json` |
+| VAT | Not registered; tax reference number 9470182230 (unevidenced) | same file; D-06 |
+| Subscriptions-to-ERP hand-off | `baobab-cp` owns authority and routing per ADR-BCP-007; the invoice moves Subscriptions to ERP as an event, not through Control Plane | `erp-scope.md` section 9 |
+| Headcount | 10 | `erp-scope.md` section 5 |
+| Payroll approach | Provider first; provider being appointed | `erp-scope.md` section 5; D-10 |
+| Weekend and public-holiday pay dates | Preceding working day. 2027/28 moves: 23 Apr, 23 Jul, 23 Sep | `erp-scope.md` section 5 |
+| Employer and start date | Nabhold Group Africa (Pty) Ltd; all 10 employees start 1 March 2027 | `erp-scope.md` section 1a |
+| Employer registrations | Applied to SARS and Dept of Employment and Labour; PAYE, SDL, UIF awaited. COIDA not mentioned | `erp-scope.md` section 5 |
+| Pay calendar | 25th monthly; 20th in December. First pay run 25 March 2027 | `erp-scope.md` section 5 |
+| Canonical host | `nabhold.com` | section 3b |
+| Engines consumed | IAM, CMS, ERP, Pulse, Subscriptions, Payments | section 5 |
+
+SH-NAB-FIN-01: ADR-SHARED-033 (Proposed) drafted on a local `shared` branch `sh-nab-fin-01`; not yet pushed or opened as a PR.
+
+## 7. CMS track (G05)
+
+Updated 9 October 2026. "Code" means implemented and unit-tested in a repository; nothing below has run against a live Control Plane, identity provider or deployed CMS, and nothing is activated. `baobab-cms` work is on one open pull request, [baobab-cms#22](https://github.com/baobab-platform/baobab-cms/pull/22), not yet merged, and its CI has not been run.
+
+| # | Item | Repo | State |
+|---|---|---|---|
+| 1 | `content.entry.resolve` contract handler | `baobab-cms` | DONE in code (PR #22) |
+| 2 | Shared OpenAPI for content/v1: route, authentication scheme, scopes, error responses | `shared` | DONE: [shared#254](https://github.com/baobab-platform/shared/pull/254) merged. Tenant authority is a Control Plane `context_id`; two scopes registered, granted to no workload |
+| 3 | Route adapter and Payload-backed loader | `baobab-cms` | DONE in code (PR #22): `POST /v1/content/resolve`, caller token verification, Control Plane context validation. Fails closed unless configured. Provider declaration is PARTIAL, not bound or certified. A tenant with no default legal entity would not resolve yet (Control Plane LA-05) |
+| 4 | Corporate content collections for the Nabhold site | `baobab-cms` | DONE in code (PR #22): `portfolio-companies`, `sectors`, `insights` and the five singleton keys (`home`, `navigation`, `footer`, `site-settings`, `group-profile`), with migrations verified on a throwaway PostgreSQL 16. Seeds are DRAFT only. REMAINING: a data round-trip against a live deployment, the estate's `marketRefs`, and approved text |
+| 5 | Signed, idempotent publication event and revalidation compatible with `/api/revalidate` | `baobab-cms`, `nabhold` | DONE in code on the CMS side (PR #22): outbox dispatcher and signed revalidation publisher. NOT deployed; the shared secret and URL are unset |
+| 6 | Estate-side capability adapter behind the content gateway, switched by flag, Payload gateway kept as the default | `nabhold` | DONE in code (this change): `src/integrations/baobab-content`. Off unless `NABHOLD_CONTENT_SOURCE=capability` and fully configured. Covers the five singleton keys; portfolio, sectors and insights stay on Payload until they have resolve keys. When the capability cannot answer, the estate serves its own defaults, never Payload for the same key. Needs, before it can be switched on: a Control Plane tenant, a RUNTIME platform context, IAM-issued workload tokens (two scopes), and an explicit service-name to origin map |
+| 7 | Editorial acceptance of public content, legal pages (privacy, terms) | business | NOT STARTED. Needs approved text |
+
+## 8. Platform dependency update, 10 October 2026
+
+Read from merged pull requests and runbooks in `baobab-cp`, `shared` and `baobab-iam` on 10 October 2026. These are source facts, not live telemetry. Nothing below has been exercised against a deployed environment, and every Control Plane route named is off by default and hard-disabled in production.
+
+| Area | What is merged | What it means for Nabhold | State |
+|---|---|---|---|
+| Organisation-first tenancy | Shared LA-01; Control Plane LA-02 and LA-03 (`baobab-cp#293`, `#294`) | A tenant's identity is its PRIMARY Organisation; `legal_entity_id` is optional. The v2 admission and registration routes exist but are disabled by default | Code merged, not enabled. No Nabhold Organisation, tenant or admission exists |
+| Legal-actor mandates | LA-04A to LA-04D (`#295`, `#296`, `#297`, `#298`): proposal, independent decision, activation, suspension, revocation | Needed before Nabhold can act as legal actor for ZuriBeans or Equator & Estate Co. (out of scope for this register's Nabhold-only track). Activation needs a distinct third human and independently verified legal-entity evidence | Code merged, staging only, hard-disabled in production. No mandate exists |
+| Legal-actor assessment | LA-05A (`#299`), LA-05G/H (`#262`, `#302`): a private `assess` read for Trade, ERP, Payments and Trade Docs; four staging-only assessor identities that hold no authority | Governs legal-actor checks for trading and payment engines. Nabhold does not trade goods (G01 task 4), so this is not on the Nabhold critical path | Code merged, staging only. Consumer enforcement (LA-05B to F) not accepted |
+| Context validation | `POST /v1/platform-context/validate` returns `organisation_id` and `market_id` for a RUNTIME context and states no default legal entity requirement in the handler | The CMS content route can read the PRIMARY Organisation from it. Whether CP can *issue* a RUNTIME context for a tenant with no default legal entity was not checked and is not assumed | Handler read; issuance UNVERIFIED |
+| Founding-group documentary deferral | ADR-BCP-026 amended to **24 calendar months** (`baobab-cp#304`); Shared contract updated (`shared#263`); CP pin refreshed (`#305`) | Earlier notes in this repo that implied 12 months are superseded. The runtime (expiry, reviews at 6/12/18/24 months, restrictions) is **not implemented**. No deferral can be recorded or relied on | Contract merged; runtime NOT STARTED |
+| IAM | `baobab-iam#107` merged: an unassigned `legal-actor:assess` scope definition. `#106` open: Control Plane dispatch gate for native and workload operations | No change to G04: the Nabhold workload and human clients do not exist, and IAM declarations remain PARTIAL | Unchanged: BLOCKED |
+
+What this does not change: G01 sign-off, the mapping of the named requester and authoriser to Control Plane Principals, Control Plane runtime access, IAM-issued tokens and the finance, HR and payroll decisions all remain open. They are decisions and access for people to provide, not repository work.

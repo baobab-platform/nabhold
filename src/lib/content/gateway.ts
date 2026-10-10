@@ -54,7 +54,13 @@ export async function getContentGateway(): Promise<CorporateContentGateway> {
     const { createPayloadContentGateway } = await import(
       "@/integrations/payload"
     );
-    cachedGateway = createPayloadContentGateway();
+    const payloadGateway = createPayloadContentGateway();
+    // Opt-in: canonical content.entry.resolve for the five singleton keys. Anything not fully configured stays on Payload.
+    const { createCapabilityContentGatewayFromEnv } = await import(
+      "@/integrations/baobab-content"
+    );
+    cachedGateway =
+      createCapabilityContentGatewayFromEnv(payloadGateway) ?? payloadGateway;
   }
 
   return cachedGateway;
