@@ -26,7 +26,7 @@ export type ContentVisibility =
 /**
  * Canonical Baobab context carried on every content record. These fields
  * are references into Baobab's own canonical registries (see
- * `nabhold/shared/contracts`); they are never redefined here.
+ * `baobab-platform/shared/contracts`); they are never redefined here.
  */
 export interface CanonicalContext {
   /** Opaque canonical identifier minted by its authoritative domain. */

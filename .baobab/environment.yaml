@@ -54,5 +54,5 @@ validation:
 
 notes:
   - "GitHub Codespaces and local Dev Containers use ghcr.io/baobab-platform/baobab-dev:1.4.4-frontend."
-  - "Browser-dependent CI uses the separately published 1.4.2-frontend-e2e profile."
+  - "Browser-dependent CI uses the separately published 1.4.4-frontend-e2e profile."
   - "This repository consumes Baobab capabilities through APIs and canonical contracts; it never accesses Baobab-owned databases."

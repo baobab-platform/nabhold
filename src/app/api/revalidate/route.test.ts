@@ -74,9 +74,9 @@ describe("POST /api/revalidate", () => {
       "content:portfolio:zuribeans",
       "content:homepage",
     ]);
-    expect(revalidateTag).toHaveBeenCalledWith("content:portfolio");
-    expect(revalidateTag).toHaveBeenCalledWith("content:portfolio:zuribeans");
-    expect(revalidateTag).toHaveBeenCalledWith("content:homepage");
+    expect(revalidateTag).toHaveBeenCalledWith("content:portfolio", { expire: 0 });
+    expect(revalidateTag).toHaveBeenCalledWith("content:portfolio:zuribeans", { expire: 0 });
+    expect(revalidateTag).toHaveBeenCalledWith("content:homepage", { expire: 0 });
   });
 
   it("revalidates a global content key", async () => {
