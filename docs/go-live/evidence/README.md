@@ -32,4 +32,10 @@ Redact PII, tokens and payroll data. Do not copy confidential records into GitHu
 
 ## Records
 
-None yet. No gate has accepted evidence.
+None accepted yet. No gate has accepted evidence.
+
+Recorded and awaiting reviewer sign-off (not accepted):
+
+| Gate | Record | Status |
+|---|---|---|
+| G01 | [`G01/production/2026-01-16-cipc-registration.md`](G01/production/2026-01-16-cipc-registration.md): CIPC registration certificate facts for Nabhold Group Africa | Sign-off PENDING |
