@@ -9,6 +9,9 @@ RUN pnpm install --frozen-lockfile
 FROM dependencies AS build
 COPY . .
 RUN pnpm build
+# Ship only production dependencies: lint, test and type-check tooling must not
+# reach the runtime image (and its vulnerability surface).
+RUN pnpm prune --prod
 FROM base AS runtime
 ARG VERSION=0.0.0-dev
 ARG REVISION=unknown
