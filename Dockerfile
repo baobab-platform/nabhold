@@ -1,4 +1,4 @@
-FROM node:22-alpine AS base
+FROM node:22.23.3-alpine3.24 AS base
 ENV PNPM_HOME=/pnpm
 ENV PATH=$PNPM_HOME:$PATH
 RUN corepack enable
@@ -9,6 +9,9 @@ RUN pnpm install --frozen-lockfile
 FROM dependencies AS build
 COPY . .
 RUN pnpm build
+# Ship only production dependencies: lint, test and type-check tooling must not
+# reach the runtime image (and its vulnerability surface).
+RUN pnpm prune --prod
 FROM base AS runtime
 ARG VERSION=0.0.0-dev
 ARG REVISION=unknown

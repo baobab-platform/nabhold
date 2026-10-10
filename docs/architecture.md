@@ -22,7 +22,7 @@ CorporateContentGateway        src/lib/content         (the port)
 PayloadCorporateContentGateway src/integrations/payload (the adapter)
         |
         v
-Payload REST API (nabhold/baobab-cms, headless, server-only)
+Payload REST API (baobab-platform/baobab-cms, headless, server-only)
 ```
 
 Payload CMS is the authoritative corporate editorial content engine
