@@ -1,6 +1,6 @@
 # Deployment contract
 
-The Node.js 22 Next.js service listens on port 3000 and exposes `GET /api/health`. Infrastructure belongs to `nabhold/infrastructure`.
+The Node.js 22 Next.js service listens on port 3000 and exposes `GET /api/health`. Infrastructure belongs to `baobab-platform/infrastructure`.
 
 | Variable | Exposure | Purpose |
 | --- | --- | --- |
@@ -10,7 +10,7 @@ The Node.js 22 Next.js service listens on port 3000 and exposes `GET /api/health
 | `BAOBAB_PULSE_TIMEOUT_MS` | Server | Positive request timeout in milliseconds; defaults to 5000 |
 | `BAOBAB_CONTROL_PLANE_API_URL` | Server | Future identity API |
 | `NABHOLD_DASHBOARD_PREVIEW` | Server | Local preview only; rejected when `NODE_ENV=production` |
-| `PAYLOAD_BASE_URL` | Server | Headless Payload (`nabhold/baobab-cms`) origin. Absent means "content unavailable," not an error. |
+| `PAYLOAD_BASE_URL` | Server | Headless Payload (`baobab-platform/baobab-cms`) origin. Absent means "content unavailable," not an error. |
 | `PAYLOAD_API_TOKEN` | Server secret | Payload REST credential. Never exposed via `NEXT_PUBLIC_*`. |
 | `PAYLOAD_REVALIDATE_SECRET` | Server secret | Bearer token required by `POST /api/revalidate`. Endpoint returns 503 while unset. |
 | `PAYLOAD_TIMEOUT_MS` | Server | Positive request timeout in milliseconds; defaults to 5000 |

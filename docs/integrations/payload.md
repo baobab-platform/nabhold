@@ -22,7 +22,7 @@ queries/*  →  transport.ts (fetch, timeout, auth)  →  Payload REST API
 dto/* (Zod validation)  →  mappers/*  →  src/lib/content/types.ts models
 ```
 
-## Current state of `nabhold/baobab-cms`
+## Current state of `baobab-platform/baobab-cms`
 
 At the time of this integration, `baobab-cms` is a generic, multi-tenant
 Baobab content engine, not yet a Nabhold-specific corporate CMS:
@@ -107,7 +107,11 @@ Payload (baobab-cms)
   |
   |  canonical content lifecycle event
   |  com.nabhold.content.{created,updated,published,unpublished,archived}.v1
-  |  (nabhold/shared event envelope — see contracts/events/v1)
+  |  (baobab-platform/shared event envelope — see contracts/events/v1)
+  |  NOTE: proposed name only. Shared's event registry does not yet register
+  |  content lifecycle events, and platform event types use the
+  |  com.baobab-platform.* namespace; the final type must be registered in
+  |  baobab-platform/shared before baobab-cms emits it.
   v
 Outbox dispatcher (baobab-cms, not yet wired to an outbound webhook)
   |
@@ -180,7 +184,7 @@ inside either adapter.
   origin (`resolveCanonicalOverride`) before use; an off-estate value from a
   compromised or misconfigured CMS editor is silently ignored, not trusted.
 
-## Required follow-up in `nabhold/baobab-cms`
+## Required follow-up in `baobab-platform/baobab-cms`
 
 Not implemented here — this repository does not modify other repositories:
 

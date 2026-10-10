@@ -4,7 +4,7 @@ The corporate frontend for Nabhold Group Africa: an institutional public presenc
 
 ## GitHub Codespaces
 
-Choose **Code → Codespaces → Create codespace on main**. The repository uses the pinned `baobab-dev` v1.2.6 `frontend` profile, installs the locked pnpm dependencies, and forwards the Next.js development server privately on port 3000.
+Choose **Code → Codespaces → Create codespace on main**. The repository uses the pinned `baobab-dev` 1.4.4 `frontend` profile, installs the locked pnpm dependencies, and forwards the Next.js development server privately on port 3000.
 
 After the Codespace is ready:
 

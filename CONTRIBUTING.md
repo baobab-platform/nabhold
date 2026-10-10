@@ -37,4 +37,4 @@ pnpm test:e2e
 4. Use conventional commit prefixes such as `feat:`, `fix:`, `docs:`, `test:`, and `chore:`.
 5. Complete the pull-request checklist and wait for required checks.
 
-Contract changes must be proposed in `nabhold/shared` first. Infrastructure changes belong in `nabhold/infrastructure`.
+Contract changes must be proposed in `baobab-platform/shared` first. Infrastructure changes belong in `baobab-platform/infrastructure`.
