@@ -1,0 +1,60 @@
+"use client"
+
+import * as React from "react"
+import Link from "next/link"
+import { MenuIcon } from "lucide-react"
+import { Button } from "@/components/ui/button"
+import {
+  Sheet,
+  SheetContent,
+  SheetHeader,
+  SheetTitle,
+  SheetTrigger,
+} from "@/components/ui/sheet"
+
+type NavItem = { label: string; href: string }
+
+export function MobileNav({
+  items,
+  portalHref = "/sign-in",
+}: {
+  items: NavItem[]
+  portalHref?: string
+}) {
+  const [open, setOpen] = React.useState(false)
+
+  return (
+    <Sheet open={open} onOpenChange={setOpen}>
+      <SheetTrigger
+        className="inline-flex size-9 items-center justify-center rounded-xl border border-border md:hidden"
+        aria-label="Open menu"
+      >
+        <MenuIcon className="size-5" />
+      </SheetTrigger>
+      <SheetContent side="right" className="w-[min(100%,20rem)]">
+        <SheetHeader>
+          <SheetTitle className="font-serif">Nabhold</SheetTitle>
+        </SheetHeader>
+        <nav aria-label="Mobile primary" className="mt-6 grid gap-1">
+          {items.map((item) => (
+            <Link
+              key={item.href}
+              href={item.href}
+              className="rounded-xl px-3 py-3 text-sm font-semibold hover:bg-muted"
+              onClick={() => setOpen(false)}
+            >
+              {item.label}
+            </Link>
+          ))}
+          <Link
+            href={portalHref}
+            onClick={() => setOpen(false)}
+            className="mt-4 rounded-xl bg-primary px-3 py-3 text-center text-sm font-bold text-primary-foreground"
+          >
+            Executive portal
+          </Link>
+        </nav>
+      </SheetContent>
+    </Sheet>
+  )
+}
