@@ -11,7 +11,7 @@ import {
   SheetTrigger,
 } from "@/components/ui/sheet"
 
-type NavItem = { label: string; href: string }
+type NavItem = { label: string; href: string; children?: { label: string; href: string }[] }
 
 export function MobileNav({
   items,
@@ -25,7 +25,7 @@ export function MobileNav({
   return (
     <Sheet open={open} onOpenChange={setOpen}>
       <SheetTrigger
-        className="inline-flex size-9 items-center justify-center rounded-xl border border-border md:hidden"
+        className="inline-flex size-9 items-center justify-center rounded-xl border border-border lg:hidden"
         aria-label="Open menu"
       >
         <MenuIcon className="size-5" />
@@ -44,6 +44,7 @@ export function MobileNav({
             >
               {item.label}
             </Link>
+            {item.children?.length ? <div className="mb-3 ml-4 grid gap-1 border-l border-border pl-3">{item.children.filter(child => child.href !== item.href).map(child => <Link key={child.href} href={child.href} onClick={() => setOpen(false)} className="rounded-lg px-3 py-2 text-xs text-muted-foreground hover:bg-muted">{child.label}</Link>)}</div> : null}
           ))}
           <Link
             href={portalHref}
