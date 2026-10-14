@@ -14,6 +14,8 @@ v2.0 is aligned to accepted ADR-BCP-026, ADR-BCP-027, Baobab EA Implementation P
 | [capability-demand-census.md](capability-demand-census.md) | Direct/conditional/indirect capability demand by release |
 | [erp-scope.md](erp-scope.md) | ERP corporate finance/people/payroll scope; subordinate to v2.0 and current Shared contracts |
 | [onboarding/P0-03-legal-verification-runbook.md](onboarding/P0-03-legal-verification-runbook.md) | Real ZA registration verification preparation and deferred authenticated execution |
+| [onboarding/P0-04B-operator-preflight-runbook.md](onboarding/P0-04B-operator-preflight-runbook.md) | Authenticated read-only CP operator diagnostic; no action permit |
+| [evidence/progress-audit-2026-10-14.md](evidence/progress-audit-2026-10-14.md) | Source snapshots, repaired PRs, exact CI and outstanding critical path |
 | [onboarding/za-legal-verification-packet.json](onboarding/za-legal-verification-packet.json) | Separate non-sensitive Nabhold/Thamani documentary inputs |
 | [onboarding/nabhold-internal-onboarding-profile.json](onboarding/nabhold-internal-onboarding-profile.json) | Fail-closed v2 planning input for the real progressive onboarding workflow |
 | [NAB-GOLIVE-MP-001-evidence-delta-2026-10-10.md](NAB-GOLIVE-MP-001-evidence-delta-2026-10-10.md) | Historical evidence delta against v1.0; not current status |

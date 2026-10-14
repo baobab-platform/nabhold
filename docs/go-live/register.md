@@ -16,7 +16,7 @@ This register records source/runtime evidence known from the repositories. It is
 | G01C group relationships/mandates | BLOCKED | CP relationship/mandate machinery exists; no accepted real control/mandate evidence for programme use | Evidence-backed relationships/mandates |
 | G02 Organisation-first onboarding | IMPLEMENTED-NOT-EXECUTED | CP progressive application, independent review/decision, TenantOnboardingRequest v2 and RegisterProgressiveTenantV2 implemented; synthetic four-business PG17 acceptance exists | Execute real Nabhold controlled staging flow |
 | G03 capability programme | IN PROGRESS | Shared catalogue has 22 keys; ADR-SHARED-033 finance inventory remains Proposed | Finance F1 contracts + subsequent domains |
-| G04 IAM | PARTIAL | Secure local provider bootstrap implemented (IAM #113); registered hierarchical workload scope syntax converged (Shared #305 / IAM #114); nabhold-backend stays PROVISIONED | Real native/CP Principals, grants and workload credential plus protected acceptance |
+| G04 IAM | PARTIAL | Secure local provider bootstrap implemented (IAM #113); registered hierarchical workload scope syntax converged (Shared #305 / IAM #114); nabhold-backend stays PROVISIONED | Authenticated operator diagnostic implemented; real native/CP Principals, grants, workload credential and protected acceptance remain |
 | G05 CMS / R0 | PARTIAL | Organisation-first consumer/provider source convergence implemented; CMS support PARTIAL and production_permitted=false | P0-04 protected identity + P0-06 live IAM/CP/binding + P0-07 R0 acceptance |
 | G06 ERP finance | BLOCKED | ERP authority/contract convergence advanced; corporate F1 capabilities not canonical/implemented | FinanceBaseline + F1 + live iDempiere |
 | G07 Workforce/HR | BLOCKED | No accepted canonical workforce contract/provider surface | Shared/domain decision + implementation |
@@ -83,7 +83,7 @@ Group membership never grants cross-tenant access.
 **Completed source task:** P0-02 — Organisation-first content context convergence (Nabhold #39; CMS #33/#34). Exit: no legal-entity-first contract drift. G05 is still PARTIAL; protected identity and binding qualification belong to P0-04/P0-06/P0-07.
 
 1. **P0-03 — preparation implemented; authenticated real-case execution deferred.** See [runbook](onboarding/P0-03-legal-verification-runbook.md).
-2. **P0-04 — secure local provider bootstrap implemented; real native/CP onboarding Principals and protected identity remain.**
+2. **P0-04 — local provider bootstrap and P0-04B-01 authenticated operator diagnostic implemented; real native/CP onboarding Principals and protected identity remain.**
 3. **P0-05 — execute Nabhold progressive controlled staging onboarding to IDENTITY_TENANT_ACCEPTED_NOT_PRODUCTION.**
 4. **P0-06 — activate the first qualified capability: Nabhold workload + CMS R0.**
 5. **P0-07 — R0 protected E2E and acceptance pack.**
@@ -210,3 +210,30 @@ P0-03 authenticated verification, P0-04 real human/CP identity, P0-05 controlled
 onboarding and P0-06/07 qualified R0 acceptance remain separate operational
 steps. No production PASS, universal administrator, current legal verification
 or accepted real founding-group Principal is asserted by these source changes.
+
+## 12. Progress audit and P0-04B-01 operator diagnostic — 14 October 2026
+
+See the [source/CI progress audit](evidence/progress-audit-2026-10-14.md) for
+inspected snapshots and exact successful CI runs. Open Nabhold PRs #43, #37 and
+#36 were repaired and merged before this increment. The #43 takeover restored
+existing P0-04A progress records, repaired breadcrumb hydration/browser checks,
+and removed the generator CLI from production dependencies.
+
+`pnpm onboarding:operators:check` now reads each operator's current CP
+`/v1/admin/effective-authority` projection independently. It checks expected
+canonical Principal UUID, distinct planned Principals/credentials, freshness,
+expiry and exact environment-qualified PLATFORM grants. Tokens and raw provider
+errors are excluded from output. The real metadata template remains null;
+no credential, Principal or runtime acceptance was invented.
+
+The [P0-04B runbook](onboarding/P0-04B-operator-preflight-runbook.md) distinguishes
+necessary projected grants from action authorisation, IAM scope/client roles,
+step-up and independently established human authority. The diagnostic does not
+submit onboarding, create identities/grants or alter CP grant enforcement.
+Source/local acceptance: lint, typecheck and 163 tests passed, including the
+actual CLI against a loopback CP-shaped service. Protected staging, legal/human
+evidence, operational certification and production remain unaccepted.
+
+**P0-04 remains PARTIAL.** Next: real native/federated humans and CP mappings,
+separate operator grants and protected action acceptance, then P0-03 real-case
+verification and P0-05 controlled onboarding. No R0/R1/R2/R3 GO is asserted.
