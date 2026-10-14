@@ -17,7 +17,7 @@ This register records source/runtime evidence known from the repositories. It is
 | G02 Organisation-first onboarding | IMPLEMENTED-NOT-EXECUTED | CP progressive application, independent review/decision, TenantOnboardingRequest v2 and RegisterProgressiveTenantV2 implemented; synthetic four-business PG17 acceptance exists | Execute real Nabhold controlled staging flow |
 | G03 capability programme | IN PROGRESS | Shared catalogue has 22 keys; ADR-SHARED-033 finance inventory remains Proposed | Finance F1 contracts + subsequent domains |
 | G04 IAM | PARTIAL | IAM provider support remains PARTIAL; nabhold-backend workload is PROVISIONED in Shared | Real Principal/workload credentials and protected acceptance |
-| G05 CMS / R0 | PARTIAL | POST /v1/content/resolve merged; CMS support PARTIAL and production_permitted=false | Organisation-first contract convergence + live IAM/CP/binding |
+| G05 CMS / R0 | PARTIAL | Organisation-first consumer/provider source convergence implemented; CMS support PARTIAL and production_permitted=false | P0-04 protected identity + P0-06 live IAM/CP/binding + P0-07 R0 acceptance |
 | G06 ERP finance | BLOCKED | ERP authority/contract convergence advanced; corporate F1 capabilities not canonical/implemented | FinanceBaseline + F1 + live iDempiere |
 | G07 Workforce/HR | BLOCKED | No accepted canonical workforce contract/provider surface | Shared/domain decision + implementation |
 | G08 Payroll | BLOCKED | No accepted production payroll capability/provider | Statutory/provider acceptance |
@@ -62,7 +62,7 @@ Group membership never grants cross-tenant access.
 | V2-B03 | Progressive/Organisation-first production routes deliberately closed pending certification | CP / security |
 | V2-B04 | EA developer-unfreeze Gate B not passed | Shared / platform |
 | V2-B05 | nabhold-backend workload PROVISIONED, not operationally accepted | IAM / CP / Nabhold |
-| V2-B06 | CMS content contract/provider still needs Organisation-first convergence and live qualification | Shared / CMS / Nabhold |
+| V2-B06 | CMS consumer/provider source converged; live qualification remains absent | CMS / IAM / CP / Nabhold |
 | V2-B07 | Executive sign-in remains preview-only | IAM / Nabhold |
 | V2-B08 | Corporate finance F1 contracts/provider absent | Shared / ERP |
 | V2-B09 | Workforce/HR boundary absent | Shared / ERP / IAM |
@@ -80,8 +80,9 @@ Group membership never grants cross-tenant access.
 
 ## 5. Immediate implementation queue
 
-1. **P0-02 — Organisation-first content context convergence (Nabhold consumer/provider source implemented; protected qualification blocked).**
-2. **P0-03 — real Nabhold independent verification path.**
+**Completed source task:** P0-02 — Organisation-first content context convergence (Nabhold #39; CMS #33/#34). Exit: no legal-entity-first contract drift. G05 is still PARTIAL; protected identity and binding qualification belong to P0-04/P0-06/P0-07.
+
+1. **P0-03 — real Nabhold independent verification path.**
 3. **P0-04 — real CP onboarding Principals and protected staging identity.**
 4. **P0-05 — execute Nabhold progressive controlled staging onboarding to IDENTITY_TENANT_ACCEPTED_NOT_PRODUCTION.**
 5. **P0-06 — activate the first qualified capability: Nabhold workload + CMS R0.**
@@ -147,8 +148,8 @@ Consulted source snapshots:
 - Nabhold ADR-NAB-0014 and masterplan v2.0 G05/P0-02 govern this increment.
 
 **Gate remains PARTIAL.** P0-02 source convergence is implemented in Nabhold
-PR #39 and CMS PR #33/#34. Consumer tests pass (125); provider tests pass (233),
-including missing/malformed Organisation, missing/duplicate/inactive projection
+PR #39 and CMS PR #33/#34. Consumer tests pass (125); provider tests pass (234),
+including exact returned UUID comparison, missing/malformed Organisation, missing/duplicate/inactive projection
 and database failure. CMS #34 fixes UUID casing compatibility without allowing
 wildcard identity queries. Protected proof with real CP/IAM identity is still absent.
 No new body field may be added to pinned
