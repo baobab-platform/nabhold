@@ -52,6 +52,41 @@ describe("Nabhold Organisation-first onboarding profile v2", () => {
     ).toHaveLength(6);
   });
 
+  it("requires all progressive-onboarding duties to use distinct Principals", () => {
+    const raw = onboardingProfileSchema.parse(loadProfile());
+    const principals = {
+      applicant_or_sponsor_principal_id: "prn_applicant",
+      reviewer_principal_id: "prn_reviewer",
+      decision_maker_principal_id: "prn_decider",
+      onboarding_requester_principal_id: "prn_requester",
+      onboarding_authoriser_principal_id: "prn_authoriser",
+      registrar_principal_id: "prn_registrar",
+    };
+    const valid = { ...raw, principals };
+
+    expect(
+      assessOnboardingReadiness(onboardingProfileSchema.parse(valid)).blockers,
+    ).not.toEqual(
+      expect.arrayContaining([
+        expect.stringContaining("separation of duties requires distinct Principals"),
+      ]),
+    );
+
+    const invalid = {
+      ...valid,
+      principals: {
+        ...principals,
+        onboarding_authoriser_principal_id:
+          principals.onboarding_requester_principal_id,
+      },
+    };
+    expect(
+      assessOnboardingReadiness(onboardingProfileSchema.parse(invalid)).blockers,
+    ).toContain(
+      "G04A: separation of duties requires distinct Principals; prn_requester is assigned to onboarding_requester_principal_id, onboarding_authoriser_principal_id",
+    );
+  });
+
   it("does not pre-mint Organisation or Tenant identity", () => {
     const profile = onboardingProfileSchema.parse(loadProfile());
 
