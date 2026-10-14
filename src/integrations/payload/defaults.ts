@@ -8,10 +8,8 @@ export const ESTATE_DEFAULT_NAVIGATION: Navigation = {
   primary: [
     { label: "Our Group", href: "/about/group" },
     { label: "Businesses", href: "/portfolio" },
-    { label: "Investment", href: "/#investment" },
-    { label: "Markets", href: "/#markets" },
-    { label: "Intelligence", href: "/#intelligence" },
-    { label: "Governance", href: "/#governance" },
+    { label: "Investment", href: "/investment" },
+    { label: "Insights", href: "/insights" },
   ],
 };
 
