@@ -32,7 +32,10 @@ Nabhold's own admission (masterplan G01B).
 
 ## 2. Preparation implemented now
 
-Run from the Nabhold checkout:
+Run from the Nabhold checkout with Node 22.6.0 or later within the declared
+Node 22 runtime. The minimum includes Node’s TypeScript stripping flag
+([official release note](https://nodejs.org/en/blog/release/v22.6.0)); older
+Node 22.0–22.5 runtimes cannot execute this command:
 
 ```bash
 pnpm verification:prepare
