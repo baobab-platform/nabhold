@@ -210,6 +210,7 @@ Shared content v1 contract and supports admitted businesses before incorporation
 
 Do not introduce `organisation_id` into the content v1 body: its schema is closed.
 PRIMARY Organisation must be attested through Control Plane context validation
-at CMS. The current CMS validator still permits an absent Organisation; until
-that provider boundary and protected staging are qualified, these consumer
-changes do not close G05 or authorise R0 publication.
+at CMS. CMS PR #33 requires attested Organisation and compares the active
+Tenant/Organisation projection pair before content reads. Old CP responses
+without Organisation are refused. Protected staging with real identity remains
+unqualified; source convergence does not close G05 or authorise R0 publication.

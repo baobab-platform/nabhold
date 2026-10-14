@@ -80,7 +80,7 @@ Group membership never grants cross-tenant access.
 
 ## 5. Immediate implementation queue
 
-1. **P0-02 — Organisation-first content context convergence (Nabhold consumer implemented; provider qualification blocked).**
+1. **P0-02 — Organisation-first content context convergence (Nabhold consumer/provider source implemented; protected qualification blocked).**
 2. **P0-03 — real Nabhold independent verification path.**
 3. **P0-04 — real CP onboarding Principals and protected staging identity.**
 4. **P0-05 — execute Nabhold progressive controlled staging onboarding to IDENTITY_TENANT_ACCEPTED_NOT_PRODUCTION.**
@@ -141,13 +141,16 @@ Consulted source snapshots:
 - Shared `9b8a00197ffda60a2a9d6a7be034baad791f7854`: content v1 request/README,
   control-plane v2 PlatformContext (mandatory attested PRIMARY Organisation).
 - CMS `f2a94a9bb9273d56db202464437923a78c823239`: ADR-0012/0014, content route
-  and CP context validator. The current validator accepts absent Organisation;
-  the route does not use the returned Organisation. This remains a provider gap.
+  and CP context validator. This baseline accepted absent Organisation and
+  ignored its value. CMS PR #33 adds mandatory CP-attested Organisation and
+  exact active Tenant/Organisation projection checking before content reads.
 - Nabhold ADR-NAB-0014 and masterplan v2.0 G05/P0-02 govern this increment.
 
-**Gate remains PARTIAL.** Full P0-02 requires CMS to require the CP-attested
-PRIMARY Organisation, reconcile projection identity and prove rejection of
-missing/mismatched Organisation. No new body field may be added to pinned
+**Gate remains PARTIAL.** P0-02 source convergence is implemented in Nabhold
+PR #39 and CMS PR #33. Consumer tests pass (125); provider tests pass (231),
+including missing/malformed Organisation, missing/duplicate/inactive projection
+and database failure. Protected proof with real CP/IAM identity is still absent.
+No new body field may be added to pinned
 Shared content v1 without contract governance. P0-03–P0-07 require real,
 independently accepted identity/Principal/staging evidence; no synthetic fixture
 or local setting is accepted as that evidence. Production remains unauthorised.
