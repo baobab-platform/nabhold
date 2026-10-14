@@ -237,3 +237,17 @@ evidence, operational certification and production remain unaccepted.
 **P0-04 remains PARTIAL.** Next: real native/federated humans and CP mappings,
 separate operator grants and protected action acceptance, then P0-03 real-case
 verification and P0-05 controlled onboarding. No R0/R1/R2/R3 GO is asserted.
+
+
+## 13. P0-06A — CP transport source preparation
+
+The capability client now refuses redirects, unsafe origins and TLS bypass,
+limits decoded resolution responses to 256 KiB, and applies its bounded
+deadline through body consumption. Raw upstream errors are excluded from
+diagnostics. See [source evidence and acceptance boundaries](evidence/P0-06A-cp-transport-hardening.md).
+
+This non-staging increment preserves CP/IAM authority, request/response
+contracts and capability decision checks. It creates no identity, credential,
+grant or binding. **P0-06 and G05 remain PARTIAL**; authenticated legal/human
+ceremonies, controlled onboarding, real workload/CMS qualification and signed
+R0 acceptance remain separate protected exits.

@@ -1,4 +1,5 @@
-import { describe, expect, it, vi } from "vitest";
+import { createServer } from "node:http";
+import { afterEach, describe, expect, it, vi } from "vitest";
 
 import {
   CapabilityClient,
@@ -39,6 +40,7 @@ const resolved = {
 
 const tokens = { getToken: async () => "workload-token" };
 const now = () => new Date("2026-10-08T09:00:30Z");
+afterEach(() => vi.unstubAllEnvs());
 
 function clientReturning(body: unknown, status = 200) {
   const fetchMock = vi.fn(
@@ -77,6 +79,8 @@ describe("CapabilityClient", () => {
       "x-correlation-id": correlationId,
     });
     expect(JSON.parse(init.body as string)).toEqual(request);
+    expect(init.redirect).toBe("error");
+    expect(init.cache).toBe("no-store");
   });
 
   it("rejects client-supplied tenant or legal-entity authority", async () => {
@@ -186,5 +190,126 @@ describe("CapabilityClient", () => {
 
     const { client } = clientReturning({ title: "Unauthorized" }, 401);
     await expect(client.resolve(request)).rejects.toThrow("HTTP 401");
+  });
+
+  it.each([
+    "http://cp.example.test", "https://user:secret@cp.example.test",
+    "https://cp.example.test/prefix", "https://cp.example.test?hint=secret",
+    "https://cp.example.test#secret", "service://cp", "not-a-url",
+  ])("refuses unsafe origin %s before acquiring a token", (baseUrl) => {
+    const getToken = vi.fn();
+    expect(() => new CapabilityClient({ baseUrl, tokens: { getToken } })).toThrow(CapabilityResolutionError);
+    expect(getToken).not.toHaveBeenCalled();
+  });
+
+  it("limits explicit HTTP exceptions to non-production loopback", () => {
+    for (const host of ["127.0.0.1", "localhost", "[::1]"]) {
+      expect(() => new CapabilityClient({ baseUrl: `http://${host}:8080`, allowLocalHttp: true })).not.toThrow();
+    }
+    expect(() => new CapabilityClient({ baseUrl: "http://cp.example.test", allowLocalHttp: true })).toThrow();
+    expect(() => new CapabilityClient({ baseUrl: "http://127.0.0.1:8080" })).toThrow();
+    vi.stubEnv("NODE_ENV", "production");
+    expect(() => new CapabilityClient({ baseUrl: "http://127.0.0.1:8080", allowLocalHttp: true })).toThrow();
+  });
+
+  it("refuses TLS bypass before acquiring credentials", async () => {
+    const getToken = vi.fn();
+    const fetchMock = vi.fn();
+    const client = new CapabilityClient({ baseUrl: "https://cp.example.test", tokens: { getToken }, fetch: fetchMock });
+    vi.stubEnv("NODE_TLS_REJECT_UNAUTHORIZED", "0");
+    await expect(client.resolve(request)).rejects.toThrow("TLS verification");
+    expect(getToken).not.toHaveBeenCalled();
+    expect(fetchMock).not.toHaveBeenCalled();
+  });
+
+  it("refuses a local HTTP client reused under production configuration", async () => {
+    const getToken = vi.fn();
+    const client = new CapabilityClient({ baseUrl: "http://127.0.0.1:8080", allowLocalHttp: true, tokens: { getToken } });
+    vi.stubEnv("NODE_ENV", "production");
+    await expect(client.resolve(request)).rejects.toThrow("requires HTTPS");
+    expect(getToken).not.toHaveBeenCalled();
+  });
+
+  it.each(["", "injected\r\nheader", "valid-token\n", " ", "a".repeat(16_385)])(
+    "refuses empty, injected or oversized bearer values", async (token) => {
+      const fetchMock = vi.fn();
+      const client = new CapabilityClient({ baseUrl: "https://cp.example.test", tokens: { getToken: async () => token }, fetch: fetchMock });
+      await expect(client.resolve(request)).rejects.toThrow(WorkloadTokenUnavailableError);
+      expect(fetchMock).not.toHaveBeenCalled();
+    },
+  );
+
+  it.each([0, -1, 1.5, NaN, Infinity, 60_001])("refuses invalid deadline %s", (timeoutMs) => {
+    expect(() => new CapabilityClient({ baseUrl: "https://cp.example.test", timeoutMs })).toThrow("timeout");
+  });
+
+  it("bounds actual streamed bytes despite a misleading Content-Length", async () => {
+    const cancelled = vi.fn();
+    const body = new ReadableStream<Uint8Array>({
+      start(controller) {
+        controller.enqueue(new TextEncoder().encode(" ".repeat(256 * 1024)));
+        controller.enqueue(new TextEncoder().encode(JSON.stringify(resolved)));
+      },
+      cancel: cancelled,
+    });
+    const client = new CapabilityClient({ baseUrl: "https://cp.example.test", tokens,
+      fetch: async () => new Response(body, { headers: { "content-type": "application/json", "content-length": "1" } }) });
+    await expect(client.resolve(request)).rejects.toThrow("unreadable resolution");
+    expect(cancelled).toHaveBeenCalledOnce();
+  });
+
+  it("cancels a stalled response body at the request deadline", async () => {
+    const cancelled = vi.fn();
+    const body = new ReadableStream<Uint8Array>({ cancel: cancelled });
+    const client = new CapabilityClient({ baseUrl: "https://cp.example.test", tokens, timeoutMs: 20,
+      fetch: async () => new Response(body, { headers: { "content-type": "application/json" } }) });
+    await expect(client.resolve(request)).rejects.toThrow("unreadable resolution");
+    expect(cancelled).toHaveBeenCalledOnce();
+  });
+
+  it("refuses non-JSON media, invalid UTF-8, malformed JSON and unexpected success statuses", async () => {
+    for (const response of [
+      new Response(JSON.stringify(resolved), { headers: { "content-type": "text/html" } }),
+      new Response(new Uint8Array([0xff]), { headers: { "content-type": "application/json" } }),
+      new Response("upstream-secret", { headers: { "content-type": "application/json" } }),
+      new Response(JSON.stringify(resolved), { status: 201, headers: { "content-type": "application/json" } }),
+    ]) {
+      const client = new CapabilityClient({ baseUrl: "https://cp.example.test", tokens, fetch: async () => response });
+      await expect(client.resolve(request)).rejects.toThrow(CapabilityResolutionError);
+    }
+  });
+
+  it("keeps raw transport and validation details out of error causes", async () => {
+    for (const fetchImpl of [
+      async () => { throw new Error("private-url-and-token"); },
+      async () => new Response(JSON.stringify({ ...resolved, decision: "private-upstream-value" }),
+        { headers: { "content-type": "application/json" } }),
+    ]) {
+      const client = new CapabilityClient({ baseUrl: "https://cp.example.test", tokens, fetch: fetchImpl });
+      const error = await client.resolve(request).catch((caught: Error) => caught);
+      expect(error).toBeInstanceOf(CapabilityResolutionError);
+      expect((error as Error).cause).toBeUndefined();
+      expect(String(error)).not.toContain("private-");
+    }
+  });
+
+  it("refuses a real same-origin redirect without sending a second credentialed request", async () => {
+    const paths: string[] = [];
+    const server = createServer((req, res) => {
+      paths.push(req.url ?? "");
+      req.resume();
+      res.writeHead(307, { location: "/redirect-target" }).end();
+    });
+    await new Promise<void>((resolve) => server.listen(0, "127.0.0.1", resolve));
+    try {
+      const address = server.address();
+      if (!address || typeof address === "string") throw new Error("Missing test listener");
+      const client = new CapabilityClient({ baseUrl: `http://127.0.0.1:${address.port}`, allowLocalHttp: true, tokens });
+      await expect(client.resolve(request)).rejects.toThrow("unreachable");
+      expect(paths).toEqual(["/v1/capabilities/resolve"]);
+    } finally {
+      server.closeAllConnections();
+      await new Promise<void>((resolve, reject) => server.close((error) => error ? reject(error) : resolve()));
+    }
   });
 });
