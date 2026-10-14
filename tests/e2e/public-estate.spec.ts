@@ -3,8 +3,10 @@ import { expect, test } from "@playwright/test";
 test("visitor reaches a portfolio company", async ({ page }) => {
   await page.goto("/");
   await page.getByRole("link", { name: "Explore the group" }).click();
+  await expect(page).toHaveURL(/\/portfolio$/);
   await page.getByRole("link", { name: /Zuribeans/ }).click();
-  await expect(page.getByRole("heading", { name: "Zuribeans" })).toBeVisible();
+  await expect(page).toHaveURL(/\/portfolio\/zuribeans$/);
+  await expect(page.getByRole("heading", { level: 1, name: "Zuribeans", exact: true })).toBeVisible();
 });
 
 test("portfolio company page exposes basic SEO metadata", async ({ page }) => {
