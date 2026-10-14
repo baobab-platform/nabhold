@@ -102,6 +102,6 @@ describe("PayloadCorporateContentGateway", () => {
     const gateway = createPayloadContentGateway();
     const home = await gateway.getHomePage();
 
-    expect(home.headline).toBe("Built on conviction. Grown with purpose.");
+    expect(home.headline).toBe("Building enduring African enterprises.");
   });
 });
