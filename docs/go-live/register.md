@@ -147,9 +147,10 @@ Consulted source snapshots:
 - Nabhold ADR-NAB-0014 and masterplan v2.0 G05/P0-02 govern this increment.
 
 **Gate remains PARTIAL.** P0-02 source convergence is implemented in Nabhold
-PR #39 and CMS PR #33. Consumer tests pass (125); provider tests pass (231),
+PR #39 and CMS PR #33/#34. Consumer tests pass (125); provider tests pass (233),
 including missing/malformed Organisation, missing/duplicate/inactive projection
-and database failure. Protected proof with real CP/IAM identity is still absent.
+and database failure. CMS #34 fixes UUID casing compatibility without allowing
+wildcard identity queries. Protected proof with real CP/IAM identity is still absent.
 No new body field may be added to pinned
 Shared content v1 without contract governance. P0-03–P0-07 require real,
 independently accepted identity/Principal/staging evidence; no synthetic fixture
