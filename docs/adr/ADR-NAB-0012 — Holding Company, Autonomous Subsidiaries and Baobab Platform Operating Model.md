@@ -1,42 +1,71 @@
 # ADR-NAB-0012 — Holding Company, Autonomous Subsidiaries and Baobab Platform Operating Model
 
-**Status:** Proposed (not Accepted; requires the decision owners below)
-**Date:** 2026-10-08
-**Decision Owners:** Nabhold Group Africa board (company secretary to record)
-**Repository:** `baobab-platform/nabhold`
-**Masterplan:** NAB-GOLIVE-MP-001, gate G01
-**Depends On:** ADR-NAB-0003, ADR-NAB-0005, ADR-NAB-0007, ADR-BCP-017, ADR-BCP-018
+**Status:** Accepted  
+**Date:** 2026-10-14  
+**Decision Owners:** Nabhold Group Africa / Baobab Platform Architecture  
+**Repository:** baobab-platform/nabhold  
+**Masterplan:** NAB-GOLIVE-MP-001 v2.0, G01/G02/G12  
+**Depends On:** ADR-NAB-0003, ADR-NAB-0005, ADR-NAB-0007, ADR-NAB-0014, ADR-BCP-017, ADR-BCP-018, ADR-BCP-026, ADR-BCP-027  
 
-## Context
+## 1. Decision
 
-Nabhold Group Africa is registered as NABHOLD GROUP AFRICA (Pty) Ltd, `2026/029839/07`, South Africa, effective 16 January 2026 (see `docs/go-live/evidence/G01/production/2026-01-16-cipc-registration.md`). The masterplan describes it as holding company, intended Baobab IP owner and operator, and parent of ZuriBeans, Thamani and Equator & Estate.
+Nabhold adopts an autonomous-holdings operating model.
 
-Nothing in the repository yet records the legal basis for subsidiary autonomy, reserved matters, intercompany agreements or IP ownership. Frontend code could otherwise encode assumptions (for example that parent ownership implies data access).
+1. **Nabhold own identity.** NABHOLD GROUP AFRICA (Pty) Ltd operates its own Organisation and independent Baobab Tenant for its holding-company, employer, IP/platform-owner and approved corporate-services activities.
+2. **Non-trading holding company.** Nabhold does not buy/sell subsidiary goods as its operating business. It does not directly consume Trade commerce, inventory, logistics or trade-document mutations by default.
+3. **Autonomous subsidiaries.** Thamani, ZuriBeans and other independently governed businesses retain their own Organisation and Tenant boundaries. Each independently decides market entry/exit, business operations and capability adoption, subject to lawful reserved matters.
+4. **Option B permanence.** Group membership is an effective-dated CorporateRelationship. A subsidiary can leave Nabhold without reminting its Organisation/Tenant or rewriting historical transactions.
+5. **Legal persons are separate facts.** Nabhold and Thamani have documented ZA incorporation claims that require independent acceptance for consequential use. ZuriBeans remains an operating business while its incorporation process is pending; future ZA/UG LegalEntities are linked additively to its existing Organisation.
+6. **Ownership is not access.** No group relationship grants IAM, Tenant, capability or data access. Group reporting needs explicit current grants, purpose and domain authority.
+7. **Legal actor is scoped.** Nabhold may act as legal actor for another operating business only under an independently approved role/activity/market/time mandate and any required legal/provider permission.
+8. **Group reporting is governed.** Parent dashboards use an authorised portfolio projection plus domain-owned aggregate/reporting capabilities. They do not wildcard-query subsidiary tenants.
+9. **Exit/disposal.** Disposal terminates future group privileges and triggers classification/grant review while preserving historic relationship, accounting and audit evidence.
+10. **Future regions.** A subsidiary incorporating in Uganda or another market creates a new jurisdiction-specific LegalEntity where independently established; it does not create a new business identity merely because jurisdiction changes.
 
-## Decision (proposed)
+## 2. Canonical model
 
-1. **Operating entity.** The Nabhold estate and its INTERNAL Baobab subscription operate for the South African legal entity above, in market `ZA` only. It does not trade goods and holds no `SELLING_GOODS` participation.
-2. **Ownership is not access.** A corporate-graph edge never grants a privilege. Group access needs the authenticated actor, a current relationship, an explicit scope, a capability entitlement, domain authorisation, data-classification clearance and a recorded purpose (masterplan §1.2).
-3. **Subsidiary autonomy.** Each subsidiary controls its market participation, day-to-day decisions and operational data. Group reporting uses explicit, effective-dated, revocable data grants. A disposal ends future grants and preserves history.
-4. **Platform commerce.** Nabhold's Baobab revenue is billed under contracts to be set by the commercial and legal decisions D-03 to D-06. The estate computes no price, tax or revenue.
-5. **No assumptions in code.** Ownership percentages, IP title and intercompany terms are recorded as decisions with evidence, never inferred from repository names or CMS content.
+    CorporateGroup
+       |
+       +-- Nabhold Organisation ---- Nabhold Tenant ---- Nabhold ZA LegalEntity
+       |
+       +-- Thamani Organisation ---- Thamani Tenant ---- ZA LegalEntity
+       |                                               + future UG LegalEntity
+       |
+       +-- ZuriBeans Organisation --- ZuriBeans Tenant - future ZA/UG LegalEntities
+       |
+       +-- Equator & Estate Organisation --- independent Tenant where justified
 
-## Open items that block Acceptance
+## 3. Governance consequences
 
-| Item | Decision |
-|---|---|
-| Subsidiary incorporation, ownership and control | D-02 |
-| IP ownership, licences, assignments | D-03 |
-| Scope of Nabhold's own commercial offering | D-04 |
-| Which subsidiary data group officers may view | D-07 |
-| Treatment of a subsidiary after sale | D-18 |
-| Director and company-secretary appointments, beneficial ownership | D-01 |
+The group SHALL maintain effective-dated evidence for:
 
-## Consequences
+- ownership/control where relied upon;
+- reserved matters;
+- subsidiary autonomy;
+- group reporting/data sharing;
+- intercompany services;
+- IP/licensing;
+- legal-actor mandates;
+- subsidiary admission, disposal and exit.
 
-- Positive: the autonomy and access rules are explicit before any group-reporting code exists.
-- Negative: this ADR cannot be Accepted until the open items have evidence. Group reporting (R3) stays disabled until then.
+The Digital Estate SHALL not encode percentages, market membership or group access as frontend constants.
 
-## Supersedes / amends
+## 4. Production constraints
 
-None. It extends ADR-NAB-0005 and ADR-NAB-0007 and amends neither.
+No production capability may infer:
+
+- corporate control from a name or Shared role label;
+- group access from parenthood;
+- legal-person status from Tenant existence;
+- seller/employer/importer/issuer status from business brand;
+- INTERNAL entitlement from group affiliation alone.
+
+## 5. Supersession
+
+This version supersedes the Proposed 8 October 2026 text of ADR-NAB-0012.
+
+ADR-NAB-0014 governs Organisation-first tenancy, legal-actor separation and capability-specific activation.
+
+## 6. Final decision
+
+Nabhold is a decentralised holding group on Baobab: common platform, explicit governance, independent operating businesses, separate tenant authority, and reversible group relationships.
