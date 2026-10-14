@@ -29,7 +29,7 @@ This register records source/runtime evidence known from the repositories. It is
 | G14 Pulse/Regulations | PARTIAL | Pulse canonical evidence/research IMPLEMENTED source; Regulations canonical capabilities PARTIAL | Nabhold bindings; verified regulatory coverage |
 | G15 Digital Estate | IN PROGRESS | Release guards, capability client and content adapter merged; executive session preview-only | Real auth/context/capability journeys |
 | G16 Infrastructure/EA-09 | PARTIAL / EXTERNAL | af-south-1 staging architecture exists; protected staging/external account evidence incomplete | Real account/roles/KMS/DNS + qualification |
-| G17 Acceptance | NOT STARTED | No release acceptance pack signed | Per-release UAT/security/ops GO |
+| G17 Acceptance | TECHNICAL TOOLING IMPLEMENTED / PROTECTED EXECUTION BLOCKED | Ordered identity/PRIMARY-Tenant/CP→CMS observations and dispatch-only protected workflow implemented; no real acceptance pack signed | Per-release UAT/security/ops GO |
 | G18 Production | NOT AUTHORISED | EA v2.1 production activation remains not authorised | Signed release-specific activation |
 
 ## 2. Platform EA gates
@@ -251,3 +251,27 @@ contracts and capability decision checks. It creates no identity, credential,
 grant or binding. **P0-06 and G05 remain PARTIAL**; authenticated legal/human
 ceremonies, controlled onboarding, real workload/CMS qualification and signed
 R0 acceptance remain separate protected exits.
+
+
+## 14. Protected identity/onboarding/CMS acceptance tooling
+
+CMS [#35](https://github.com/baobab-platform/baobab-cms/pull/35) fixes the JWT
+authenticator's one-colon scope parser, which rejected actual registered
+`content:entry:resolve` credentials. Signed ES256/JWKS and route-denial tests
+pass; the provider remains PARTIAL and no live binding is activated.
+
+`pnpm acceptance:protected` now collects sequential G04 operator authority,
+G02 PRIMARY Tenant mapping readback, and G05 CP binding/CMS observations with
+eight negative cases. The main-only workflow validates independent staging
+reviewer protections before service-credential execution and uploads sanitized
+non-authorising observations/digests. See the [exact inputs, procedure and
+remaining exits](onboarding/protected-acceptance-runbook.md).
+
+**Live execution is blocked:** no real staging origins, human/CP Principal
+plan, issued workload credentials, controlled negative contexts or protected
+environment credentials were configured in this session. No account, grant,
+admission/verification decision, tenant, binding or production activation was
+created. G01B/G02/G04/G05 and P0-03 through P0-07 operational exits remain
+pending. Executive BFF login, true revocation ceremony, publication/revalidation
+cycle, rollback and independent G17 signoff are explicitly separate acceptance
+checks rather than facts inferred from a mapping or successful content read.

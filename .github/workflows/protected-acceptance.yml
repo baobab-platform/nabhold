@@ -1,0 +1,83 @@
+name: Nabhold Protected Technical Acceptance
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  actions: read
+
+concurrency:
+  group: nabhold-protected-staging-acceptance
+  cancel-in-progress: false
+
+jobs:
+  technical-observations:
+    # No PR, arbitrary-ref or public-input execution with service credentials.
+    if: github.repository == 'baobab-platform/nabhold' && github.ref == 'refs/heads/main'
+    runs-on: ubuntu-26.04
+    environment: staging
+    timeout-minutes: 15
+    container:
+      image: ghcr.io/baobab-platform/baobab-dev:1.4.4-frontend-e2e
+      options: --user 0
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - name: Install immutable dependencies
+        run: pnpm install --frozen-lockfile
+      - name: Verify independent environment protections before service secret injection
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+        run: node --experimental-strip-types scripts/check-staging-protection.mjs
+      - name: Observe protected IAM, PRIMARY Tenant and CP-to-CMS boundaries
+        env:
+          NABHOLD_ACCEPTANCE_PLAN_B64: ${{ secrets.NABHOLD_ACCEPTANCE_PLAN_B64 }}
+          NABHOLD_OPERATOR_VERIFICATION_REVIEWER_TOKEN: ${{ secrets.NABHOLD_OPERATOR_VERIFICATION_REVIEWER_TOKEN }}
+          NABHOLD_OPERATOR_VERIFICATION_DECIDER_TOKEN: ${{ secrets.NABHOLD_OPERATOR_VERIFICATION_DECIDER_TOKEN }}
+          NABHOLD_OPERATOR_ADMISSION_REVIEWER_TOKEN: ${{ secrets.NABHOLD_OPERATOR_ADMISSION_REVIEWER_TOKEN }}
+          NABHOLD_OPERATOR_ADMISSION_DECIDER_TOKEN: ${{ secrets.NABHOLD_OPERATOR_ADMISSION_DECIDER_TOKEN }}
+          NABHOLD_OPERATOR_ONBOARDING_REQUESTER_TOKEN: ${{ secrets.NABHOLD_OPERATOR_ONBOARDING_REQUESTER_TOKEN }}
+          NABHOLD_OPERATOR_ONBOARDING_AUTHORISER_TOKEN: ${{ secrets.NABHOLD_OPERATOR_ONBOARDING_AUTHORISER_TOKEN }}
+          NABHOLD_OPERATOR_TENANT_REGISTRAR_TOKEN: ${{ secrets.NABHOLD_OPERATOR_TENANT_REGISTRAR_TOKEN }}
+          NABHOLD_ACCEPTANCE_RESOLVE_TOKEN: ${{ secrets.NABHOLD_ACCEPTANCE_RESOLVE_TOKEN }}
+          NABHOLD_ACCEPTANCE_CONTENT_TOKEN: ${{ secrets.NABHOLD_ACCEPTANCE_CONTENT_TOKEN }}
+          NABHOLD_ACCEPTANCE_MISSING_SCOPE_TOKEN: ${{ secrets.NABHOLD_ACCEPTANCE_MISSING_SCOPE_TOKEN }}
+          NABHOLD_ACCEPTANCE_REJECTED_TOKEN: ${{ secrets.NABHOLD_ACCEPTANCE_REJECTED_TOKEN }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          set +x
+          umask 077
+          test -n "$NABHOLD_ACCEPTANCE_PLAN_B64" || { echo "::error::Protected acceptance plan is missing"; exit 2; }
+          plan_file="$RUNNER_TEMP/nabhold-acceptance-plan.json"
+          trap 'rm -f "$plan_file"' EXIT
+          # Base64 is transport encoding, never encryption. Decode without
+          # printing metadata or accepting credentials inside the plan.
+          node --input-type=module -e '
+            import { writeFileSync } from "node:fs";
+            try {
+              const text = process.env.NABHOLD_ACCEPTANCE_PLAN_B64;
+              if (text.length > 45000 || !/^[A-Za-z0-9+/]+={0,2}$(?![\s\S])/.test(text)) throw new Error();
+              writeFileSync(process.argv[1], Buffer.from(text, "base64"), { mode: 0o600, flag: "wx" });
+            } catch { process.stderr.write("Protected plan decoding refused\n"); process.exit(2); }
+          ' "$plan_file"
+          node --experimental-strip-types scripts/run-protected-acceptance.mjs --input "$plan_file" --require-staging > protected-observations.json
+      - name: Hash sanitized observations for independent evidence review
+        if: always()
+        shell: bash
+        run: |
+          if test -s protected-observations.json; then
+            sha256sum protected-observations.json > protected-observations.sha256
+          fi
+      - name: Upload sanitized non-authorising observations
+        if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
+        with:
+          name: nabhold-protected-observations-${{ github.sha }}-${{ github.run_id }}
+          path: |
+            protected-observations.json
+            protected-observations.sha256
+          retention-days: 14
+          if-no-files-found: ignore
