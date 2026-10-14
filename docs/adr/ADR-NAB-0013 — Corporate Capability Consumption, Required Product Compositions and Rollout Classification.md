@@ -1,38 +1,110 @@
 # ADR-NAB-0013 — Corporate Capability Consumption, Required Product Compositions and Rollout Classification
 
-**Status:** Proposed (implemented in code; Acceptance requires architecture review)
-**Date:** 2026-10-08
-**Decision Owners:** Baobab Platform Architecture / Nabhold frontend
-**Repository:** `baobab-platform/nabhold`
-**Masterplan:** NAB-GOLIVE-MP-001, gates G02, G03, G15
-**Depends On:** ADR-NAB-0003, ADR-NAB-0006, ADR-BCP-003, ADR-BCP-007, ADR-SHARED-017
+**Status:** Accepted  
+**Date:** 2026-10-14  
+**Decision Owners:** Baobab Platform Architecture / Nabhold Digital Estate  
+**Repository:** baobab-platform/nabhold  
+**Masterplan:** NAB-GOLIVE-MP-001 v2.0  
+**Depends On:** ADR-NAB-0003, ADR-NAB-0006, ADR-NAB-0014, ADR-BCP-003, ADR-BCP-007, ADR-BCP-026, ADR-BCP-027, ADR-SHARED-017  
 
-## Context
+## 1. Decision
 
-The estate must ship in independently releasable classes (R0 institutional, R1 corporate, R2 platform commercial, R3 group oversight). Most capabilities R1 to R3 need are not canonical, and none has a proven active binding. Without an enforced boundary, a protected route or prototype could be reached because a public release is live.
+### 1.1 Release classes
 
-## Decision (proposed)
+Nabhold ships four independently controlled release classes:
 
-1. **Release classes are enforced server-side.** `src/lib/release/release-class.ts` enables R0 by default and R1 to R3 only when the matching `NABHOLD_RELEASE_Rn` variable is exactly `"true"`. Classes are never inferred from one another. `/dashboard` requires R1; the Pulse overview requires R3. Disabled routes return 404.
-2. **A flag is not acceptance.** Enabling a class requires the signed GO in masterplan §11 and the evidence in `docs/go-live/evidence/`. The flag only makes that decision enforceable and reversible.
-3. **Capabilities are consumed by canonical key only.** The estate requests only keys present in the Shared catalogue (`src/lib/estate/onboarding-profile.ts` holds a reviewed snapshot). Proposed keys in `docs/go-live/capability-demand-census.md` are not requested until Shared registers them (G03).
-4. **Resolution goes through the Control Plane.** `src/lib/control-plane/` implements the Shared resolution contract. It sends no tenant, legal-entity or principal identity, fails closed without a workload token provider, and refuses mismatched, expired or non-`RESOLVED` decisions. It never proxies business payloads.
-5. **Capability states are distinct.** Every capability is tracked as canonical (`C`), proposed (`P`) or active (`A`). Source code, a provider declaration or a green CI run does not make a capability `A`.
-6. **The browser talks only to the estate.** All calls to IAM, CMS, ERP and Pulse are server-side. The Content-Security-Policy therefore sets `connect-src 'self'`, and adding a browser-visible origin is a deliberate change to `src/lib/security/csp.ts` with a note here. The workspace uses a per-request nonce; public pages are prerendered and cached, so they cannot carry one and keep `'unsafe-inline'` for scripts as a recorded trade-off.
-7. **Transitional exceptions are explicit.** The direct Payload gateway and the Pulse `/v1/executive-overview` prototype remain only as recorded exceptions (B-03, B-13) until their canonical replacements exist.
+- R0 — Institutional public estate;
+- R1 — Nabhold corporate operations;
+- R2 — Baobab commercial subscriptions/services;
+- R3 — authorised group oversight.
 
-## Alternatives rejected
+Server-side flags may technically expose a release class, but a flag is not acceptance. Every release still needs masterplan G17 evidence and a signed GO.
 
-- A single `NABHOLD_PRODUCTION` switch: cannot release R0 without exposing R1 to R3.
-- Hiding unreleased routes only in navigation: not enforcement.
-- Adding proposed keys to the estate so screens can be built: duplicates semantics Shared must own.
+### 1.2 Capability-only business integration
 
-## Consequences
+The estate SHALL consume a business operation only when its key is canonical in Shared or when the operation is a documented Control Plane administrative contract.
 
-- Positive: R0 can proceed on its own path; protected routes fail closed.
-- Negative: an unset flag hides routes that preview users could previously see; local work now sets the flags in `.env.local`.
-- Follow-up: replace the transitional Payload gateway after `content.entry.resolve` is live (G05); tighten the public CSP if public pages become dynamic.
+Candidate/proposed capability names SHALL NOT be used in production clients.
 
-## Supersedes / amends
+### 1.3 Control Plane resolution
 
-Partially supersedes nothing. It operationalises ADR-NAB-0003 and ADR-NAB-0006.
+Provider selection, binding and readiness are resolved by the Control Plane. The estate SHALL NOT select an engine/provider from tenant, market, legal entity or group membership.
+
+### 1.4 Organisation-first context
+
+Protected requests SHALL use trusted Organisation/Tenant context. LegalEntity/legal actor is included only where required by the operation and must be resolved from accepted authority, never an unrestricted browser field.
+
+### 1.5 Capability readiness states
+
+The programme distinguishes:
+
+- canonical contract;
+- provider source support;
+- provider certification;
+- grant/entitlement;
+- binding;
+- IAM/context authority;
+- protected staging;
+- production activation.
+
+No global Tenant ACTIVE state collapses these dimensions.
+
+## 2. Direct engine consumption
+
+Nabhold is expected to consume:
+
+| Engine | Purpose |
+|---|---|
+| IAM | human/workload authentication and lifecycle |
+| CMS | public/editorial corporate content |
+| ERP | finance, accounts, procurement, assets, projects, workforce/payroll boundary |
+| Pulse | governed executive evidence/research/intelligence |
+| Subscriptions | internal product entitlement and R2 subscription/billing |
+| Payments | R2 collections/refunds/settlement |
+| Regulations | conditional regulatory requirement/evidence/decision support |
+
+Trade, Trade Docs, TMS and SCF are not default direct Nabhold dependencies because Nabhold is a non-trading holding company. R3 may consume authorised aggregates from subsidiary domains.
+
+## 3. Current canonical keys
+
+Nabhold may directly/conditionally use the following current Shared keys:
+
+- content.entry.resolve;
+- identity.authentication.perform;
+- identity.workload-token.issue;
+- billing.subscription.manage;
+- billing.usage.record;
+- payment.intent.create;
+- payment.intent.cancel;
+- payment.payment.authorize;
+- payment.payment.capture;
+- payment.refund.create;
+- intelligence.evidence.search;
+- intelligence.research-mission.manage;
+- regulations.requirement.resolve;
+- regulations.evidence.assess;
+- regulations.decision.evaluate.
+
+Commerce, buyer, goods-order and inventory keys are not Nabhold direct operations.
+
+## 4. Future corporate capability programme
+
+Corporate finance begins with ADR-SHARED-033's proposed F1/F2/F3 inventory and becomes consumable only after individual Shared contract promotion.
+
+Separate Shared decisions are required for workforce, payroll, procurement/assets, governance/documents/notifications, advanced billing/payments and group-reporting projections.
+
+The estate SHALL not pre-empt those semantic decisions.
+
+## 5. Transitional provider adapters
+
+Direct Payload and noncanonical Pulse prototype integrations may exist only as explicit, bounded migration/development paths. A production exception requires a dated approval and removal plan.
+
+## 6. Supersession
+
+This Accepted revision supersedes the Proposed 8 October 2026 ADR-NAB-0013.
+
+It is amended by ADR-NAB-0014 for Organisation-first and capability-specific activation semantics.
+
+## 7. Final decision
+
+Nabhold owns experience composition. Shared owns capability semantics. CP owns runtime authority. Domain engines own business truth. Providers remain replaceable behind canonical contracts.
