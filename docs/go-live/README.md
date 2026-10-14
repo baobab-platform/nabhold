@@ -35,7 +35,7 @@ v2.0 is aligned to accepted ADR-BCP-026, ADR-BCP-027, Baobab EA Implementation P
 | Control | Behaviour |
 |---|---|
 | Release classes | R0 default; R1-R3 explicitly gated server-side |
-| Capability resolution | Server-only Control Plane client; fails closed without workload identity |
+| Capability resolution | Server-only Control Plane client; fails closed without workload identity; canonical CMS workload scope syntax converged in Shared/IAM |
 | Content adapter | Canonical content adapter exists but remains unqualified for production |
 | Security headers/CSP | Applied through the estate proxy/security helpers |
 | Canonical host | nabhold.com is the declared canonical host when configured |
@@ -51,3 +51,13 @@ v2.0 is aligned to accepted ADR-BCP-026, ADR-BCP-027, Baobab EA Implementation P
 | R3 Group Oversight | NOT RELEASED |
 
 See [register.md](register.md) for the current blockers and implementation queue.
+
+## Local work without staging or AWS
+
+IAM’s [local provider bootstrap](https://github.com/baobab-platform/baobab-iam/blob/main/docs/operations/local-admin-bootstrap.md)
+now generates private local credentials through `make local-credentials` and
+requires explicit passwords. Provider access remains separate from native
+Kratos accounts and CP administrative grants. Shared/IAM also repair the
+previous rejection of the existing `content:entry:resolve` scope; no workload
+or capability is promoted by that syntax correction. See the register's
+non-staging source increment section for exact PRs and remaining acceptance.
