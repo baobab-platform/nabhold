@@ -15,7 +15,7 @@
 | Supplied by | Programme sponsor, 8 October 2026 |
 | Persons named on the certificate | Brian James Nabusiu: incorporator, and director (Directors table, status ACTIVE as at the certificate). Personal details deliberately not copied here. |
 | Roles stated by the sponsor (8 Oct 2026, interim) | Brian James Nabusiu: incorporator and director (both confirmed by the certificate). Brenda Adams: Company Secretary "for now"; the appointment is yet to be formalised (sponsor, 8 Oct 2026) and is not shown by the certificate. |
-| Reviewer sign-off | PENDING. Not to be given until the Company Secretary appointment is formalised; until then the director (Brian James Nabusiu) is the only verified office-holder. |
+| Reviewer sign-off | PENDING. An independently authorised CP reviewer may review the registration evidence without a Company Secretary appointment. Office-holder authority is a separate claim; the certificate records director status only as at 16 January 2026. |
 
 The source PDF is held by the sponsor and is deliberately not committed: its cover page carries a personal e-mail address.
 
@@ -30,4 +30,4 @@ The source PDF is held by the sponsor and is deliberately not committed: its cov
 
 ## Independence note
 
-Brenda Adams is the named onboarding requester (G02) and the intended Company Secretary, but that appointment is not yet formalised, so she cannot yet sign off this evidence. Brian James Nabusiu, the independent authoriser, is the verified director. If sign-off is needed before the appointment is formalised, record who gave it and in what capacity. The Control Plane maker/checker step must in any case be performed by two different Principals.
+Brenda Adams was named as an intended onboarding requester and Company Secretary; neither that name nor the unformalised appointment is an authorised CP Principal. Brian James Nabusiu is recorded as a director on the January certificate; current director and representative authority require their own evidence. Registration review need not wait for a Company Secretary appointment: use an independently authorised reviewer who did not assert the claim, and an independent authorised decider, with the required CP scopes and immutable decision evidence. Do not use a director’s own assertion as independent verification. The Control Plane maker/checker requirements remain in force.
