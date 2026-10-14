@@ -44,7 +44,7 @@ export default async function HomePage() {
 
   return <div className="overflow-hidden">
     <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }}/>
-    <Hero eyebrow={home.eyebrow} headline={home.headline} introduction={home.introduction} primaryCta={home.primaryCta} secondaryCta={home.secondaryCta}/>
+    <Hero eyebrow={home.eyebrow} headline={home.headline} introduction={home.introduction} primaryCta={home.primaryCta} secondaryCta={home.secondaryCta} heroMedia={home.heroMedia}/>
     <section className="border-b border-border bg-[var(--surface)] py-8"><div className="shell grid gap-6 sm:grid-cols-2 lg:grid-cols-4">{[
       ["Mandate","Holding company"],["Operating model","Autonomous businesses"],["Platform","Shared infrastructure"],["Horizon","Long-term value"]
     ].map(([label,value]) => <div key={label} className="border-l-2 border-[var(--gold)] pl-4"><p className="eyebrow">{label}</p><p className="mt-2 font-serif text-2xl">{value}</p></div>)}</div></section>
