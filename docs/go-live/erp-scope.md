@@ -1,5 +1,8 @@
 # ERP engine scope for Nabhold
 
+> **v2.0 control note (14 October 2026):** This remains a useful ERP scoping input, but it was written against the 8 October baseline. Accepted [NAB-GOLIVE-MP-001 v2.0](NAB-GOLIVE-MP-001.md), current Shared contracts and current ERP main take precedence over any stale status, deadline or provider statement below.
+
+
 **Purpose.** What `baobab-erp` must gain before Nabhold can consume finance, accounts, HR and payroll from it, in the order Nabhold needs it.
 **Basis.** Read-only survey of `baobab-erp` at `2ef19b8` (after #76), Shared `contracts/erp/v1` and `contracts/capability/v1`, and the masterplan NAB-GOLIVE-MP-001, on 8 October 2026.
 **Status.** A scoping input for ERP and Shared owners. It creates no canonical key, accepts no ADR and claims no support. Every "missing" below was checked in code and docs, but I could not run ERP or iDempiere.

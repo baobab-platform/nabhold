@@ -1,6 +1,6 @@
 # Evidence index
 
-Masterplan §10.3: evidence classes are not interchangeable. An ADR is not an implementation, a green CI run is not an active binding, and a simulated provider proves nothing about production.
+[NAB-GOLIVE-MP-001 v2.0](../NAB-GOLIVE-MP-001.md) §31: evidence classes are not interchangeable. An ADR is not an implementation, a green CI run is not an active binding, and a simulated provider proves nothing about production.
 
 Store pointers to immutable artefacts, not the artefacts themselves:
 

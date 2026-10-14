@@ -1,5 +1,8 @@
 # NAB-GOLIVE-MP-001 — Evidence delta (R0 focus)
 
+> **HISTORICAL EVIDENCE SNAPSHOT:** This 10 October delta assessed retired masterplan v1.0. It remains audit evidence only. Current programme status is in [register.md](register.md) under accepted [v2.0](NAB-GOLIVE-MP-001.md).
+
+
 **Parent document:** `NAB-GOLIVE-MP-001-masterplan-v1.0.md` (baseline 8 October 2026)  
 **Delta date:** 10 October 2026  
 **Scope of this pass:** release **R0 — Institutional public website** (gates G05, G15, G16, and the G01–G03 prerequisites R0 depends on). Other releases are only counted, not assessed.  

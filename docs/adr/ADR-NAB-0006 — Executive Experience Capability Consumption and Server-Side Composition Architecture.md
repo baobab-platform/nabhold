@@ -1,5 +1,8 @@
 # ADR-NAB-0006 — Executive Experience Capability Consumption and Server-Side Composition Architecture
 
+> **ADR-NAB-0014 amendment notice (14 October 2026):** Organisation-first tenancy, separate legal-actor authority, Option B autonomy and capability-specific activation in ADR-NAB-0014 supersede any older legal-entity-first or whole-tenant-readiness interpretation in this ADR. All other compatible decisions remain Accepted.
+
+
 **Status:** Accepted  
 **Date:** 2026-09-20  
 **Decision Owners:** Nabhold Group Africa / Baobab Platform Architecture  
