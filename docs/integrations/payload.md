@@ -199,3 +199,17 @@ Not implemented here — this repository does not modify other repositories:
 4. Wire the outbox dispatcher to call this estate's `POST /api/revalidate`
    on `content.published`/`content.unpublished`/`content.archived`.
 5. Define and publish a draft-preview contract.
+
+## Organisation-first canonical content (v2.0 G05 / P0-02)
+
+The canonical singleton adapter requires a Tenant, CP-issued context UUID,
+Digital Estate and trusted provider origin. `NABHOLD_CONTENT_LEGAL_ENTITY_ID`
+is optional: use it only to narrow content scope, never to stand in for
+Organisation identity or an operating legal actor. Omission follows the existing
+Shared content v1 contract and supports admitted businesses before incorporation.
+
+Do not introduce `organisation_id` into the content v1 body: its schema is closed.
+PRIMARY Organisation must be attested through Control Plane context validation
+at CMS. The current CMS validator still permits an absent Organisation; until
+that provider boundary and protected staging are qualified, these consumer
+changes do not close G05 or authorise R0 publication.

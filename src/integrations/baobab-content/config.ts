@@ -3,7 +3,7 @@
  * `content.entry.resolve` capability (register item 6, CMS track).
  *
  * Off unless NABHOLD_CONTENT_SOURCE is exactly "capability". When it is on,
- * every value below is required; a missing one turns the capability path off
+ * the Tenant, context and Digital Estate are required; a missing one turns the capability path off
  * (the estate then serves its own defaults for the five singleton keys, never
  * a guess). Nothing here has a NEXT_PUBLIC_* mirror.
  *
@@ -11,13 +11,15 @@
  * - tenantId: the Control Plane tenant id (tn_...) issued for Nabhold;
  * - platformContextId: a RUNTIME platform context the Control Plane issued for
  *   this workload (how it is issued and refreshed is not yet decided);
- * - legalEntityId / digitalEstateId / marketId: the canonical ids the CMS
- *   records are scoped to.
+ * - digitalEstateId / marketId: the canonical ids the CMS records are scoped to.
+ * - legalEntityId: an optional content filter, never Tenant identity or proof of
+ *   a legal-actor mandate (ADR-NAB-0014). PRIMARY Organisation authority comes
+ *   from CP context validation at the provider, not an environment hint.
  */
 export interface BaobabContentConfig {
   tenantId: string;
   platformContextId: string;
-  legalEntityId: string;
+  legalEntityId?: string;
   digitalEstateId: string;
   marketId?: string;
   locale: string;
@@ -31,6 +33,7 @@ export interface BaobabContentConfig {
 
 const DEFAULT_TIMEOUT_MS = 5_000;
 const TENANT_ID = /^tn_[a-z0-9]+$/;
+const UUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
 const LOCALE = /^[a-z]{2}(?:-[A-Z]{2})?$/;
 
 function parseServiceOrigins(raw: string | undefined): Record<string, string> | null {
@@ -61,7 +64,7 @@ export function getBaobabContentConfig(): BaobabContentConfig | null {
 
   const tenantId = process.env.NABHOLD_CONTENT_TENANT_ID;
   const platformContextId = process.env.NABHOLD_CONTENT_CONTEXT_ID;
-  const legalEntityId = process.env.NABHOLD_CONTENT_LEGAL_ENTITY_ID;
+  const legalEntityId = process.env.NABHOLD_CONTENT_LEGAL_ENTITY_ID || undefined;
   const digitalEstateId = process.env.NABHOLD_CONTENT_DIGITAL_ESTATE_ID;
   const locale = process.env.NABHOLD_CONTENT_LOCALE ?? "en-ZA";
   const serviceOrigins = parseServiceOrigins(process.env.NABHOLD_SERVICE_ORIGINS);
@@ -70,7 +73,7 @@ export function getBaobabContentConfig(): BaobabContentConfig | null {
     !tenantId ||
     !TENANT_ID.test(tenantId) ||
     !platformContextId ||
-    !legalEntityId ||
+    !UUID.test(platformContextId) ||
     !digitalEstateId ||
     !LOCALE.test(locale) ||
     !serviceOrigins

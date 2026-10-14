@@ -85,7 +85,7 @@ describe("capability gateway composition", () => {
   it.each([
     ["NABHOLD_CONTENT_TENANT_ID", "Nabhold"],
     ["NABHOLD_CONTENT_CONTEXT_ID", ""],
-    ["NABHOLD_CONTENT_LEGAL_ENTITY_ID", ""],
+    ["NABHOLD_CONTENT_CONTEXT_ID", "not-a-context"],
     ["NABHOLD_CONTENT_DIGITAL_ESTATE_ID", ""],
     ["NABHOLD_SERVICE_ORIGINS", "not json"],
     ["NABHOLD_SERVICE_ORIGINS", JSON.stringify({ x: "https://cms.example/path" })],
@@ -95,6 +95,13 @@ describe("capability gateway composition", () => {
     full();
     vi.stubEnv(name, value);
     expect(createCapabilityContentGatewayFromEnv(transitional)).toBeNull();
+  });
+
+  it("allows Organisation-bound content without a LegalEntity", () => {
+    full();
+    vi.stubEnv("NABHOLD_CONTENT_LEGAL_ENTITY_ID", "");
+    expect(getBaobabContentConfig()?.legalEntityId).toBeUndefined();
+    expect(createCapabilityContentGatewayFromEnv(transitional)).not.toBeNull();
   });
 
   it("requires https origins in production", () => {
