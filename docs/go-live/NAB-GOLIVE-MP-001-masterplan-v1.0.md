@@ -1,6 +1,8 @@
 # NABHOLD GROUP AFRICA
 ## Corporate Digital Estate & Baobab Platform Commercialisation — Go-Live Masterplan
 
+> **HISTORICAL / RETIRED:** This v1.0 baseline was retired on 14 October 2026 and is preserved for audit history only. The accepted controlling plan is [NAB-GOLIVE-MP-001 v2.0](NAB-GOLIVE-MP-001.md). Do not use this document to sequence new implementation or onboarding.
+
 **Document ID:** NAB-GOLIVE-MP-001  
 **Version:** 1.0 — proposed baseline for formal approval  
 **Baseline date:** 8 October 2026  
@@ -8,7 +10,7 @@
 **Primary implementation repository:** [`baobab-platform/nabhold`](https://github.com/baobab-platform/nabhold)  
 **Platform architecture/contract authority:** [`baobab-platform/shared`](https://github.com/baobab-platform/shared)  
 **Tenancy/entitlement authority:** [`baobab-platform/baobab-cp`](https://github.com/baobab-platform/baobab-cp)  
-**Status:** DRAFT FOR ARCHITECTURAL RATIFICATION — not a claim that any gate is complete  
+**Status:** HISTORICAL — RETIRED 14 OCTOBER 2026; superseded by NAB-GOLIVE-MP-001 v2.0  
 **Baseline convention:** `EVIDENCED` = implementation seen in source/declaration; `DECLARED` = canonical contract only; `PLANNED` = proposal not yet canonically registered; `UNVERIFIED` = no acceptance evidence; `BLOCKED` = required prerequisite absent. **Neither source code nor a green CI test establishes a production-active CapabilityBinding.**
 
 > **Master rule:** This document is the *programme reference* for Nabhold go-live, not an alternative source of canonical contracts, runtime permissions, financial truth or legal advice. Accepted Shared, Control Plane and engine ADRs govern their own domains. Any contradiction is a blocking decision to reconcile through an ADR and contract PR, not an invitation for Nabhold frontend code to invent a workaround.
