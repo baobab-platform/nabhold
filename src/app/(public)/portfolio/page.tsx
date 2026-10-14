@@ -1,43 +1,47 @@
-import Link from "next/link";
-
-import { listPortfolioCompanies } from "@/features/portfolio/queries";
+import { listPortfolioCompanies } from "@/features/portfolio/queries"
+import { PageHeader } from "@/components/marketing/page-header"
+import { CompanyCard } from "@/components/marketing/company-card"
+import { PreviewBanner } from "@/components/dashboard/preview-banner"
+import { EmptyState } from "@/components/dashboard/empty-state"
 
 export default async function Page() {
-  const portfolio = await listPortfolioCompanies();
+  const portfolio = await listPortfolioCompanies()
 
   return (
-    <section className="shell py-20">
-      <p className="eyebrow">Portfolio</p>
-      <h1 className="display mt-5 text-6xl">
-        Independent businesses. Shared discipline.
-      </h1>
-      {portfolio.some((c) => c.devFallback) && (
-        <p
-          role="status"
-          className="mt-5 border border-amber-500 bg-amber-50 p-3 text-sm"
-        >
-          Development preview data only. No Payload content is connected.
-        </p>
-      )}
-      {portfolio.length === 0 ? (
-        <p className="mt-14 text-[var(--muted)]">
-          Portfolio content is not yet available.
-        </p>
-      ) : (
-        <div className="mt-14 divide-y divide-[var(--line)] border-y border-[var(--line)]">
-          {portfolio.map((c) => (
-            <Link
-              href={`/portfolio/${c.slug}`}
-              key={c.slug}
-              className="grid gap-3 py-8 md:grid-cols-[1fr_1fr_2fr]"
-            >
-              <h2 className="font-serif text-3xl">{c.name}</h2>
-              <p className="text-sm font-bold">{c.sector}</p>
-              <p className="text-[var(--muted)]">{c.summary}</p>
-            </Link>
-          ))}
-        </div>
-      )}
-    </section>
-  );
+    <>
+      <PageHeader
+        eyebrow="Portfolio"
+        title="Independent businesses. Shared discipline."
+        breadcrumbs={[
+          { label: "Home", href: "/" },
+          { label: "Portfolio" },
+        ]}
+      />
+      <section className="shell pb-20">
+        {portfolio.some((c) => c.devFallback) ? (
+          <div className="mb-8">
+            <PreviewBanner description="Development preview data only. No Payload content is connected." />
+          </div>
+        ) : null}
+        {portfolio.length === 0 ? (
+          <EmptyState
+            title="Portfolio content is not yet available"
+            description="Companies will appear here once published through the corporate content gateway."
+          />
+        ) : (
+          <div className="grid gap-5 md:grid-cols-2 lg:grid-cols-3">
+            {portfolio.map((c) => (
+              <CompanyCard
+                key={c.slug}
+                slug={c.slug}
+                name={c.name}
+                summary={c.summary}
+                sector={c.sector}
+              />
+            ))}
+          </div>
+        )}
+      </section>
+    </>
+  )
 }
