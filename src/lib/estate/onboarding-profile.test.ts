@@ -14,124 +14,113 @@ const profilePath = path.join(
   "docs/go-live/onboarding/nabhold-internal-onboarding-profile.json",
 );
 
-type Profile = Record<string, Record<string, unknown>>;
-
-function loadProfile(): Profile {
-  return JSON.parse(readFileSync(profilePath, "utf8")) as Profile;
+function loadProfile(): unknown {
+  return JSON.parse(readFileSync(profilePath, "utf8"));
 }
 
-describe("Nabhold INTERNAL onboarding profile", () => {
-  it("conforms to the profile schema", () => {
-    expect(onboardingProfileSchema.safeParse(loadProfile()).success).toBe(true);
+describe("Nabhold Organisation-first onboarding profile v2", () => {
+  it("conforms to the accepted v2.0 planning schema", () => {
+    const parsed = onboardingProfileSchema.parse(loadProfile());
+    expect(parsed.masterplan_version).toBe("2.0");
+    expect(parsed.status).toBe("DRAFT_CONTROLLED_STAGING_INPUT");
   });
 
-  it("carries the verified CIPC facts and no longer has G01 blockers", () => {
+  it("keeps documentary CIPC facts explicitly unverified", () => {
     const profile = onboardingProfileSchema.parse(loadProfile());
 
-    expect(profile.organisation).toMatchObject({
-      legal_name: "NABHOLD GROUP AFRICA (Pty) Ltd",
-      jurisdiction: "ZA",
-      registration_identifier: "2026/029839/07",
+    expect(profile.business_identity).toMatchObject({
+      legal_name_claim: "NABHOLD GROUP AFRICA (Pty) Ltd",
+      jurisdiction_claim: "ZA",
+      registration_identifier_claim: "2026/029839/07",
+      evidence_posture: "DOCUMENTED_NOT_INDEPENDENTLY_VERIFIED",
     });
-    expect(
-      assessOnboardingReadiness(profile).blockers.filter((b) =>
-        b.startsWith("G01"),
-      ),
-    ).toEqual([]);
+    expect(assessOnboardingReadiness(profile).blockers).toContain(
+      "G01B: independent Nabhold verification is not accepted",
+    );
   });
 
-  it("names a requester and a distinct independent authoriser", () => {
+  it("does not pretend named humans are Control Plane Principals", () => {
+    const profile = onboardingProfileSchema.parse(loadProfile());
+    const assessment = assessOnboardingReadiness(profile);
+
+    expect(Object.values(profile.principals).every((value) => value === null)).toBe(
+      true,
+    );
+    expect(assessment.readyForControlledSubmission).toBe(false);
+    expect(
+      assessment.blockers.filter((blocker) => blocker.startsWith("G04A:")),
+    ).toHaveLength(6);
+  });
+
+  it("does not pre-mint Organisation or Tenant identity", () => {
     const profile = onboardingProfileSchema.parse(loadProfile());
 
-    expect(profile.approvals).toEqual({
-      requester: "Brenda Adams",
-      independent_authoriser: "Brian Nabusiu",
-    });
-    expect(profile.digital_estate.domains).toEqual([
-      "nabhold.com",
-      "www.nabhold.com",
-    ]);
-    expect(profile.digital_estate.canonical_domain).toBe("nabhold.com");
-    expect(assessOnboardingReadiness(profile)).toEqual({
-      readyToSubmit: true,
-      blockers: [],
-    });
+    expect(profile.organisation.organisation_id).toBeNull();
+    expect(profile.tenant.tenant_id).toBeNull();
+    expect(profile.tenant.identity_state_target).toBe(
+      "IDENTITY_TENANT_ACCEPTED_NOT_PRODUCTION",
+    );
   });
 
-  it("is blocked when approvals are removed", () => {
-    const raw = loadProfile();
-    raw.approvals.requester = null;
-    raw.approvals.independent_authoriser = null;
+  it("rejects invented Organisation and Tenant ids as readiness", () => {
+    const raw = onboardingProfileSchema.parse(loadProfile());
+    const withIds = {
+      ...raw,
+      organisation: { ...raw.organisation, organisation_id: "org_fake" },
+      tenant: { ...raw.tenant, tenant_id: "tn_fake" },
+    };
+    const assessment = assessOnboardingReadiness(
+      onboardingProfileSchema.parse(withIds),
+    );
 
-    expect(
-      assessOnboardingReadiness(onboardingProfileSchema.parse(raw)).blockers,
-    ).toEqual([
-      "G02: approvals.requester is not named",
-      "G02: approvals.independent_authoriser is not named",
-    ]);
-  });
-
-  it("reports G01 blockers when legal facts are removed", () => {
-    const raw = loadProfile();
-    raw.organisation.jurisdiction = null;
-    raw.organisation.registration_identifier = null;
-    raw.organisation.legal_evidence_ref = null;
-
-    expect(
-      assessOnboardingReadiness(onboardingProfileSchema.parse(raw)).blockers,
-    ).toEqual(
+    expect(assessment.blockers).toEqual(
       expect.arrayContaining([
-        "G01: organisation.jurisdiction is unverified",
-        "G01: organisation.registration_identifier is unverified",
-        "G01: organisation.legal_evidence_ref is missing",
+        "G02B: this repository must not pre-mint organisation_id; use CP state",
+        "G02D: this repository must not pre-mint tenant_id; use CP state",
       ]),
     );
   });
 
-  it("rejects an authoriser who is the requester", () => {
-    const raw = loadProfile();
-    raw.approvals.independent_authoriser = raw.approvals.requester;
-    expect(
-      assessOnboardingReadiness(onboardingProfileSchema.parse(raw)).blockers,
-    ).toEqual([
-      "G02: authoriser must be a different principal from requester",
-    ]);
+  it("keeps Nabhold non-trading and ZA scoped", () => {
+    const raw = onboardingProfileSchema.parse(loadProfile());
+
+    expect(raw.market.operating_markets).toEqual(["ZA"]);
+    const invalid = {
+      ...raw,
+      market: {
+        ...raw.market,
+        participation_activities: ["SELLING_GOODS"],
+      },
+    };
+    expect(onboardingProfileSchema.safeParse(invalid).success).toBe(false);
   });
 
-  it("rejects a billable, wildcard or non-ZA classification", () => {
-    for (const mutate of [
-      (p: Profile) => (p.classification.monetary_charge = 10),
-      (p: Profile) => (p.classification.billing_required = true),
-      (p: Profile) => (p.classification.usage_metering = false),
-      (p: Profile) => (p.market.operating_markets = ["KE"]),
-      (p: Profile) => (p.market.operating_markets = ["*"]),
-      (p: Profile) => (p.tenant_id = "*" as unknown as Record<string, unknown>),
-    ]) {
-      const raw = loadProfile();
-      mutate(raw);
+  it("requires canonical domains to match the estate declaration", () => {
+    const raw = onboardingProfileSchema.parse(loadProfile());
+    const invalid = {
+      ...raw,
+      digital_estate: {
+        ...raw.digital_estate,
+        canonical_domain: "other.example",
+      },
+    };
 
-      expect(onboardingProfileSchema.safeParse(raw).success).toBe(false);
-    }
+    expect(onboardingProfileSchema.safeParse(invalid).success).toBe(false);
   });
 
-  it("requires the canonical domain to be one of the estate domains", () => {
-    const raw = loadProfile();
-    raw.digital_estate.canonical_domain = "other.example";
+  it("refuses proposed noncanonical capability keys", () => {
+    const raw = onboardingProfileSchema.parse(loadProfile());
+    const invalid = {
+      ...raw,
+      requested_capabilities: {
+        ...raw.requested_capabilities,
+        R1_foundation: [
+          ...raw.requested_capabilities.R1_foundation,
+          "finance.ledger.read",
+        ],
+      },
+    };
 
-    expect(onboardingProfileSchema.safeParse(raw).success).toBe(false);
-  });
-
-  it("refuses trading activity for the holding company", () => {
-    const raw = loadProfile();
-    raw.market.participation_activities = ["SELLING_GOODS"];
-
-    expect(onboardingProfileSchema.safeParse(raw).success).toBe(false);
-  });
-
-  it("refuses non-canonical or proposed capability keys", () => {
-    const raw = loadProfile();
-    (raw.requested_capabilities.R1 as string[]).push("finance.ledger.balance.read");
-
-    expect(onboardingProfileSchema.safeParse(raw).success).toBe(false);
+    expect(onboardingProfileSchema.safeParse(invalid).success).toBe(false);
   });
 });
