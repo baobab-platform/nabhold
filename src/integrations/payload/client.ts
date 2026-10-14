@@ -87,6 +87,7 @@ class PayloadCorporateContentGateway implements CorporateContentGateway {
       ...fields.canonical,
       eyebrow: fields.eyebrow ?? ESTATE_DEFAULT_HOME_PAGE.eyebrow,
       headline: fields.headline ?? ESTATE_DEFAULT_HOME_PAGE.headline,
+      accentHeadline: fields.accentHeadline ?? ESTATE_DEFAULT_HOME_PAGE.accentHeadline,
       introduction: fields.introduction ?? ESTATE_DEFAULT_HOME_PAGE.introduction,
       primaryCta: fields.primaryCta ?? ESTATE_DEFAULT_HOME_PAGE.primaryCta,
       secondaryCta: fields.secondaryCta ?? ESTATE_DEFAULT_HOME_PAGE.secondaryCta,
@@ -95,6 +96,7 @@ class PayloadCorporateContentGateway implements CorporateContentGateway {
         fields.institutionalStatement ??
         ESTATE_DEFAULT_HOME_PAGE.institutionalStatement,
       heroMedia: fields.heroMedia,
+      heroGallery: fields.heroGallery,
       seo: fields.seo,
     };
   }

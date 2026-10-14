@@ -8,10 +8,8 @@ export const ESTATE_DEFAULT_NAVIGATION: Navigation = {
   primary: [
     { label: "Our Group", href: "/about/group" },
     { label: "Businesses", href: "/portfolio" },
-    { label: "Investment", href: "/#investment" },
-    { label: "Markets", href: "/#markets" },
-    { label: "Intelligence", href: "/#intelligence" },
-    { label: "Governance", href: "/#governance" },
+    { label: "Investment", href: "/investment" },
+    { label: "Insights", href: "/insights" },
   ],
 };
 
@@ -36,11 +34,13 @@ export const ESTATE_DEFAULT_SITE_SETTINGS: SiteSettings = {
 
 export const ESTATE_DEFAULT_HOME_PAGE: HomePageContent = {
   eyebrow: "Nabhold Group Africa",
-  headline: "Building enduring African enterprises.",
-  introduction: "A long-term African holding company that supports independently operated businesses through disciplined capital, governance and shared capabilities.",
+  headline: "Building what lasts.",
+  accentHeadline: "Enabling what’s next.",
+  introduction: "We build and steward enduring African enterprises while developing Baobab Platform to enable businesses within and beyond our Group.",
   primaryCta: { label: "Explore our businesses", href: "/portfolio" },
-  secondaryCta: { label: "Our investment approach", href: "/#investment" },
+  secondaryCta: { label: "Discover Baobab Platform", href: "/platform" },
   featuredPortfolioCompanies: [],
+  heroGallery: [],
   institutionalStatement: "Strong Roots. Inspired Growth.",
 };
 

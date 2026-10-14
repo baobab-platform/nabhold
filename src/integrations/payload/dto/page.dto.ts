@@ -37,12 +37,14 @@ export const pageDtoSchema = canonicalContextDtoSchema.extend({
   // Home page (contentKey: "home") — forward-looking, optional.
   eyebrow: z.string().optional(),
   headline: z.string().optional(),
+  accentHeadline: z.string().optional(),
   introduction: z.string().optional(),
   primaryCta: callToActionDtoSchema.optional(),
   secondaryCta: callToActionDtoSchema.optional(),
   featuredPortfolioCompanies: z.array(z.string()).optional(),
   institutionalStatement: z.string().optional(),
   heroMedia: mediaDtoSchema.nullable().optional(),
+  heroGallery: z.array(mediaDtoSchema).max(4).optional(),
 
   // Navigation (contentKey: "navigation") — forward-looking, optional.
   navigationItems: z.array(navigationItemDtoSchema).optional(),

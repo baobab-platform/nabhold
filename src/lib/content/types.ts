@@ -181,12 +181,16 @@ export interface PaginatedInsights {
 export interface HomePageContent extends CanonicalContext {
   eyebrow?: string;
   headline: string;
+  /** Optional highlighted second line of the institutional hero headline. */
+  accentHeadline?: string;
   introduction?: string;
   primaryCta?: CallToAction;
   secondaryCta?: CallToAction;
   featuredPortfolioCompanies: PortfolioCompanySummary[];
   institutionalStatement?: string;
   heroMedia?: MediaAsset | null;
+  /** Additional approved CMS media for the editorial hero collage. */
+  heroGallery?: MediaAsset[];
   seo?: SeoMetadata;
 }
 

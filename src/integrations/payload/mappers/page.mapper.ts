@@ -15,11 +15,13 @@ import { mapSeo } from "./seo.mapper";
 export interface MappedHomePageFields {
   eyebrow?: string;
   headline?: string;
+  accentHeadline?: string;
   introduction?: string;
   primaryCta?: { label: string; href: string };
   secondaryCta?: { label: string; href: string };
   institutionalStatement?: string;
   heroMedia: ReturnType<typeof mapMedia>;
+  heroGallery: NonNullable<ReturnType<typeof mapMedia>>[];
   featuredPortfolioCompanySlugs: string[];
   seo: ReturnType<typeof mapSeo>;
   canonical: ReturnType<typeof mapCanonicalContext>;
@@ -29,11 +31,16 @@ export function toHomePageFields(dto: PageDto): MappedHomePageFields {
   return {
     eyebrow: dto.eyebrow,
     headline: dto.headline,
+    accentHeadline: dto.accentHeadline,
     introduction: dto.introduction,
     primaryCta: dto.primaryCta,
     secondaryCta: dto.secondaryCta,
     institutionalStatement: dto.institutionalStatement,
     heroMedia: mapMedia(dto.heroMedia),
+    heroGallery: (dto.heroGallery ?? []).flatMap((media) => {
+      const asset = mapMedia(media);
+      return asset ? [asset] : [];
+    }),
     featuredPortfolioCompanySlugs: dto.featuredPortfolioCompanies ?? [],
     seo: mapSeo(dto.seo),
     canonical: mapCanonicalContext(dto),
