@@ -36,6 +36,7 @@ export function MobileNav({
         </SheetHeader>
         <nav aria-label="Mobile primary" className="mt-6 grid gap-1">
           {items.map((item) => (
+            <React.Fragment key={item.href}>
             <Link
               key={item.href}
               href={item.href}
@@ -45,6 +46,7 @@ export function MobileNav({
               {item.label}
             </Link>
             {item.children?.length ? <div className="mb-3 ml-4 grid gap-1 border-l border-border pl-3">{item.children.filter(child => child.href !== item.href).map(child => <Link key={child.href} href={child.href} onClick={() => setOpen(false)} className="rounded-lg px-3 py-2 text-xs text-muted-foreground hover:bg-muted">{child.label}</Link>)}</div> : null}
+            </React.Fragment>
           ))}
           <Link
             href={portalHref}
