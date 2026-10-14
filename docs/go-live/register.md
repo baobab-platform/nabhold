@@ -12,7 +12,7 @@ This register records source/runtime evidence known from the repositories. It is
 |---|---|---|---|
 | G00 Programme control | ACCEPTED | Masterplan v2.0 accepted; ADR-NAB-0014 accepted; v1.0 retired | Keep register/evidence current |
 | G01A documentary identity | PARTIAL | Nabhold and Thamani CIPC documentary references recorded in Shared; Nabhold evidence file present | Reviewer/legal governance completion |
-| G01B independent verification | BLOCKED | CP verification/custody machinery exists; no independently accepted real Nabhold verification case | Real source + independent decision |
+| G01B independent verification | IMPLEMENTATION PARTIAL / EXECUTION DEFERRED | Real Nabhold/Thamani registration packet, validation and offline CP request preparation implemented; no independently accepted real case yet | Later authorised source/custody intake + independent CP decision |
 | G01C group relationships/mandates | BLOCKED | CP relationship/mandate machinery exists; no accepted real control/mandate evidence for programme use | Evidence-backed relationships/mandates |
 | G02 Organisation-first onboarding | IMPLEMENTED-NOT-EXECUTED | CP progressive application, independent review/decision, TenantOnboardingRequest v2 and RegisterProgressiveTenantV2 implemented; synthetic four-business PG17 acceptance exists | Execute real Nabhold controlled staging flow |
 | G03 capability programme | IN PROGRESS | Shared catalogue has 22 keys; ADR-SHARED-033 finance inventory remains Proposed | Finance F1 contracts + subsequent domains |
@@ -57,7 +57,7 @@ Group membership never grants cross-tenant access.
 
 | ID | Blocker | Owner lane |
 |---|---|---|
-| V2-B01 | No independently accepted real Nabhold legal verification case | CP / governance / source integration |
+| V2-B01 | Verification preparation implemented; real independently accepted case deferred pending authorised execution | CP / IAM / governance / source integration |
 | V2-B02 | Real onboarding human Principals/SoD not established for the journey | IAM / CP |
 | V2-B03 | Progressive/Organisation-first production routes deliberately closed pending certification | CP / security |
 | V2-B04 | EA developer-unfreeze Gate B not passed | Shared / platform |
@@ -82,7 +82,7 @@ Group membership never grants cross-tenant access.
 
 **Completed source task:** P0-02 — Organisation-first content context convergence (Nabhold #39; CMS #33/#34). Exit: no legal-entity-first contract drift. G05 is still PARTIAL; protected identity and binding qualification belong to P0-04/P0-06/P0-07.
 
-1. **P0-03 — real Nabhold independent verification path.**
+1. **P0-03 — preparation implemented; authenticated real-case execution deferred.** See [runbook](onboarding/P0-03-legal-verification-runbook.md).
 3. **P0-04 — real CP onboarding Principals and protected staging identity.**
 4. **P0-05 — execute Nabhold progressive controlled staging onboarding to IDENTITY_TENANT_ACCEPTED_NOT_PRODUCTION.**
 5. **P0-06 — activate the first qualified capability: Nabhold workload + CMS R0.**
@@ -156,3 +156,28 @@ No new body field may be added to pinned
 Shared content v1 without contract governance. P0-03–P0-07 require real,
 independently accepted identity/Principal/staging evidence; no synthetic fixture
 or local setting is accepted as that evidence. Production remains unauthorised.
+
+## 10. P0-03 implementation — registered ZA businesses, execution deferred
+
+Sponsor instruction (14 October 2026): proceed with P0-03 for the legally
+registered Nabhold Group Africa and Thamani Global; provision authorised IAM
+Principals and protected staging credentials later.
+
+Implemented:
+
+- [Separate real registration packet](onboarding/za-legal-verification-packet.json)
+  for Nabhold `2026/029839/07` and Thamani `2026/291672/07`.
+- Closed schema validation, exact business/fact/evidence association, offline
+  preparation assessment and canonical CP case/claim draft compilation.
+- `pnpm verification:prepare`, with no network, tokens, submission or status promotion.
+- [Deferred execution runbook](onboarding/P0-03-legal-verification-runbook.md)
+  covering real Organisation identities, independent reviewers, source/custody,
+  registration-before-name checks, policy freshness, decisions and evidence.
+- Removed the unsupported blanket requirement to formalise a Company Secretary
+  appointment before independent registration review. Office-holder authority
+  remains a separate claim.
+
+P0-03's accepted-real-case exit is unchanged and pending deferred execution.
+G01B is not PASS. Thamani's certificate enterprise label/full declared name are
+preserved separately for official-source review. No current legal status,
+ownership, director authority, tax standing or production acceptance is inferred.

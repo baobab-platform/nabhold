@@ -1,0 +1,31 @@
+{
+  "packet_version": "1.0.0",
+  "masterplan": "NAB-GOLIVE-MP-001",
+  "masterplan_version": "2.0",
+  "task": "P0-03",
+  "status": "PREPARED_NOT_SUBMITTED",
+  "businesses": [
+    {
+      "business_id": "NABHOLD",
+      "legal_name": "NABHOLD GROUP AFRICA (Pty) Ltd",
+      "registration_identifier": "2026/029839/07",
+      "jurisdiction": "ZA",
+      "registration_effective_date": "2026-01-16",
+      "certificate_issued_date": "2026-01-16",
+      "certificate_enterprise_name": "NABHOLD GROUP AFRICA (Pty) Ltd",
+      "documentary_reference": "baobab-platform/nabhold:docs/go-live/evidence/G01/production/2026-01-16-cipc-registration.md",
+      "documentary_posture": "REGISTERED_EVIDENCED"
+    },
+    {
+      "business_id": "THAMANI-GLOBAL",
+      "legal_name": "THAMANI GLOBAL (Pty) Ltd",
+      "registration_identifier": "2026/291672/07",
+      "jurisdiction": "ZA",
+      "registration_effective_date": "2026-04-09",
+      "certificate_issued_date": "2026-04-13",
+      "certificate_enterprise_name": "THAMANI GLOBAL",
+      "documentary_reference": "baobab-platform/thamani:docs/legal/evidence/2026-04-09-cipc-registration.md",
+      "documentary_posture": "REGISTERED_EVIDENCED"
+    }
+  ]
+}
