@@ -37,6 +37,7 @@ export default async function Page() {
                 name={c.name}
                 summary={c.summary}
                 sector={c.sector}
+                image={c.logo ?? null}
               />
             ))}
           </div>
