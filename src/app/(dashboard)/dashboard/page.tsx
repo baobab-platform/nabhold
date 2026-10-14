@@ -1,1 +1,111 @@
-import {getExecutiveOverview,PulseUnavailableError} from "@/lib/pulse/client";import {notFound} from "next/navigation";import {isReleaseEnabled} from "@/lib/release/release-class";import {previewOverview} from "@/features/pulse/preview";export default async function Page(){if(!isReleaseEnabled("R3"))notFound();let data;let preview=false;try{data=await getExecutiveOverview()}catch(error){if(!(error instanceof PulseUnavailableError)||process.env.NABHOLD_DASHBOARD_PREVIEW!=="true")throw error;data=previewOverview;preview=true}return <div><p className="eyebrow">Decision surface</p><h1 className="mt-2 font-serif text-4xl">Executive overview</h1><p role="note" className="mt-3 text-sm text-[var(--muted)]">Advisory prototype. Not sourced from a canonical Baobab capability (NAB-GOLIVE-MP-001 B-13); not an authoritative financial or market statement.</p>{preview&&<p role="status" className="mt-5 border border-amber-500 bg-amber-50 p-3 text-sm">Preview data only. No Pulse API is connected.</p>}<section className="mt-8"><h2 className="font-serif text-2xl">Market signals</h2><div className="mt-4 grid gap-4 md:grid-cols-2">{data.signals.map(s=><article className="card p-5" key={s.id}><span className="text-xs font-bold">{s.market}</span><h3 className="mt-6 text-xl font-bold">{s.title}</h3><p className="mt-2 capitalize text-[var(--gold-deep)]">{s.direction} · {Math.round(s.confidence*100)}%</p></article>)}</div></section><section className="mt-10"><h2 className="font-serif text-2xl">Ranked opportunities</h2><div className="card mt-4 overflow-x-auto"><table className="w-full text-left text-sm"><thead><tr><th className="p-4">Opportunity</th><th className="p-4">Market</th><th className="p-4">Score</th></tr></thead><tbody>{data.opportunities.map(o=><tr className="border-t border-[var(--line)]" key={o.id}><td className="p-4"><strong>{o.title}</strong><span className="block text-xs text-[var(--muted)]">{o.rationale}</span></td><td className="p-4">{o.market}</td><td className="p-4 font-bold">{o.score}</td></tr>)}</tbody></table></div></section></div>}
+import { notFound } from "next/navigation"
+
+import {
+  getExecutiveOverview,
+  PulseUnavailableError,
+} from "@/lib/pulse/client"
+import { isReleaseEnabled } from "@/lib/release/release-class"
+import { previewOverview } from "@/features/pulse/preview"
+import { SignalCard } from "@/components/dashboard/signal-card"
+import { OpportunityTable } from "@/components/dashboard/opportunity-table"
+import { KpiCard } from "@/components/dashboard/kpi-card"
+import { PreviewBanner } from "@/components/dashboard/preview-banner"
+import { ChartCard } from "@/components/dashboard/chart-card"
+import { SectionHeader } from "@/components/marketing/section-header"
+
+export default async function Page() {
+  if (!isReleaseEnabled("R3")) notFound()
+
+  let data
+  let preview = false
+  try {
+    data = await getExecutiveOverview()
+  } catch (error) {
+    if (
+      !(error instanceof PulseUnavailableError) ||
+      process.env.NABHOLD_DASHBOARD_PREVIEW !== "true"
+    ) {
+      throw error
+    }
+    data = previewOverview
+    preview = true
+  }
+
+  const avgConfidence =
+    data.signals.length > 0
+      ? Math.round(
+          (data.signals.reduce((a: number, s: { confidence: number }) => a + s.confidence, 0) /
+            data.signals.length) *
+            100
+        )
+      : 0
+
+  return (
+    <div className="space-y-10">
+      <div>
+        <p className="eyebrow">Decision surface</p>
+        <h1 className="mt-2 font-serif text-4xl">Executive overview</h1>
+        <p role="note" className="mt-3 text-sm text-muted-foreground">
+          Advisory prototype. Not sourced from a canonical Baobab capability
+          (NAB-GOLIVE-MP-001 B-13); not an authoritative financial or market
+          statement.
+        </p>
+      </div>
+
+      {preview ? (
+        <PreviewBanner description="Preview data only. No Pulse API is connected." />
+      ) : null}
+
+      <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+        <KpiCard label="Signals" value={String(data.signals.length)} />
+        <KpiCard label="Opportunities" value={String(data.opportunities.length)} />
+        <KpiCard
+          label="Avg confidence"
+          value={`${avgConfidence}%`}
+          deltaTone="neutral"
+        />
+        <KpiCard label="Mode" value={preview ? "Preview" : "Live"} />
+      </div>
+
+      <section>
+        <SectionHeader title="Market signals" className="mb-4" />
+        <div className="grid gap-4 md:grid-cols-2">
+          {data.signals.map(
+            (s: {
+              id: string
+              market: string
+              title: string
+              direction: string
+              confidence: number
+            }) => (
+              <SignalCard
+                key={s.id}
+                market={s.market}
+                title={s.title}
+                direction={s.direction}
+                confidence={s.confidence}
+              />
+            )
+          )}
+        </div>
+      </section>
+
+      <section>
+        <SectionHeader title="Ranked opportunities" className="mb-4" />
+        <OpportunityTable rows={data.opportunities} />
+      </section>
+
+      <section>
+        <ChartCard
+          title="Illustrative confidence series"
+          data={data.signals.map(
+            (s: { market: string; confidence: number }, i: number) => ({
+              label: s.market || `S${i + 1}`,
+              value: Math.round(s.confidence * 100),
+            })
+          )}
+        />
+      </section>
+    </div>
+  )
+}
