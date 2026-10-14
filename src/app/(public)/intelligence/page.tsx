@@ -1,10 +1,13 @@
 import type { Metadata } from "next";
 import { ChartNoAxesCombined, BookOpen, Compass, ShieldCheck } from "lucide-react";
 import { EditorialPage } from "@/components/marketing/editorial-page";
+import { listInsights } from "@/features/insights/queries";
+import { InsightCard } from "@/components/marketing/insight-card";
+import Link from "next/link";
 export const metadata:Metadata={title:"Intelligence | Nabhold Group Africa",description:"Market research, sector perspectives and evidence-aware decision support."};
-export default function Page(){return <EditorialPage eyebrow="Nabhold intelligence" title="Better intelligence. Better decisions." lead="Our ambition is evidence-aware research that helps the Group understand changing African markets. Only published, approved research is made available publicly." principles={[
+export default async function Page(){const publications=await listInsights({pageSize:3});return <><EditorialPage eyebrow="Nabhold intelligence" title="Better intelligence. Better decisions." lead="Our ambition is evidence-aware research that helps the Group understand changing African markets. Only published, approved research is made available publicly." principles={[
 {title:"Market intelligence",body:"Research into commercial context and changing market conditions, with clear source attribution.",icon:Compass},
 {title:"Sector outlooks",body:"Longer-horizon perspectives on sectors relevant to the Group's strategic interests.",icon:ChartNoAxesCombined},
 {title:"Published perspectives",body:"Editorial research and articles are surfaced through the corporate content gateway.",icon:BookOpen},
 {title:"Responsible interpretation",body:"Evidence, uncertainty and publication approvals matter as much as the analytical output.",icon:ShieldCheck}
-]} closing="Insight earns credibility when its evidence is transparent." related={[{label:"Published insights",href:"/insights"},{label:"African markets",href:"/markets"},{label:"Investment approach",href:"/investment"}]}/>}
+]} closing="Insight earns credibility when its evidence is transparent." related={[{label:"Published insights",href:"/insights"},{label:"African markets",href:"/markets"},{label:"Investment approach",href:"/investment"}]}/><section className="shell py-20"><div className="flex flex-wrap items-end justify-between gap-5"><div><p className="eyebrow">Published research</p><h2 className="mt-4 font-serif text-4xl">Latest Group perspectives</h2></div><Link href="/insights" className="font-semibold text-[var(--gold-deep)]">All publications →</Link></div>{publications.items.length > 0 ? <div className="mt-10 grid gap-5 md:grid-cols-3">{publications.items.map(item=><InsightCard key={item.slug} slug={item.slug} title={item.title} summary={item.excerpt} topic={item.contentType} publishedAt={new Date(item.publishedAt).toLocaleDateString("en-ZA")}/>)}</div> : <p className="mt-8 text-muted-foreground">Approved research appears here when published through the corporate content gateway.</p>}</section></>}
