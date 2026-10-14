@@ -45,12 +45,12 @@ export async function SiteHeader() {
         </Link>
         <nav aria-label="Primary" className="hidden items-center gap-4 lg:flex">
           {primary.map((item) => (
-            <div key={item.href} className="group relative">
+            <div key={item.href} className="group">
               <Link href={item.href} className="inline-flex min-h-12 items-center gap-1.5 text-xs font-bold transition-colors hover:text-[var(--gold-deep)] focus-visible:text-[var(--gold-deep)]">{(() => { const MenuIcon = iconFor(item.href); return <MenuIcon size={15}/>; })()}{item.label}<ChevronDown size={12}/></Link>
-              <div className="invisible absolute left-0 top-full w-80 translate-y-1 border border-border bg-[var(--surface)] p-5 opacity-0 shadow-xl transition-all group-hover:visible group-hover:translate-y-0 group-hover:opacity-100 group-focus-within:visible group-focus-within:translate-y-0 group-focus-within:opacity-100">
-                <p className="eyebrow mb-4">{item.label}</p>
-                {submenus[item.href]?.map((child) => <Link key={child.href} href={child.href} className="flex items-start gap-3 rounded-md p-3 hover:bg-[var(--paper)] focus-visible:bg-[var(--paper)]"><Network size={18} className="mt-1 shrink-0 text-[var(--gold-deep)]"/><span><strong className="block text-sm">{child.label}</strong><span className="mt-1 block text-xs leading-5 text-muted-foreground">{child.description}</span></span></Link>)}
-              </div>
+              <div className="invisible fixed left-1/2 top-[108px] z-50 grid w-[min(94vw,1040px)] -translate-x-1/2 translate-y-1 grid-cols-[1fr_2fr] gap-8 border border-border bg-[var(--surface)] p-8 opacity-0 shadow-2xl transition-opacity group-hover:visible group-hover:translate-y-0 group-hover:opacity-100 group-focus-within:visible group-focus-within:translate-y-0 group-focus-within:opacity-100">
+                <div className="border-r border-border pr-6"><p className="eyebrow mb-4">{item.label}</p><p className="font-serif text-3xl">Building enduring African enterprises.</p><p className="mt-4 text-sm leading-6 text-muted-foreground">Explore the Group&apos;s companies, outlook and stewardship.</p></div><div className="grid grid-cols-2 gap-2">
+                {submenus[item.href]?.map((child) => <Link key={child.href} href={child.href} className="flex items-start gap-3 rounded-md p-4 hover:bg-[var(--paper)] focus-visible:bg-[var(--paper)]"><Network size={18} className="mt-1 shrink-0 text-[var(--gold-deep)]"/><span><strong className="block text-sm">{child.label}</strong><span className="mt-1 block text-xs leading-5 text-muted-foreground">{child.description}</span></span></Link>)}
+              </div></div>
             </div>
           ))}
         </nav>
