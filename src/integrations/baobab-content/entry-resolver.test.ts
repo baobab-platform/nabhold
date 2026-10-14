@@ -66,7 +66,7 @@ function build(opts: {
     const body = JSON.parse(String(init.body));
     return (
       opts.cpResponse?.(init) ??
-      new Response(JSON.stringify(resolution({ correlation_id: body.correlation_id })), { status: 200 })
+      new Response(JSON.stringify(resolution({ correlation_id: body.correlation_id })), { status: 200, headers: { "content-type": "application/json" } })
     );
   }) as unknown as typeof fetch;
   const cmsFetch = vi.fn(async (url: unknown, init: RequestInit) => {
@@ -141,7 +141,7 @@ describe("ContentEntryResolver", () => {
             resolved_at: "2026-10-09T10:00:00Z",
             correlation_id: CORR,
           }),
-          { status: 200 },
+          { status: 200, headers: { "content-type": "application/json" } },
         ),
     });
     expect(await resolver.resolveEntry("home")).toEqual({ status: "unavailable", reason: "CAPABILITY_NOT_RESOLVED" });
@@ -161,7 +161,7 @@ describe("ContentEntryResolver", () => {
       { route_reference: "https://evil.example/v1/content/resolve" },
     ]) {
       const { resolver, cmsFetch } = build({
-        cpResponse: () => new Response(JSON.stringify(resolution({}, invocation)), { status: 200 }),
+        cpResponse: () => new Response(JSON.stringify(resolution({}, invocation)), { status: 200, headers: { "content-type": "application/json" } }),
       });
       const out = await resolver.resolveEntry("home");
       expect(out.status).toBe("unavailable");
