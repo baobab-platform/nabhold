@@ -105,7 +105,10 @@ export class ContentEntryResolver {
         body: JSON.stringify({
           tenant_id: this.config.tenantId,
           content_key: contentKey,
-          legal_entity_id: this.config.legalEntityId,
+          // Shared content v1 permits omission. Do not invent a LegalEntity
+          // merely to read institutional content for an Organisation-bound Tenant.
+          // This filter cannot establish legal-actor or cross-tenant authority.
+          ...(this.config.legalEntityId ? { legal_entity_id: this.config.legalEntityId } : {}),
           digital_estate_id: this.config.digitalEstateId,
           ...(this.config.marketId ? { market_id: this.config.marketId } : {}),
           locale: this.config.locale,

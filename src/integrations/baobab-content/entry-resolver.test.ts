@@ -111,6 +111,16 @@ describe("ContentEntryResolver", () => {
     expect(cmsCalls[0].init.redirect).toBe("error");
   });
 
+  it("omits legal-actor and Organisation claims when resolving content without incorporation", async () => {
+    const { resolver, cmsCalls } = build({ cfg: { ...config, legalEntityId: undefined } });
+    expect((await resolver.resolveEntry("navigation")).status).toBe("ok");
+    const body = JSON.parse(String(cmsCalls[0].init.body));
+    expect(body).not.toHaveProperty("legal_entity_id");
+    expect(body).not.toHaveProperty("organisation_id");
+    expect(body).not.toHaveProperty("legal_actor_id");
+    expect(body.tenant_id).toBe(config.tenantId);
+  });
+
   it("reuses the resolution until the Control Plane expiry", async () => {
     const { resolver, cpFetch } = build({});
     await resolver.resolveEntry("navigation");

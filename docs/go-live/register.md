@@ -80,7 +80,7 @@ Group membership never grants cross-tenant access.
 
 ## 5. Immediate implementation queue
 
-1. **P0-02 — Organisation-first content context convergence.**
+1. **P0-02 — Organisation-first content context convergence (Nabhold consumer implemented; provider qualification blocked).**
 2. **P0-03 — real Nabhold independent verification path.**
 3. **P0-04 — real CP onboarding Principals and protected staging identity.**
 4. **P0-05 — execute Nabhold progressive controlled staging onboarding to IDENTITY_TENANT_ACCEPTED_NOT_PRODUCTION.**
@@ -127,3 +127,27 @@ Unknown values remain unknown until accepted.
 ## 8. Evidence rule
 
 Nothing is marked production PASS without an immutable evidence pointer and the owning authority's acceptance. Green CI is implementation evidence, not go-live authority.
+
+## 9. G05 / P0-02 consumer increment — 14 October 2026
+
+Nabhold no longer requires a LegalEntity to configure canonical institutional
+content resolution. The optional `legal_entity_id` remains a content filter;
+no Organisation/legal-actor claim is minted by the estate. A CP-issued UUID
+context, Tenant claim, Digital Estate and trusted provider origin remain required.
+Negative tests cover missing/malformed context and cross-tenant provider responses.
+
+Consulted source snapshots:
+
+- Shared `9b8a00197ffda60a2a9d6a7be034baad791f7854`: content v1 request/README,
+  control-plane v2 PlatformContext (mandatory attested PRIMARY Organisation).
+- CMS `f2a94a9bb9273d56db202464437923a78c823239`: ADR-0012/0014, content route
+  and CP context validator. The current validator accepts absent Organisation;
+  the route does not use the returned Organisation. This remains a provider gap.
+- Nabhold ADR-NAB-0014 and masterplan v2.0 G05/P0-02 govern this increment.
+
+**Gate remains PARTIAL.** Full P0-02 requires CMS to require the CP-attested
+PRIMARY Organisation, reconcile projection identity and prove rejection of
+missing/mismatched Organisation. No new body field may be added to pinned
+Shared content v1 without contract governance. P0-03–P0-07 require real,
+independently accepted identity/Principal/staging evidence; no synthetic fixture
+or local setting is accepted as that evidence. Production remains unauthorised.
