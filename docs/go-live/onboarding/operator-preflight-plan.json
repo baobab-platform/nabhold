@@ -1,0 +1,15 @@
+{
+  "version": "1.0",
+  "masterplan": "NAB-GOLIVE-MP-001-v2.0",
+  "environment": "staging",
+  "cp_origin": null,
+  "principals": {
+    "verification_reviewer": null,
+    "verification_decider": null,
+    "admission_reviewer": null,
+    "admission_decider": null,
+    "onboarding_requester": null,
+    "onboarding_authoriser": null,
+    "tenant_registrar": null
+  }
+}
