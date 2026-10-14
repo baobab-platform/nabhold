@@ -32,6 +32,12 @@ updates:
       npm-minor-patch:
         patterns: ["*"]
         update-types: ["minor", "patch"]
+    # Runtime declarations and container images still target Node 22. A newer
+    # typings major can expose APIs unavailable to the production process.
+    # Remove this ceiling only with the reviewed runtime migration (G15/G16).
+    ignore:
+      - dependency-name: "@types/node"
+        update-types: ["version-update:semver-major"]
     labels: ["dependencies", "javascript"]
     commit-message:
       prefix: "chore"
