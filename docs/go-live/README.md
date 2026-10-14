@@ -1,37 +1,51 @@
 # Nabhold go-live programme
 
-Programme control for [NAB-GOLIVE-MP-001](NAB-GOLIVE-MP-001-masterplan-v1.0.md) (v1.0, *Draft for ratification*, baseline 8 October 2026).
+The controlling programme baseline is **[NAB-GOLIVE-MP-001 v2.0](NAB-GOLIVE-MP-001.md)**, Accepted 14 October 2026.
 
-The masterplan is the programme reference. It does not replace Shared, Control Plane or engine ADRs, and it does not authorise merges or production changes.
+The former [v1.0 masterplan](NAB-GOLIVE-MP-001-masterplan-v1.0.md) is **HISTORICAL / RETIRED** and remains in the repository only for audit traceability.
+
+v2.0 is aligned to accepted ADR-BCP-026, ADR-BCP-027, Baobab EA Implementation Plan v2.1 and ADR-NAB-0014. It adopts Organisation-first progressive onboarding, Option B subsidiary autonomy, separate legal-actor authority and capability-specific activation.
 
 | Document | Purpose |
 |---|---|
-| [register.md](register.md) | Gate status, blockers B-01 to B-18, decisions D-01 to D-18. Update with every PR that moves a gate. |
-| [evidence/README.md](evidence/README.md) | Evidence index rules. Nothing is `IMPLEMENTED`, `CERTIFIED`, `ACTIVE` or `PASS` without a pointer here. |
-| [capability-demand-census.md](capability-demand-census.md) | Per-journey capability demand with canonical / proposed / active status. |
-| [erp-scope.md](erp-scope.md) | What `baobab-erp` must gain for finance, accounts, HR and payroll, in Nabhold's order, with phases and decisions. |
-| [onboarding/](onboarding/nabhold-internal-onboarding-profile.json) | Machine-checkable G02 input profile for INTERNAL admission (`src/lib/estate/onboarding-profile.test.ts`), and the G06 finance-baseline input for ERP intake (`finance-baseline-input.test.ts`). |
+| [NAB-GOLIVE-MP-001.md](NAB-GOLIVE-MP-001.md) | Accepted v2.0 programme authority |
+| [register.md](register.md) | Live gate/blocker/decision status; update whenever a gate materially changes |
+| [evidence/README.md](evidence/README.md) | Evidence-index rules and immutable acceptance pointers |
+| [capability-demand-census.md](capability-demand-census.md) | Direct/conditional/indirect capability demand by release |
+| [erp-scope.md](erp-scope.md) | ERP corporate finance/people/payroll scope; subordinate to v2.0 and current Shared contracts |
+| [onboarding/nabhold-internal-onboarding-profile.json](onboarding/nabhold-internal-onboarding-profile.json) | Fail-closed v2 planning input for the real progressive onboarding workflow |
+| [NAB-GOLIVE-MP-001-evidence-delta-2026-10-10.md](NAB-GOLIVE-MP-001-evidence-delta-2026-10-10.md) | Historical evidence delta against v1.0; not current status |
 
-The masterplan G00 names the canonical path `docs/go-live/NAB-GOLIVE-MP-001.md`. The merged file keeps its versioned name `NAB-GOLIVE-MP-001-masterplan-v1.0.md`; renaming it is a separate, reviewed change.
+## Architectural rules
 
-## What the code enforces today
+- Organisation, Tenant, LegalEntity, CorporateRelationship and legal-actor mandate are distinct.
+- A documented CIPC certificate is not an independently accepted Control Plane verification.
+- A name is not a Control Plane Principal.
+- A Tenant is not proof that any capability is production-ready.
+- One capability becoming ready does not activate another.
+- Corporate ownership does not grant cross-tenant access.
+- Nabhold is a non-trading holding-company consumer; Trade/TMS/Trade Docs/SCF are not default direct dependencies.
+- Production provider selection goes through canonical contracts and Control Plane authority.
+- No source declaration, CI result or feature flag is production acceptance.
 
-| Control | Where | Behaviour |
-|---|---|---|
-| Release classes | `src/lib/release/release-class.ts` | R0 on by default; R1 to R3 off unless the flag is exactly `"true"`. `/dashboard` needs R1; the Pulse overview needs R3. Disabled routes return 404. |
-| Capability resolution | `src/lib/control-plane/` | Typed client for the Shared `resolutionRequest`/`resolution` contract. Sends no tenant or legal-entity identity. Fails closed with no workload token provider (blocked on G04), on mismatched or expired resolutions, and on any non-`RESOLVED` decision. |
-| Security headers | `src/lib/security/headers.ts` | Frame, sniffing, referrer, transport and cross-origin baseline everywhere; `/dashboard` is `noindex` and `no-store`. |
-| Content-Security-Policy | `src/lib/security/csp.ts`, `src/proxy.ts` | Workspace: per-request nonce plus `strict-dynamic`, no inline scripts. Public pages: scripts allow `'unsafe-inline'` (prerendered, cached), everything else locked down; browser may connect only to this origin. `NABHOLD_CSP_MODE=report-only` for rollout. |
-| Canonical host | `src/lib/security/canonical-host.ts`, `src/proxy.ts`, `src/app/layout.tsx` | With `NABHOLD_CANONICAL_HOST=nabhold.com`, `www.nabhold.com` gets a 308 to the apex. Redirect target comes from configuration, not the Host header. Pages carry canonical links; the Docker build defaults `NEXT_PUBLIC_SITE_URL` to `https://nabhold.com`. |
-| Onboarding profile | `src/lib/estate/onboarding-profile.ts` | INTERNAL, zero charge, metering on, ZA only, canonical keys only. Reports G01/G02 blockers instead of defaulting. |
+## What the current estate code enforces
 
-None of this establishes a production-active CapabilityBinding. Enabling a flag is not acceptance.
+| Control | Behaviour |
+|---|---|
+| Release classes | R0 default; R1-R3 explicitly gated server-side |
+| Capability resolution | Server-only Control Plane client; fails closed without workload identity |
+| Content adapter | Canonical content adapter exists but remains unqualified for production |
+| Security headers/CSP | Applied through the estate proxy/security helpers |
+| Canonical host | nabhold.com is the declared canonical host when configured |
+| Onboarding profile | v2 profile refuses fake Organisation/Tenant IDs and records missing independent verification/Principals as blockers |
 
-## Release status
+## Current release status
 
 | Release | Status |
 |---|---|
-| R0 Institutional | NOT RELEASED. Waiting on G01 legal content approval, G05 and G16. |
-| R1 Corporate | NOT RELEASED. Disabled by default. |
-| R2 Platform commercial | NOT RELEASED. Disabled by default. |
-| R3 Group oversight | NOT RELEASED. Disabled by default. |
+| R0 Institutional | NOT RELEASED |
+| R1 Corporate | NOT RELEASED |
+| R2 Platform Commercial | NOT RELEASED |
+| R3 Group Oversight | NOT RELEASED |
+
+See [register.md](register.md) for the current blockers and implementation queue.
