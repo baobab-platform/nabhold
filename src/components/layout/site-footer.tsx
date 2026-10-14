@@ -4,10 +4,10 @@ import { getContentGateway } from "@/lib/content";
 
 /** Corporate wayfinding. No unverified contact coordinates or statutory claims. */
 const groups = [
-  { title: "Our Group", links: [{label:"About us",href:"/about/group"},{label:"How we build",href:"/#value"},{label:"Governance",href:"/#governance"}] },
-  { title: "Our Businesses", links: [{label:"Portfolio",href:"/portfolio"},{label:"Group structure",href:"/#architecture"},{label:"Strategic sectors",href:"/sectors"}] },
-  { title: "Investment & Markets", links: [{label:"Investment approach",href:"/#investment"},{label:"African footprint",href:"/#markets"},{label:"Intelligence",href:"/#intelligence"}] },
-  { title: "Insights & Access", links: [{label:"Insights",href:"/insights"},{label:"Executive login",href:"/sign-in"}] },
+  { title: "Our Group", links: [{label:"About us",href:"/about/group"},{label:"How we build",href:"/#value"},{label:"Governance",href:"/governance"}] },
+  { title: "Our Businesses", links: [{label:"Portfolio",href:"/portfolio"},{label:"Group structure",href:"/platform"},{label:"Strategic sectors",href:"/sectors"}] },
+  { title: "Investment & Markets", links: [{label:"Investment approach",href:"/investment"},{label:"African footprint",href:"/markets"},{label:"Intelligence",href:"/intelligence"}] },
+  { title: "Insights & Access", links: [{label:"Insights",href:"/insights"},{label:"Executive login",href:"/sign-in"},{label:"Contact",href:"/contact"}] },
 ];
 
 export async function SiteFooter() {
