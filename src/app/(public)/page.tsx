@@ -54,7 +54,7 @@ export default async function HomePage() {
     </section>
 
     <section id="businesses" className="scroll-mt-36 border-y border-border bg-[var(--surface)] py-20"><div className="shell"><div className="flex flex-wrap items-end justify-between gap-5"><SectionHeader eyebrow="Our businesses" title="Distinct enterprises. A shared ambition."/><Link href="/portfolio" className="inline-flex items-center gap-2 font-bold">View portfolio <ArrowRight size={17}/></Link></div>
-      {home.featuredPortfolioCompanies.length ? <div className="mt-10 grid gap-5 md:grid-cols-3">{home.featuredPortfolioCompanies.map((company,index) => <CompanyCard key={company.slug} slug={company.slug} name={company.name} summary={company.summary} index={index}/>)}</div> :
+      {home.featuredPortfolioCompanies.length ? <div className="mt-10 grid gap-5 md:grid-cols-3">{home.featuredPortfolioCompanies.map((company,index) => <CompanyCard key={company.slug} slug={company.slug} name={company.name} summary={company.summary} index={index} image={company.logo ?? null}/>)}</div> :
       <div className="mt-10 grid gap-5 md:grid-cols-3">{companies.map((company) => <div key={company.name} className="flex min-h-64 flex-col border border-border bg-[var(--paper)] p-7"><company.icon className="mb-8 size-8 text-[var(--gold-deep)]"/><p className="eyebrow">{company.detail}</p><h3 className="mt-3 font-serif text-3xl">{company.name}</h3><p className="mt-3 text-sm leading-6 text-muted-foreground">{company.summary}</p><Link className="mt-auto pt-6 font-semibold text-[var(--gold-deep)]" href="/portfolio">Explore portfolio →</Link></div>)}</div>}
     </div></section>
 
