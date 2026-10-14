@@ -3,6 +3,7 @@ import { describe, expect, it, vi } from "vitest";
 
 vi.mock("@/lib/content", () => ({
   getContentGateway: vi.fn(async () => ({
+    listInsights: vi.fn(async () => ({ items: [], page: 1, pageSize: 3, totalItems: 0, totalPages: 0 })),
     getHomePage: vi.fn(async () => ({
       eyebrow: "Test eyebrow",
       headline: "Test headline",
