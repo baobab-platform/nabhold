@@ -1,67 +1,53 @@
-import type {
-  FooterContent,
-  GroupProfileContent,
-  HomePageContent,
-  Navigation,
-  SiteSettings,
-} from "@/lib/content/types";
+import type { FooterContent, GroupProfileContent, HomePageContent, Navigation, SiteSettings } from "@/lib/content/types";
 
 /**
- * Estate-owned defaults used when Payload has not yet published a
- * structured document for a given global (ADR-0002: `baobab-cms`'s
- * generic `pages` collection does not yet carry the forward-looking
- * fields these globals need). These are genuine, accurate, general
- * institutional statements the estate is comfortable shipping to
- * production on their own — not placeholder/preview data, and not gated
- * by any development-only flag. They are replaced field-by-field as
- * Payload gains the corresponding schema.
+ * Editorial defaults are safe for publication without a CMS connection.
+ * Never encode unverified market operations, investment totals or results here.
  */
-
 export const ESTATE_DEFAULT_NAVIGATION: Navigation = {
   primary: [
-    { label: "About", href: "/about/group" },
-    { label: "Portfolio", href: "/portfolio" },
-    { label: "Sectors", href: "/sectors" },
-    { label: "Insights", href: "/insights" },
+    { label: "Our Group", href: "/about/group" },
+    { label: "Businesses", href: "/portfolio" },
+    { label: "Investment", href: "/#investment" },
+    { label: "Markets", href: "/#markets" },
+    { label: "Intelligence", href: "/#intelligence" },
+    { label: "Governance", href: "/#governance" },
   ],
 };
 
 export const ESTATE_DEFAULT_FOOTER: FooterContent = {
   statement: "Strong Roots. Inspired Growth.",
   tagline: "Grounded enough to endure. Visionary enough to lead.",
-  links: [],
+  links: [
+    { label: "Our Group", href: "/about/group" },
+    { label: "Our Businesses", href: "/portfolio" },
+    { label: "Insights", href: "/insights" },
+    { label: "Executive access", href: "/sign-in" },
+  ],
 };
 
 export const ESTATE_DEFAULT_SITE_SETTINGS: SiteSettings = {
   siteName: "Nabhold Group Africa",
   seoDefaults: {
     title: "Nabhold Group Africa",
-    description:
-      "A disciplined African holding company building durable enterprises.",
+    description: "A disciplined African holding company building durable enterprises.",
   },
 };
 
 export const ESTATE_DEFAULT_HOME_PAGE: HomePageContent = {
-  eyebrow: "African enterprise · long-term value",
-  headline: "Built on conviction. Grown with purpose.",
-  introduction:
-    "Nabhold Group Africa builds and stewards businesses positioned for durable, responsible growth across the continent.",
-  primaryCta: { label: "Explore the group", href: "/portfolio" },
-  secondaryCta: { label: "Our purpose", href: "/about/group" },
+  eyebrow: "Nabhold Group Africa",
+  headline: "Building enduring African enterprises.",
+  introduction: "A long-term African holding company that supports independently operated businesses through disciplined capital, governance and shared capabilities.",
+  primaryCta: { label: "Explore our businesses", href: "/portfolio" },
+  secondaryCta: { label: "Our investment approach", href: "/#investment" },
   featuredPortfolioCompanies: [],
-  institutionalStatement: "Patient capital. Practical enterprise.",
+  institutionalStatement: "Strong Roots. Inspired Growth.",
 };
 
 export const ESTATE_DEFAULT_GROUP_PROFILE: GroupProfileContent = {
   title: "Rooted in Africa. Built for generations.",
   body: [
-    {
-      type: "paragraph",
-      text: "Nabhold Group Africa establishes, supports and stewards independently operated businesses.",
-    },
-    {
-      type: "paragraph",
-      text: "The group sets strategic direction and investment discipline while each operating company retains responsibility for its customers, operations and digital estate.",
-    },
+    { type: "paragraph", text: "Nabhold Group Africa establishes, supports and stewards independently operated businesses." },
+    { type: "paragraph", text: "The group sets strategic direction and investment discipline while each operating company retains responsibility for its customers, operations and digital estate." },
   ],
 };
