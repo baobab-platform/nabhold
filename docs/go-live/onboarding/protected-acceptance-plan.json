@@ -1,0 +1,37 @@
+{
+  "version": "1.0",
+  "operators": {
+    "version": "1.0",
+    "masterplan": "NAB-GOLIVE-MP-001-v2.0",
+    "environment": "staging",
+    "cp_origin": null,
+    "principals": {
+      "verification_reviewer": null,
+      "verification_decider": null,
+      "admission_reviewer": null,
+      "admission_decider": null,
+      "onboarding_requester": null,
+      "onboarding_authoriser": null,
+      "tenant_registrar": null
+    }
+  },
+  "onboarding": {
+    "organisation_id": null,
+    "tenant_id": null,
+    "isolation_strategy": "schema_per_tenant",
+    "residency_region": "af-south-1"
+  },
+  "cms": {
+    "origin": null,
+    "context_id": null,
+    "forbidden_context_id": null,
+    "forbidden_tenant_id": null,
+    "digital_estate_id": null,
+    "content_key": "navigation",
+    "locale": "en-ZA",
+    "expected_record_id": null,
+    "expected_binding_id": null,
+    "expected_provider_id": null,
+    "expected_engine_instance_id": null
+  }
+}
