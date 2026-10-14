@@ -194,6 +194,23 @@ export function assessOnboardingReadiness(
     if (!value) blockers.push(`G04A: ${role} is not a Control Plane Principal`);
   }
 
+  const assignedPrincipals = Object.entries(profile.principals).filter(
+    (entry): entry is [string, string] => entry[1] !== null,
+  );
+  const rolesByPrincipal = new Map<string, string[]>();
+  for (const [role, principal] of assignedPrincipals) {
+    const roles = rolesByPrincipal.get(principal) ?? [];
+    roles.push(role);
+    rolesByPrincipal.set(principal, roles);
+  }
+  for (const [principal, roles] of rolesByPrincipal) {
+    if (roles.length > 1) {
+      blockers.push(
+        `G04A: separation of duties requires distinct Principals; ${principal} is assigned to ${roles.join(", ")}`,
+      );
+    }
+  }
+
   if (profile.organisation.organisation_id) {
     blockers.push(
       "G02B: this repository must not pre-mint organisation_id; use CP state",
