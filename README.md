@@ -38,7 +38,7 @@ pnpm test:e2e
 
 GitHub CI runs the same gates using the `baobab-dev:1.4.4-frontend-e2e` profile.
 
-See [architecture](docs/architecture.md), [Pulse integration](docs/integrations/pulse.md), [Payload CMS integration](docs/integrations/payload.md), [content model](docs/content-model.md), and [deployment](docs/deployment.md).
+See the accepted [Go-Live Master Plan v2.0](docs/go-live/NAB-GOLIVE-MP-001.md), [live go-live register](docs/go-live/register.md), [architecture](docs/architecture.md), [Pulse integration](docs/integrations/pulse.md), [Payload CMS integration](docs/integrations/payload.md), [content model](docs/content-model.md), and [deployment](docs/deployment.md).
 
 ## Foundation 4
 
