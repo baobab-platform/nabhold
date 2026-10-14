@@ -16,7 +16,7 @@ This register records source/runtime evidence known from the repositories. It is
 | G01C group relationships/mandates | BLOCKED | CP relationship/mandate machinery exists; no accepted real control/mandate evidence for programme use | Evidence-backed relationships/mandates |
 | G02 Organisation-first onboarding | IMPLEMENTED-NOT-EXECUTED | CP progressive application, independent review/decision, TenantOnboardingRequest v2 and RegisterProgressiveTenantV2 implemented; synthetic four-business PG17 acceptance exists | Execute real Nabhold controlled staging flow |
 | G03 capability programme | IN PROGRESS | Shared catalogue has 22 keys; ADR-SHARED-033 finance inventory remains Proposed | Finance F1 contracts + subsequent domains |
-| G04 IAM | PARTIAL | IAM provider support remains PARTIAL; nabhold-backend workload is PROVISIONED in Shared | Real Principal/workload credentials and protected acceptance |
+| G04 IAM | PARTIAL | Secure local provider bootstrap implemented (IAM #113); registered hierarchical workload scope syntax converged (Shared #305 / IAM #114); nabhold-backend stays PROVISIONED | Real native/CP Principals, grants and workload credential plus protected acceptance |
 | G05 CMS / R0 | PARTIAL | Organisation-first consumer/provider source convergence implemented; CMS support PARTIAL and production_permitted=false | P0-04 protected identity + P0-06 live IAM/CP/binding + P0-07 R0 acceptance |
 | G06 ERP finance | BLOCKED | ERP authority/contract convergence advanced; corporate F1 capabilities not canonical/implemented | FinanceBaseline + F1 + live iDempiere |
 | G07 Workforce/HR | BLOCKED | No accepted canonical workforce contract/provider surface | Shared/domain decision + implementation |
@@ -83,14 +83,14 @@ Group membership never grants cross-tenant access.
 **Completed source task:** P0-02 — Organisation-first content context convergence (Nabhold #39; CMS #33/#34). Exit: no legal-entity-first contract drift. G05 is still PARTIAL; protected identity and binding qualification belong to P0-04/P0-06/P0-07.
 
 1. **P0-03 — preparation implemented; authenticated real-case execution deferred.** See [runbook](onboarding/P0-03-legal-verification-runbook.md).
-3. **P0-04 — real CP onboarding Principals and protected staging identity.**
-4. **P0-05 — execute Nabhold progressive controlled staging onboarding to IDENTITY_TENANT_ACCEPTED_NOT_PRODUCTION.**
-5. **P0-06 — activate the first qualified capability: Nabhold workload + CMS R0.**
-6. **P0-07 — R0 protected E2E and acceptance pack.**
-7. **P1-01 — accept and publish finance F1 contracts.**
-8. **P1-02 — FinanceBaseline + live iDempiere proof.**
-9. **P1-03 — finance F2 plus procurement/assets/projects.**
-10. **P1-04/P1-05 — workforce then payroll.**
+2. **P0-04 — secure local provider bootstrap implemented; real native/CP onboarding Principals and protected identity remain.**
+3. **P0-05 — execute Nabhold progressive controlled staging onboarding to IDENTITY_TENANT_ACCEPTED_NOT_PRODUCTION.**
+4. **P0-06 — activate the first qualified capability: Nabhold workload + CMS R0.**
+5. **P0-07 — R0 protected E2E and acceptance pack.**
+6. **P1-01 — accept and publish finance F1 contracts.**
+7. **P1-02 — FinanceBaseline + live iDempiere proof.**
+8. **P1-03 — finance F2 plus procurement/assets/projects.**
+9. **P1-04/P1-05 — workforce then payroll.**
 
 R2 billing/payments and R3 group reporting proceed in parallel only where they do not bypass the authority prerequisites above.
 
@@ -181,3 +181,32 @@ P0-03's accepted-real-case exit is unchanged and pending deferred execution.
 G01B is not PASS. Thamani's certificate enterprise label/full declared name are
 preserved separately for official-source review. No current legal status,
 ownership, director authority, tax standing or production acceptance is inferred.
+
+## 11. Non-staging IAM/R0 source increments — 14 October 2026
+
+Sponsor instruction: continue tasks that do not require staging or AWS credentials.
+
+| Source increment | Implementation evidence | Actual acceptance remaining |
+|---|---|---|
+| Secure local provider administrator bootstrap | IAM [#113](https://github.com/baobab-platform/baobab-iam/pull/113): private OS-random credential preparation, no public password fallbacks, exclusive mode-0600 files, no secret output, local loopback ports, session cleanup and fresh CI credentials | No real native human or CP Principal/grant has been created |
+| Canonical registered CMS scope grammar | Shared [#305](https://github.com/baobab-platform/shared/pull/305): hierarchical scopes and strict end-of-string validation; declared-scope regression tests | Syntax does not activate an identity or scope allocation |
+| Issuer/contract convergence | IAM [#114](https://github.com/baobab-platform/baobab-iam/pull/114): exact Shared pin, Go parser, shared cross-language corpus and admission-fence tests | Nabhold remains PROVISIONED; real workload issuance/binding/context proof still required |
+
+Use `make local-credentials` in the IAM checkout to prepare isolated Keycloak/
+Postgres credentials privately, then follow its [local bootstrap runbook](https://github.com/baobab-platform/baobab-iam/blob/main/docs/operations/local-admin-bootstrap.md).
+This is provider administration, not a Baobab-wide superadmin. Accepted
+ADR-IAM-0031/0033 separates Kratos, Hydra, Keycloak and CP administration;
+CP's existing `cmd/admin-bootstrap` grants bounded time-bound authority to
+registered active, distinct operator/recipient Principals rather than deriving
+business authority from a provider password.
+
+The previous single-colon workload request grammar rejected the already
+registered `content:entry:resolve` scope. Shared and IAM now represent it without
+altering registry status, scope ceilings, audiences, credential requirements or
+canonical admission. Tests retain denial of PROVISIONED workloads, unallocated
+preview, wrong audience, wrong issuer/credential and wrong environment.
+
+P0-03 authenticated verification, P0-04 real human/CP identity, P0-05 controlled
+onboarding and P0-06/07 qualified R0 acceptance remain separate operational
+steps. No production PASS, universal administrator, current legal verification
+or accepted real founding-group Principal is asserted by these source changes.
