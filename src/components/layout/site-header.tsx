@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { ArrowUpRight, LockKeyhole, ChevronDown, Building2, Landmark, Globe2, ChartNoAxesCombined, ShieldCheck, Network, BookOpen, Trees, Compass, Newspaper, MapPinned } from "lucide-react";
+import { ArrowUpRight, LockKeyhole, ChevronDown, Building2, Landmark, Globe2, ShieldCheck, Network, BookOpen, Trees, Compass, MapPinned } from "lucide-react";
 import { MobileNav } from "@/components/marketing/mobile-nav";
 
 /**
@@ -31,7 +31,7 @@ export function SiteHeader() {
     <div className="bg-[#111] text-white"><div className="shell flex min-h-9 items-center justify-between gap-3 text-[11px]"><span className="hidden sm:block">Building enduring enterprises for Africa&apos;s next generation.</span><span className="sm:hidden">Nabhold Group Africa</span><nav aria-label="Utility" className="flex gap-4"><Link href="/insights">Newsroom</Link><Link href="/contact">Contact</Link><span aria-label="Current language English">EN</span></nav></div></div>
     <div className="shell flex min-h-[76px] items-center justify-between gap-4">
       <Link href="/" aria-label="Nabhold Group Africa home" className="flex shrink-0 items-center gap-2"><Trees className="size-9 text-[var(--gold-deep)]"/><span className="text-sm font-extrabold tracking-widest">NABHOLD<span className="block text-[10px] text-muted-foreground">GROUP AFRICA</span></span></Link>
-      <nav aria-label="Primary" className="hidden items-center gap-4 lg:flex">
+      <nav aria-label="Primary" className="hidden items-center gap-5 lg:flex xl:gap-7">
         {siteNavigation.map(item=><div key={item.href} className="group">
           <Link href={item.href} className="flex min-h-12 items-center gap-1.5 text-sm font-semibold hover:text-[var(--gold-deep)] focus-visible:text-[var(--gold-deep)]"><item.icon size={16}/>{item.label}{item.children.length>0?<ChevronDown size={13}/>:null}</Link>
           {item.children.length>0?<div className="invisible fixed left-1/2 top-[112px] z-50 grid w-[min(92vw,990px)] -translate-x-1/2 grid-cols-[.85fr_1.5fr] gap-8 border border-border bg-[var(--surface)] p-8 opacity-0 shadow-2xl transition-opacity group-hover:visible group-hover:opacity-100 group-focus-within:visible group-focus-within:opacity-100">
@@ -40,7 +40,7 @@ export function SiteHeader() {
           </div>:null}
         </div>)}
       </nav>
-      <div className="flex items-center gap-2"><Link href="/intelligence" aria-label="Intelligence research" title="Intelligence research" className="hidden p-2 xl:inline-flex"><ChartNoAxesCombined size={19}/></Link><Link href="/sign-in" className="hidden min-h-10 items-center gap-2 bg-[var(--ink)] px-3 text-xs font-semibold text-white lg:inline-flex"><LockKeyhole size={14}/> Executive login</Link><MobileNav items={siteNavigation.map(({label,href,children})=>({label,href,children:children.map(({label,href})=>({label,href}))}))}/></div>
+      <div className="flex items-center gap-2"><Link href="/sign-in" className="hidden min-h-10 items-center gap-2 bg-[var(--ink)] px-3 text-xs font-semibold text-white lg:inline-flex"><LockKeyhole size={14}/> Executive login</Link><MobileNav items={siteNavigation.map(({label,href,children})=>({label,href,children:children.map(({label,href})=>({label,href}))}))}/></div>
     </div>
   </header>;
 }
