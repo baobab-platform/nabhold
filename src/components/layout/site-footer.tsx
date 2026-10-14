@@ -57,7 +57,7 @@ const footerGroups = [
     title: "Platform & Enablement",
     links: [
       { label: "Baobab Platform", href: "/platform" },
-      { label: "Shared capability", href: "/platform" },
+      { label: "Group operating model", href: "/about/group#operating-model" },
     ],
   },
   {
