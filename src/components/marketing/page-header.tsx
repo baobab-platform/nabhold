@@ -1,3 +1,5 @@
+import { Fragment } from "react"
+
 import {
   Breadcrumb,
   BreadcrumbItem,
@@ -35,14 +37,19 @@ export function PageHeader({
             {breadcrumbs.map((c, i) => {
               const last = i === breadcrumbs.length - 1
               return (
-                <BreadcrumbItem key={`${c.label}-${i}`}>
+                <Fragment key={`${c.label}-${i}`}>
+                  {/* Separators are list items too: keep them as siblings so
+                      the browser does not repair nested <li> markup before
+                      React hydrates the server-rendered breadcrumb. */}
                   {i > 0 ? <BreadcrumbSeparator /> : null}
+                  <BreadcrumbItem>
                   {last || !c.href ? (
                     <BreadcrumbPage>{c.label}</BreadcrumbPage>
                   ) : (
                     <BreadcrumbLink href={c.href}>{c.label}</BreadcrumbLink>
                   )}
                 </BreadcrumbItem>
+                </Fragment>
               )
             })}
           </BreadcrumbList>
