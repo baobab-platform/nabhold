@@ -3,6 +3,7 @@ import Link from "next/link";
 import { ArrowRight, ArrowUpRight, Building2, Compass, Globe2, Landmark, Network, ShieldCheck, Sprout, Trees, Users } from "lucide-react";
 import { getContentGateway } from "@/lib/content";
 import { AfricaFootprint } from "@/components/marketing/africa-footprint";
+import { PublicBreadcrumbs } from "@/components/marketing/public-breadcrumbs";
 
 /**
  * The corporate story is an editorial composition, not a canonical registry.
@@ -39,7 +40,7 @@ export default async function Page() {
   return <article>
     <header className="relative overflow-hidden bg-[#111111] py-24 text-white md:py-32">
       <div className="absolute inset-y-0 right-0 w-1/2 bg-gradient-to-l from-[#3b2b0e]/50 to-transparent" aria-hidden="true" />
-      <div className="shell relative"><p className="eyebrow !text-[var(--gold)]">Our Group · Our Story</p>
+      <div className="shell relative"><PublicBreadcrumbs contrast="dark" items={[{label:"Home",href:"/"},{label:"Our Group"}]} /><p className="eyebrow !text-[var(--gold)]">Our Group · Our Story</p>
         <h1 className="display mt-7 max-w-5xl text-5xl md:text-7xl">{profile.title}</h1>
         <p className="mt-7 max-w-2xl text-lg leading-8 text-white/75">An African holding company committed to patient enterprise-building, accountable ownership and independently operated businesses.</p>
         <div className="mt-9 flex flex-wrap gap-3"><Link href="/portfolio" className="inline-flex min-h-12 items-center gap-2 bg-[var(--gold)] px-5 font-bold text-black">Explore our businesses <ArrowRight size={18}/></Link><Link href="#operating-model" className="inline-flex min-h-12 items-center gap-2 border border-white/40 px-5 font-semibold text-white">How our Group works <ArrowUpRight size={18}/></Link></div>
