@@ -66,9 +66,11 @@ export async function requireExecutiveCapability(
       capabilityKey: capabilityKeySchema,
       contractVersion: z.number().int().positive(),
     }).strict().parse(request);
-    const now = deps.now?.() ?? Date.now();
+    // Capture the clock at each validation boundary: an asynchronous CP or
+    // IAM request can consume the entirety of a previously valid lease.
+    const currentTime = () => deps.now?.() ?? Date.now();
     const identity = await requireCurrentIdentity(session, deps.settings, deps.fetcher);
-    if (identity.expiresAt <= now) throw new Error("Expired identity");
+    if (identity.expiresAt <= currentTime()) throw new Error("Expired identity");
     const raw = await deps.context.resolveCurrent({
       principalId: identity.principalId,
       expectedOrganisationId: expected.expectedOrganisationId,
@@ -78,16 +80,18 @@ export async function requireExecutiveCapability(
     if (context.principal_id !== identity.principalId ||
       context.organisation_id !== expected.expectedOrganisationId ||
       context.tenant_id !== expected.expectedTenantId) throw new Error("Wrong context");
+    const contextCheckedAt = currentTime();
     const evaluatedAt = Date.parse(context.evaluated_at);
     const contextExpiry = Date.parse(context.expires_at);
-    if (Math.abs(now - evaluatedAt) > 30_000 || contextExpiry <= now ||
-      contextExpiry > now + 5 * 60_000) throw new Error("Stale context");
+    if (Math.abs(contextCheckedAt - evaluatedAt) > 30_000 || contextExpiry <= contextCheckedAt ||
+      contextExpiry > contextCheckedAt + 5 * 60_000) throw new Error("Stale context");
     const resolution = await deps.capabilities.resolve({
       capability_key: expected.capabilityKey,
       required_contract_version: expected.contractVersion,
       context_id: context.context_id,
       correlation_id: randomUUID(),
     });
+    const resolvedAt = currentTime();
     // The canonical CP client already checks request/response correlation,
     // contract version, decision, expiry, grant, binding and invocation.
     if (resolution.context_id !== context.context_id ||
@@ -95,12 +99,12 @@ export async function requireExecutiveCapability(
       resolution.decision !== "RESOLVED" || !resolution.grant_id ||
       !resolution.binding_id || !resolution.invocation ||
       resolution.invocation.contract_version !== expected.contractVersion ||
-      (resolution.expires_at && Date.parse(resolution.expires_at) <= now)) {
+      (resolution.expires_at && Date.parse(resolution.expires_at) <= resolvedAt)) {
       throw new Error("Denied capability");
     }
     const expiresAt = Math.min(identity.expiresAt, contextExpiry,
       resolution.expires_at ? Date.parse(resolution.expires_at) : contextExpiry);
-    if (expiresAt <= now) throw new Error("Expired authority");
+    if (expiresAt <= currentTime()) throw new Error("Expired authority");
     return { principalId: identity.principalId, contextId: context.context_id, expiresAt };
   } catch {
     // Never disclose CP tenancy, grant identifiers or provider configuration.
