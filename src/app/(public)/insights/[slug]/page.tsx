@@ -3,6 +3,7 @@ import Image from "next/image";
 import { notFound } from "next/navigation";
 
 import { getInsight } from "@/features/insights/queries";
+import { PublicBreadcrumbs } from "@/components/marketing/public-breadcrumbs";
 import { resolveCanonicalOverride } from "@/lib/content/cache";
 
 export async function generateMetadata({
@@ -58,6 +59,7 @@ export default async function Page({
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
       />
+      <PublicBreadcrumbs items={[{label:"Home",href:"/"},{label:"Insights",href:"/insights"},{label:insight.title}]} />
       <p className="eyebrow">{insight.contentType}</p>
       <h1 className="display mt-5 text-5xl">{insight.title}</h1>
       <div className="mt-6 flex flex-wrap items-center gap-3 text-sm text-[var(--muted)]">

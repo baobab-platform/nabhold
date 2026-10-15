@@ -5,7 +5,7 @@ import { listInsights } from "@/features/insights/queries";
 import { InsightCard } from "@/components/marketing/insight-card";
 import Link from "next/link";
 export const metadata:Metadata={title:"Intelligence | Nabhold Group Africa",description:"Market research, sector perspectives and evidence-aware decision support."};
-export default async function Page(){const publications=await listInsights({pageSize:3});return <><EditorialPage eyebrow="Nabhold intelligence" title="Better intelligence. Better decisions." lead="Our ambition is evidence-aware research that helps the Group understand changing African markets. Only published, approved research is made available publicly." principles={[
+export default async function Page(){const publications=await listInsights({pageSize:3});return <><EditorialPage breadcrumbs={[{label:"Home",href:"/"},{label:"Insights",href:"/insights"},{label:"Intelligence"}]} eyebrow="Nabhold intelligence" title="Better intelligence. Better decisions." lead="Our ambition is evidence-aware research that helps the Group understand changing African markets. Only published, approved research is made available publicly." principles={[
 {title:"Market intelligence",body:"Research into commercial context and changing market conditions, with clear source attribution.",icon:Compass},
 {title:"Sector outlooks",body:"Longer-horizon perspectives on sectors relevant to the Group's strategic interests.",icon:ChartNoAxesCombined},
 {title:"Published perspectives",body:"Editorial research and articles are surfaced through the corporate content gateway.",icon:BookOpen},
