@@ -25,6 +25,11 @@ jobs:
       - name: Checkout source
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
 
+      - name: Match the declared production Node runtime
+        uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
+        with:
+          node-version: "22.23.3"
+
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
 
@@ -33,6 +38,24 @@ jobs:
 
       - name: Type-check
         run: pnpm typecheck
+
+      - name: Install TLS fixture build headers
+        run: |
+          apt-get update
+          apt-get install -y --no-install-recommends libssl-dev
+
+      - name: Build pinned TLS Redis fixture
+        shell: bash
+        run: |
+          scripts/build-test-redis.sh "$RUNNER_TEMP/nabhold-test-redis" > "$RUNNER_TEMP/nabhold-redis-build.log" 2>&1 || {
+            tail -60 "$RUNNER_TEMP/nabhold-redis-build.log"
+            exit 1
+          }
+
+      - name: Confidential BFF store — real TLS Redis acceptance
+        env:
+          NABHOLD_TEST_REDIS_BINARY: ${{ runner.temp }}/nabhold-test-redis/src/redis-server
+        run: pnpm test:auth-store
 
       - name: Unit tests
         run: pnpm test
