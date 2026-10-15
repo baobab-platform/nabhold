@@ -16,6 +16,7 @@ export default async function Page() {
         title="Sectors we understand."
         breadcrumbs={[
           { label: "Home", href: "/" },
+          { label: "Businesses", href: "/portfolio" },
           { label: "Sectors" },
         ]}
       />
