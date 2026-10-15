@@ -79,7 +79,7 @@ export function cspHeaderName(mode: string | undefined): string {
 }
 
 export function surfaceForPath(pathname: string): CspSurface {
-  return pathname === "/dashboard" || pathname.startsWith("/dashboard/")
+  return pathname === "/account" || pathname.startsWith("/account/") || pathname === "/dashboard" || pathname.startsWith("/dashboard/")
     ? "protected"
     : "public";
 }

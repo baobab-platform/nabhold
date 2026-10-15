@@ -83,7 +83,7 @@ Group membership never grants cross-tenant access.
 **Completed source task:** P0-02 — Organisation-first content context convergence (Nabhold #39; CMS #33/#34). Exit: no legal-entity-first contract drift. G05 is still PARTIAL; protected identity and binding qualification belong to P0-04/P0-06/P0-07.
 
 1. **P0-03 — preparation implemented; authenticated real-case execution deferred.** See [runbook](onboarding/P0-03-legal-verification-runbook.md).
-2. **P0-04 — local provider bootstrap, operator diagnostic and G04B-02 confidential session custody implemented; real native/CP onboarding Principals and protected identity remain.** Next source task: confidential OIDC login/callback using the atomic store, then current IAM/CP authority checks.
+2. **P0-04 — local provider bootstrap, operator diagnostic, confidential session custody and G04B-03 OIDC integration implemented; real native/CP onboarding Principals and protected identity remain.** Next: approved CP-audience human-client/profile handoff and estate/context authorisation; real protected identity acceptance remains.
 3. **P0-05 — execute Nabhold progressive controlled staging onboarding to IDENTITY_TENANT_ACCEPTED_NOT_PRODUCTION.**
 4. **P0-06 — activate the first qualified capability: Nabhold workload + CMS R0.**
 5. **P0-07 — R0 protected E2E and acceptance pack.**
@@ -293,3 +293,16 @@ and no live user, grant, Tenant or binding is created. The next source step is
 the reviewed OIDC login/callback integration, followed by per-request IAM
 revocation and canonical CP estate/context authorisation. Protected staging
 and independent G17 acceptance remain separate exits.
+
+## 16. Critical-path source increment — G04B-03 (15 October 2026)
+
+Confidential OIDC login/callback now uses atomic browser-bound transactions,
+S256/state/nonce and independent ID-token signature validation. Current IAM
+introspection and CP self-identity checks are required before issuing a session
+and on every account/session read. CSRF-protected local logout revokes custody.
+See [source boundary and protected prerequisites](onboarding/G04B-03-oidc-login-callback.md).
+
+Disabled by default; no real client/credential/identity or capability is created.
+The current native handoff's identity-only scope contract is not silently expanded:
+a CP-audience human token with approved authority:self is still required.
+Executive and CMS authority remain separate and release-gated. P0-04 is PARTIAL.

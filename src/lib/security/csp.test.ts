@@ -69,6 +69,7 @@ describe("content security policy", () => {
 
   it("selects the protected surface only for the workspace", () => {
     expect(surfaceForPath("/dashboard")).toBe("protected");
+    expect(surfaceForPath("/account")).toBe("protected");
     expect(surfaceForPath("/dashboard/reports")).toBe("protected");
     expect(surfaceForPath("/dashboards")).toBe("public");
     expect(surfaceForPath("/")).toBe("public");
