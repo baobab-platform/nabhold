@@ -14,6 +14,7 @@ v2.0 is aligned to accepted ADR-BCP-026, ADR-BCP-027, Baobab EA Implementation P
 | [capability-demand-census.md](capability-demand-census.md) | Direct/conditional/indirect capability demand by release |
 | [erp-scope.md](erp-scope.md) | ERP corporate finance/people/payroll scope; subordinate to v2.0 and current Shared contracts |
 | [onboarding/P0-03-legal-verification-runbook.md](onboarding/P0-03-legal-verification-runbook.md) | Real ZA registration verification preparation and deferred authenticated execution |
+| [onboarding/G04B-02-confidential-session-custody.md](onboarding/G04B-02-confidential-session-custody.md) | Encrypted BFF custody, atomic login transactions and real TLS Redis acceptance |
 | [onboarding/protected-acceptance-runbook.md](onboarding/protected-acceptance-runbook.md) | G17 technical observations across operator identity, PRIMARY Tenant and CP→CMS; independent acceptance remains |
 | [evidence/P0-06A-cp-transport-hardening.md](evidence/P0-06A-cp-transport-hardening.md) | Credentialed CP transport source hardening; live qualification pending |
 | [onboarding/P0-04B-operator-preflight-runbook.md](onboarding/P0-04B-operator-preflight-runbook.md) | Authenticated read-only CP operator diagnostic; no action permit |

@@ -34,6 +34,19 @@ jobs:
       - name: Type-check
         run: pnpm typecheck
 
+      - name: Build pinned TLS Redis fixture
+        shell: bash
+        run: |
+          scripts/build-test-redis.sh "$RUNNER_TEMP/nabhold-test-redis" > "$RUNNER_TEMP/nabhold-redis-build.log" 2>&1 || {
+            tail -60 "$RUNNER_TEMP/nabhold-redis-build.log"
+            exit 1
+          }
+
+      - name: Confidential BFF store — real TLS Redis acceptance
+        env:
+          NABHOLD_TEST_REDIS_BINARY: ${{ runner.temp }}/nabhold-test-redis/src/redis-server
+        run: pnpm test:auth-store
+
       - name: Unit tests
         run: pnpm test
 

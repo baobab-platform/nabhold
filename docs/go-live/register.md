@@ -83,7 +83,7 @@ Group membership never grants cross-tenant access.
 **Completed source task:** P0-02 — Organisation-first content context convergence (Nabhold #39; CMS #33/#34). Exit: no legal-entity-first contract drift. G05 is still PARTIAL; protected identity and binding qualification belong to P0-04/P0-06/P0-07.
 
 1. **P0-03 — preparation implemented; authenticated real-case execution deferred.** See [runbook](onboarding/P0-03-legal-verification-runbook.md).
-2. **P0-04 — local provider bootstrap and P0-04B-01 authenticated operator diagnostic implemented; real native/CP onboarding Principals and protected identity remain.**
+2. **P0-04 — local provider bootstrap, operator diagnostic and G04B-02 confidential session custody implemented; real native/CP onboarding Principals and protected identity remain.** Next source task: confidential OIDC login/callback using the atomic store, then current IAM/CP authority checks.
 3. **P0-05 — execute Nabhold progressive controlled staging onboarding to IDENTITY_TENANT_ACCEPTED_NOT_PRODUCTION.**
 4. **P0-06 — activate the first qualified capability: Nabhold workload + CMS R0.**
 5. **P0-07 — R0 protected E2E and acceptance pack.**
@@ -275,3 +275,21 @@ created. G01B/G02/G04/G05 and P0-03 through P0-07 operational exits remain
 pending. Executive BFF login, true revocation ceremony, publication/revalidation
 cycle, rollback and independent G17 signoff are explicitly separate acceptance
 checks rather than facts inferred from a mapping or successful content read.
+
+
+## 15. Critical-path source increment — G04B-02 (15 October 2026)
+
+The next implementable dependency after the protected-observation collector is
+durable confidential BFF session custody. The new server-only module encrypts
+private records, atomically consumes browser-bound login transactions, applies
+absolute expiry and supports local revocation across workers. TLS-only Redis,
+key rotation, recovery-epoch operation and a required real Redis integration
+suite are documented in the [source/runbook](onboarding/G04B-02-confidential-session-custody.md).
+
+P0-03 real independent verification and P0-04 real operator identities remain
+the first operational blockers; source work does not waive them. G04 remains
+PARTIAL. The store defaults off, the executive session remains preview-only,
+and no live user, grant, Tenant or binding is created. The next source step is
+the reviewed OIDC login/callback integration, followed by per-request IAM
+revocation and canonical CP estate/context authorisation. Protected staging
+and independent G17 acceptance remain separate exits.
