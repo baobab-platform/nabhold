@@ -31,7 +31,10 @@ export class TlsRedisBackend implements ConfidentialBackend {
     // it can contain hostnames, credentials, command arguments or ciphertext.
     client.on("error", () => undefined);
     const signal = AbortSignal.timeout(3000);
-    const stop = () => { if (client.isOpen) client.destroy(); };
+    // Pinned node-redis registers metrics at construction, even when connect
+    // fails before opening a socket. isOpen is not a resource-lifetime guard:
+    // always destroy to unregister those handles too. destroy is idempotent.
+    const stop = () => { client.destroy(); };
     let abort: (() => void) | undefined;
     const deadline = new Promise<never>((_, reject) => {
       abort = () => { stop(); reject(new ConfidentialStoreError()); };
