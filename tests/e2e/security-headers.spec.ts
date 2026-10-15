@@ -63,3 +63,17 @@ test("pages declare a canonical link on the configured site origin", async ({
 
   expect(href).toMatch(/\/portfolio$/);
 });
+
+test("identity routes fail closed without activation and account data is never anonymous", async ({ request, page }) => {
+  // This browser suite has no IAM, CP or Redis credentials. Enabling it must
+  // never be necessary to build or browse the anonymous institutional estate.
+  const login = await request.post("/api/auth/login", { maxRedirects: 0 });
+  expect(login.status()).toBe(404);
+  const callback = await request.get("/api/auth/callback?code=untrusted&state=untrusted", { maxRedirects: 0 });
+  expect(callback.status()).toBe(404);
+  expect(callback.headers()["referrer-policy"]).toBe("no-referrer");
+  await page.goto("/account");
+  await expect(page).toHaveURL(/\/sign-in$/);
+  await expect(page.getByRole("button", { name: "Continue with Baobab IAM" })).toBeDisabled();
+  await expect(page.locator('input[type="password"]')).toHaveCount(0);
+});

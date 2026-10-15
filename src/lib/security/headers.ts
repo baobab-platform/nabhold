@@ -34,5 +34,10 @@ export function securityHeaderRules(): HeaderRule[] {
   return [
     { source: "/(.*)", headers: BASELINE_HEADERS },
     { source: "/dashboard/:path*", headers: PROTECTED_HEADERS },
+    // Account responses contain a canonical identity and logout CSRF token.
+    // Auth redirects/errors can contain one-time protocol material in their URL.
+    ...["/account/:path*", "/api/auth/:path*"].map(source => ({ source, headers: [
+      ...PROTECTED_HEADERS, { key: "Referrer-Policy", value: "no-referrer" },
+    ] })),
   ];
 }

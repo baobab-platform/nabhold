@@ -1,0 +1,124 @@
+import "server-only";
+import { timingSafeEqual } from "node:crypto";
+import { NextRequest, NextResponse } from "next/server";
+import { newOpaqueHandle, type ConfidentialSessionStore } from "../store/confidential-store";
+import { createConfidentialStoreFromEnv } from "../store/redis-backend";
+import { AuthenticationDenied, readAuthSettings, type AuthSettings } from "./settings";
+import { begin, discover, exchange } from "./protocol";
+import { requireCurrentIdentity } from "./authority";
+import { limitedBody } from "./transport";
+
+export const ATTEMPT = "__Host-nabhold-login";
+export const BINDING = "__Host-nabhold-browser";
+export const SESSION = "__Host-nabhold-session";
+const opaque = /^[A-Za-z0-9_-]{43}$(?![\s\S])/;
+const headers = { "Cache-Control": "private, no-store", "Pragma": "no-cache", "Referrer-Policy": "no-referrer", "X-Content-Type-Options": "nosniff" };
+function cookie(response: NextResponse, name: string, value: string, maxAge: number, sameSite: "strict" | "lax" = "strict") {
+  response.cookies.set(name, value, { secure: true, httpOnly: true, path: "/", sameSite, maxAge });
+}
+function clearAttempt(response: NextResponse) {
+  cookie(response, ATTEMPT, "", 0, "lax"); cookie(response, BINDING, "", 0, "lax");
+}
+/** Reject ambiguous cookies as well as malformed handles; no substring matching. */
+function handle(request: NextRequest, name: string): string | undefined {
+  // Next's cookie parser collapses repeated names; inspect the raw header first.
+  const count = (request.headers.get("cookie") ?? "").split(";").filter(part => part.trim().split("=", 1)[0] === name).length;
+  if (count > 1) throw new AuthenticationDenied();
+  const all = request.cookies.getAll(name);
+  if (all.length > 1) throw new AuthenticationDenied();
+  const value = all[0]?.value;
+  if (value !== undefined && !opaque.test(value)) throw new AuthenticationDenied();
+  return value;
+}
+function origin(request: NextRequest, settings: AuthSettings, mutation = false) {
+  if (request.nextUrl.origin !== settings.origin || mutation && (request.headers.get("origin") !== settings.origin ||
+      ![null, "same-origin"].includes(request.headers.get("sec-fetch-site")))) throw new AuthenticationDenied();
+}
+function denied(status = 401) { return NextResponse.json({ code: "AUTHENTICATION_UNAVAILABLE_OR_DENIED" }, { status, headers }); }
+/** Dependencies are explicit only for tests; production routes always use the
+ * environment factory and verified TLS Redis. There is no process-local fallback.
+ */
+export interface AuthDependencies { settings: () => AuthSettings | null; store: () => ConfidentialSessionStore | null; fetcher?: typeof fetch }
+const production: AuthDependencies = { settings: readAuthSettings, store: createConfidentialStoreFromEnv };
+export function authHandlers(deps: AuthDependencies = production) {
+  function context(request: NextRequest, mutation = false) {
+    const settings = deps.settings();
+    if (!settings) return null;
+    origin(request, settings, mutation);
+    const store = deps.store();
+    if (!store) throw new AuthenticationDenied();
+    return { settings, store };
+  }
+  return {
+    /** POST plus exact Origin prevents unsolicited third-party login initiation.
+     * Lax attempt/binding cookies survive the top-level provider callback. They
+     * are separate random values and are never OAuth state or token containers.
+     */
+    async login(request: NextRequest) {
+      try {
+        const ctx = context(request, true); if (!ctx) return denied(404);
+        const old = handle(request, ATTEMPT), binding = handle(request, BINDING);
+        if (old && binding) await ctx.store.consumeLogin(old, binding);
+        const { transaction, url } = begin(ctx.settings, await discover(ctx.settings, deps.fetcher));
+        const browser = newOpaqueHandle();
+        const attempt = await ctx.store.issueLogin(transaction, browser);
+        const response = NextResponse.redirect(url, { status: 303, headers });
+        cookie(response, ATTEMPT, attempt, 300, "lax"); cookie(response, BINDING, browser, 300, "lax");
+        return response;
+      } catch { const response = denied(); clearAttempt(response); return response; }
+    },
+    async callback(request: NextRequest) {
+      try {
+        const ctx = context(request); if (!ctx) return denied(404);
+        const attempt = handle(request, ATTEMPT), browser = handle(request, BINDING);
+        if (!attempt || !browser) throw new AuthenticationDenied();
+        // GETDEL occurs before state/code/error checks or any network request.
+        const transaction = await ctx.store.consumeLogin(attempt, browser);
+        if (!transaction) throw new AuthenticationDenied();
+        const session = await exchange(ctx.settings, transaction, request.nextUrl, deps.fetcher);
+        const current = await requireCurrentIdentity(session, ctx.settings, deps.fetcher);
+        // Trusted introspection can shorten the token endpoint's advertised
+        // lifetime. Custody and cookie expiry must respect that current bound.
+        session.expiresAt = current.expiresAt;
+        // Successful login rotates session handles and revokes a presented old session;
+        // uncertainty is denied. Other browsers retain their own bounded sessions.
+        const old = handle(request, SESSION);
+        if (old) await ctx.store.revokeSession(old);
+        const next = await ctx.store.createSession(session);
+        const response = NextResponse.redirect(new URL("/account", ctx.settings.origin), { status: 303, headers });
+        cookie(response, SESSION, next, Math.floor((session.expiresAt - Date.now()) / 1000));
+        clearAttempt(response); return response;
+      } catch { const response = denied(); clearAttempt(response); return response; }
+    },
+    /** Token-free identity diagnostic only. CP grants/context/assurance are not
+     * cached into the session and do not unlock the executive release surfaces.
+     */
+    async session(request: NextRequest) {
+      try {
+        const ctx = context(request); if (!ctx) return denied(404);
+        const value = handle(request, SESSION); if (!value) throw new AuthenticationDenied();
+        const session = await ctx.store.readSession(value); if (!session) throw new AuthenticationDenied();
+        const identity = await requireCurrentIdentity(session, ctx.settings, deps.fetcher);
+        return NextResponse.json({ ...identity, csrfToken: session.csrfToken }, { headers });
+      } catch { return denied(); }
+    },
+    /** Local logout remains possible when IAM or CP is unavailable. It revokes
+     * custody, not the provider's SSO session; no fabricated global logout claim.
+     */
+    async logout(request: NextRequest) {
+      try {
+        const ctx = context(request, true); if (!ctx) return denied(404);
+        const value = handle(request, SESSION); if (!value) throw new AuthenticationDenied();
+        const session = await ctx.store.readSession(value); if (!session) throw new AuthenticationDenied();
+        if (request.headers.get("content-type") !== "application/x-www-form-urlencoded") throw new AuthenticationDenied();
+        const bytes = await limitedBody(request.body, AbortSignal.timeout(5000), 1024);
+        const form = new URLSearchParams(new TextDecoder("utf-8", { fatal: true }).decode(bytes));
+        const csrf = form.get("csrfToken") ?? "";
+        if (form.getAll("csrfToken").length !== 1 || !opaque.test(csrf) || !timingSafeEqual(Buffer.from(csrf), Buffer.from(session.csrfToken))) throw new AuthenticationDenied();
+        await ctx.store.revokeSession(value);
+        const response = NextResponse.redirect(new URL("/sign-in", ctx.settings.origin), { status: 303, headers });
+        cookie(response, SESSION, "", 0); clearAttempt(response); return response;
+      } catch { return denied(); }
+    },
+  };
+}
