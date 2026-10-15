@@ -30,6 +30,8 @@ describe("HomePage", () => {
       screen.getByRole("heading", { level: 1, name: "Test headline" }),
     ).toBeInTheDocument();
     expect(screen.getByText("Acme Holdings")).toBeInTheDocument();
+    // Breadcrumbs belong to the public interior pages, never the homepage.
+    expect(screen.queryByRole("navigation", { name: /breadcrumb/i })).not.toBeInTheDocument();
     expect(
       screen.getByRole("link", { name: /View company/ }),
     ).toHaveAttribute("href", "/portfolio/acme");
