@@ -1,7 +1,11 @@
-import { render, screen, within } from "@testing-library/react";
-import { describe, expect, it } from "vitest";
+import { cleanup, render, screen, within } from "@testing-library/react";
+import { afterEach, describe, expect, it } from "vitest";
 import { PublicBreadcrumbs } from "./public-breadcrumbs";
 import { PageHeader } from "./page-header";
+
+// The shared Vitest setup does not globally clean up React Testing Library
+// renders; isolate each test so landmarks from earlier cases cannot persist.
+afterEach(cleanup);
 
 describe("PublicBreadcrumbs", () => {
   it("links to actual ancestors and marks only the last item as current", () => {
