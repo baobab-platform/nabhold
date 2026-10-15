@@ -93,6 +93,9 @@ activation is introduced here.
 
 ## Verification
 
+CI explicitly selects Node **22.23.3**, matching the deployment Dockerfile,
+rather than inheriting Node 24 from the frontend tooling image. It installs
+OpenSSL development headers for the ephemeral TLS fixture build.
 The required CI step builds Redis **8.10.2** from exact official source commit
 `498ecd0d6d007db11ddb3aea9428552598a78622`, outside the repository. A moved tag
 fails verification. Tests generate an ephemeral self-signed fixture CA,
