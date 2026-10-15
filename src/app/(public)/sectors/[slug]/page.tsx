@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 
 import { getContentGateway } from "@/lib/content";
+import { PublicBreadcrumbs } from "@/components/marketing/public-breadcrumbs";
 
 export async function generateStaticParams() {
   const gateway = await getContentGateway();
@@ -37,6 +38,7 @@ export default async function Page({
 
   return (
     <article className="shell py-20">
+      <PublicBreadcrumbs items={[{label:"Home",href:"/"},{label:"Businesses",href:"/portfolio"},{label:"Sectors",href:"/sectors"},{label:sector.name}]} />
       <p className="eyebrow">Sector</p>
       <h1 className="display mt-5 text-6xl">{sector.name}</h1>
       <p className="mt-8 max-w-2xl text-lg leading-8 text-[var(--muted)]">
