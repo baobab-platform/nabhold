@@ -18,3 +18,11 @@
 6. Protected staging and independent G17 release approval remain separate. No source test counts as production approval.
 
 **Fail-closed principle:** missing adapter or absent current resolution means no authorisation. The public R0 website and API-only external clients must not require or inherit Nabhold's executive estate.
+
+## Cross-service context ownership finding (15 October 2026)
+
+CP commit `babae209` binds a stored context to the principal that resolved it. CP capability resolution checks that the authenticated caller owns the context. Consequently, a **human-owned context_id is not redeemable using a different Nabhold workload token**. The G04B-04 `requireExecutiveCapability` function is therefore only a seam until a CP-approved same-principal human capability request, explicit delegated-authority protocol, or another canonical owner-approved pattern is established. A hypothetical `context_id` in an internal BFF is not an authorisation grant. Do not wire the default workload-backed `CapabilityClient` to a human-owned context, and do not weaken CP context-owner enforcement to make that work.
+
+The new `withExecutiveCapability` helper requires current-authority checks before a protected operation callback, and keeps the provider's own execution-point controls independent. No dashboard route is activated by the helper; callers must use server-registered mappings. This is implementation progress, not INT-02/INT-03 success.
+
+**Required CP/Shared convergence decision:** document the exact protocol for an authorised human principal acting through Nabhold's confidential BFF, with current grants, capability resolution, context owner, token audience and resource-server verification. Add real-component positive and cross-tenant/revoked/wrong-audience negatives to Infrastructure's L4 harness before enabling an R1 endpoint.
