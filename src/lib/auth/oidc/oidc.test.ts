@@ -30,6 +30,7 @@ function fixture() {
   let nonce = "", challenge = "", codeUsed = false;
   let claims: Record<string, unknown> = {}, inactive = false, cpFails = false, signatureBad = false, tokenAudience = "baobab-control-plane";
   let endpoint = settings.issuer + "token";
+  let tokenLifetime = 600;
   const fetcher = vi.fn<typeof fetch>(async (input, init) => {
     const url = String(input);
     if (url.endsWith("/.well-known/openid-configuration")) return json({ issuer: settings.issuer,
@@ -55,7 +56,7 @@ function fixture() {
     }
     if (url === settings.introspectionEndpoint) return json({ active: !inactive, iss: settings.issuer,
       sub: "provider-subject-not-cp-uuid", aud: tokenAudience, client_id: settings.clientId,
-      exp: Math.floor(Date.now() / 1000) + 600, scope: "openid authority:self" });
+      exp: Math.floor(Date.now() / 1000) + tokenLifetime, scope: "openid authority:self" });
     if (url === settings.cpOrigin + "/v1/admin/effective-authority") {
       expect(new Headers(init?.headers).get("authorization")).toBe("Bearer synthetic-private-access-token");
       return json({ principal_id: principal, evaluated_at: new Date().toISOString(), grants: [] }, cpFails ? 403 : 200);
@@ -77,9 +78,9 @@ function fixture() {
     return { response, cookie, callback: "/api/auth/callback?" + new URLSearchParams({ state: url.searchParams.get("state")!, code: "fixture-one-time-code", iss: settings.issuer }) };
   }
   return { records, store, handlers, request, login, fetcher,
-    alter: (v: { claims?: Record<string, unknown>; inactive?: boolean; cpFails?: boolean; signatureBad?: boolean; tokenAudience?: string; endpoint?: string }) => {
+    alter: (v: { claims?: Record<string, unknown>; inactive?: boolean; cpFails?: boolean; signatureBad?: boolean; tokenAudience?: string; endpoint?: string; tokenLifetime?: number }) => {
       claims = v.claims ?? claims; inactive = v.inactive ?? inactive; cpFails = v.cpFails ?? cpFails;
-      signatureBad = v.signatureBad ?? signatureBad; tokenAudience = v.tokenAudience ?? tokenAudience; endpoint = v.endpoint ?? endpoint;
+      signatureBad = v.signatureBad ?? signatureBad; tokenAudience = v.tokenAudience ?? tokenAudience; endpoint = v.endpoint ?? endpoint; tokenLifetime = v.tokenLifetime ?? tokenLifetime;
     } };
 }
 afterEach(() => vi.unstubAllEnvs());
@@ -138,6 +139,14 @@ describe("OIDC login, confidential callback and current authority", () => {
     f.alter({ endpoint: "https://attacker.test/token" });
     expect((await f.handlers.login(f.request("/api/auth/login", "", "POST"))).status).toBe(401);
     expect(f.fetcher).toHaveBeenCalledTimes(1);
+  });
+  it("caps custody at the current introspection expiry", async () => {
+    const f = fixture(), login = await f.login(); f.alter({ tokenLifetime: 120 });
+    const response = await f.handlers.callback(f.request(login.callback, login.cookie));
+    expect(response.status).toBe(303);
+    const session = await f.store.readSession(response.cookies.get(SESSION)!.value);
+    expect(session!.expiresAt).toBeLessThanOrEqual(Date.now() + 120000);
+    expect(response.cookies.get(SESSION)!.maxAge).toBeLessThanOrEqual(120);
   });
   it("rejects duplicate cookies and rotates a presented old session", async () => {
     const f = fixture(), login = await f.login();

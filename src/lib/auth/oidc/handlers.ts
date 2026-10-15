@@ -76,7 +76,10 @@ export function authHandlers(deps: AuthDependencies = production) {
         const transaction = await ctx.store.consumeLogin(attempt, browser);
         if (!transaction) throw new AuthenticationDenied();
         const session = await exchange(ctx.settings, transaction, request.nextUrl, deps.fetcher);
-        await requireCurrentIdentity(session, ctx.settings, deps.fetcher);
+        const current = await requireCurrentIdentity(session, ctx.settings, deps.fetcher);
+        // Trusted introspection can shorten the token endpoint's advertised
+        // lifetime. Custody and cookie expiry must respect that current bound.
+        session.expiresAt = current.expiresAt;
         // Successful login rotates session handles and revokes a presented old session;
         // uncertainty is denied. Other browsers retain their own bounded sessions.
         const old = handle(request, SESSION);
