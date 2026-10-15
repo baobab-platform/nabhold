@@ -77,4 +77,19 @@ describe("G04B-04 current executive capability boundary", () => {
    const noContext={...f.deps,context:{resolveCurrent:async()=>null}};
    await expect(requireExecutiveCapability(session,request,noContext)).rejects.toBeInstanceOf(AuthenticationDenied);
  });
+ it("denies when capability resolution outlives its context lease", async () => {
+   const f=setup();
+   let clock = Date.now();
+   const first = clock;
+   f.context.mockImplementationOnce(async () => ({ principal_id: principal, organisation_id: org,
+     tenant_id: tenant, context_id: "current-context",
+     evaluated_at: new Date(first).toISOString(), expires_at: new Date(first+60000).toISOString(), authorised: true }));
+   f.resolve.mockImplementationOnce(async () => {
+     clock = first + 61000;
+     return { context_id:"current-context", capability_key:request.capabilityKey, decision:"RESOLVED" as const,
+       grant_id:"grant",binding_id:"binding",invocation:{contract_version:1,service_reference:"https://cms.example.test",
+       protocol:"http" as const,provider_id:"cms",engine_instance_id:"instance"},expires_at:new Date(first+120000).toISOString() };
+   });
+   await expect(requireExecutiveCapability(session,request,{...f.deps, now:()=>clock})).rejects.toBeInstanceOf(AuthenticationDenied);
+ });
 });
