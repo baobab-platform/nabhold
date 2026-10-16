@@ -47,3 +47,12 @@ Foundation gate validates contract compatibility and reproducibility and scans
 source, dependencies, secrets, configuration, and the deployable image.
 Fixable transitive dependencies are constrained through reviewed pnpm overrides
 and remain visible in the committed lockfile.
+
+
+## Finance F1 source progress
+
+Shared's independent Finance F1 DRAFT wire tranche is merged. The
+[Go-Live evidence record](docs/go-live/evidence/finance-f1-source-2026-10-16.md)
+and [programme register](docs/go-live/register.md) track exact commits/checks,
+restricted ledger/journal/statement contracts and remaining ERP native/Finance
+acceptance. DRAFT vocabulary does not enable a Nabhold finance feature or release.
