@@ -355,3 +355,26 @@ See the [full evidence and next owner tasks](evidence/finance-f1-source-2026-10-
 G03 has advanced DRAFT source. G06 remains blocked for operational F1; G01/G02,
 protected G04/G05/G16/G17 and G18 are not promoted. No R0/R1/R2/R3 release is
 accepted. Infrastructure #35 was not changed by this Finance increment.
+
+## 19. INT-02 prerequisite source closure — 16 October 2026
+
+Sponsor direction: implement the recommended repairs towards Infrastructure #35.
+The [prerequisite source evidence](evidence/int02-prerequisite-source-2026-10-16.md)
+records merged CP #407/#408, IAM #117 and Shared #322 with immutable commits,
+review status, evidence class and synthetic/provider boundaries.
+
+Current governed PRIMARY authority and metrics, packaged browser themes, and a
+PROVISIONED Pulse test-caller ceiling are source progress. Infrastructure's
+browser/code/S256/MFA, four-principal isolation and explicit workload-registry
+loading remain candidates until the actual final-head run proves them.
+Historical source-only or partial workload results do not establish full L4.
+
+L4-CP-02 remains BLOCKED for an actual qualified provider and its current
+health/binding/contract/market/instance/isolation negatives. Shared's proof
+bootstrap requires an owner-governed decision; its only existing exception was
+not broadened. No new caller was promoted to ACTIVE, and no fake provider
+certification was created. #35 remains open. INT-03 depends on full INT-02.
+
+G04 source advances; real onboarding, G05/R0, G16/G17 and G18 remain unaccepted.
+This checkpoint supersedes stale prerequisite PR statuses above while retaining
+the dated history. Finance DRAFT source status in section 18 is unchanged.

@@ -56,3 +56,7 @@ Shared's independent Finance F1 DRAFT wire tranche is merged. The
 and [programme register](docs/go-live/register.md) track exact commits/checks,
 restricted ledger/journal/statement contracts and remaining ERP native/Finance
 acceptance. DRAFT vocabulary does not enable a Nabhold finance feature or release.
+
+The [INT-02 prerequisite checkpoint](docs/go-live/evidence/int02-prerequisite-source-2026-10-16.md)
+records merged IAM/CP/Shared repairs and the remaining real integration/provider
+qualification. Infrastructure #35 remains open; no protected release is implied.
