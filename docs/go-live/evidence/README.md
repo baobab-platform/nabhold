@@ -39,3 +39,5 @@ Recorded and awaiting reviewer sign-off (not accepted):
 | Gate | Record | Status |
 |---|---|---|
 | G01 | [`G01/production/2026-01-16-cipc-registration.md`](G01/production/2026-01-16-cipc-registration.md): CIPC registration certificate facts for Nabhold Group Africa | Sign-off PENDING |
+
+| G03/G06 | [`finance-f1-source-2026-10-16.md`](finance-f1-source-2026-10-16.md): merged DRAFT Finance source and unit tests | Source only; steward/gate sign-off PENDING |

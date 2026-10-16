@@ -3,6 +3,16 @@
 **Programme:** NAB-GOLIVE-MP-001 v2.0, G03/G06, P1-01/P1-02.
 **State:** DRAFT wire source merged; ERP provider and release acceptance pending.
 **Dependency:** source engineering is independent of Infrastructure #35.
+**Claim and scope:** IMPLEMENTED source schemas, validation and tests only; no
+CERTIFIED, ACTIVE or provider PASS claim.
+**Evidence class:** Source and unit tests. The linked Shared contracts remain
+DRAFT; this record does not establish accepted canonical semantics.
+**Reviewer role/date:** automated engineering source/CI review, 16 October 2026.
+Shared/ERP contract stewards and programme gate reviewers: sign-off PENDING;
+no human or domain acceptance is asserted.
+**Simulation/provider declaration:** examples are synthetic and validation runs
+offline. No live, sandbox or simulated Finance provider was exercised. The
+separately linked Infrastructure observation is outside this Finance claim.
 
 ## Immutable source and CI pointers
 
