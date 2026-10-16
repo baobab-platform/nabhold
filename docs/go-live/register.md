@@ -1,10 +1,11 @@
 # Nabhold Go-Live Register — v2.0
 
 **Masterplan:** [NAB-GOLIVE-MP-001 v2.0](NAB-GOLIVE-MP-001.md)  
-**Baseline:** 14 October 2026  
+**Baseline:** 14 October 2026; latest source reconciliation 16 October 2026
 **Status model:** architecture, contract, code, migration, synthetic test, protected staging, external evidence and operational certification are tracked separately.
 
 This register records source/runtime evidence known from the repositories. It is not live production telemetry.
+The [16 October Finance F1 source evidence](evidence/finance-f1-source-2026-10-16.md) and section 18 supersede older Finance source/PR-status claims while preserving their dated history.
 
 ## 1. Programme gates
 
@@ -15,10 +16,10 @@ This register records source/runtime evidence known from the repositories. It is
 | G01B independent verification | IMPLEMENTATION PARTIAL / EXECUTION DEFERRED | Real Nabhold/Thamani registration packet, validation and offline CP request preparation implemented; no independently accepted real case yet | Later authorised source/custody intake + independent CP decision |
 | G01C group relationships/mandates | BLOCKED | CP relationship/mandate machinery exists; no accepted real control/mandate evidence for programme use | Evidence-backed relationships/mandates |
 | G02 Organisation-first onboarding | IMPLEMENTED-NOT-EXECUTED | CP progressive application, independent review/decision, TenantOnboardingRequest v2 and RegisterProgressiveTenantV2 implemented; synthetic four-business PG17 acceptance exists | Execute real Nabhold controlled staging flow |
-| G03 capability programme | IN PROGRESS | Shared catalogue has 22 keys; ADR-SHARED-033 finance inventory remains Proposed | Finance F1 contracts + subsequent domains |
+| G03 capability programme | IN PROGRESS | Shared catalogue has 25 keys including three DRAFT/EXPERIMENTAL F1 entries; ADR-SHARED-033 remains Proposed | F1 semantic/provider acceptance + subsequent domains |
 | G04 IAM | PARTIAL | Secure local provider bootstrap implemented (IAM #113); registered hierarchical workload scope syntax converged (Shared #305 / IAM #114); nabhold-backend stays PROVISIONED | Authenticated operator diagnostic implemented; real native/CP Principals, grants, workload credential and protected acceptance remain |
 | G05 CMS / R0 | PARTIAL | Organisation-first consumer/provider source convergence implemented; CMS support PARTIAL and production_permitted=false | P0-04 protected identity + P0-06 live IAM/CP/binding + P0-07 R0 acceptance |
-| G06 ERP finance | BLOCKED | ERP authority/contract convergence advanced; corporate F1 capabilities not canonical/implemented | FinanceBaseline + F1 + live iDempiere |
+| G06 ERP finance | BLOCKED | Shared #319/#321 merged F1 DRAFT wire contracts; no certified ERP F1 provider | FinanceBaseline + F1 + live iDempiere |
 | G07 Workforce/HR | BLOCKED | No accepted canonical workforce contract/provider surface | Shared/domain decision + implementation |
 | G08 Payroll | BLOCKED | No accepted production payroll capability/provider | Statutory/provider acceptance |
 | G09 Procurement/assets/projects | BLOCKED | Required corporate contracts incomplete | Contracts + ERP adapters |
@@ -64,7 +65,7 @@ Group membership never grants cross-tenant access.
 | V2-B05 | nabhold-backend workload PROVISIONED, not operationally accepted | IAM / CP / Nabhold |
 | V2-B06 | CMS consumer/provider source converged; live qualification remains absent | CMS / IAM / CP / Nabhold |
 | V2-B07 | Executive sign-in remains preview-only | IAM / Nabhold |
-| V2-B08 | Corporate finance F1 contracts/provider absent | Shared / ERP |
+| V2-B08 | F1 DRAFT wire contracts merged; semantic acceptance and ERP native/provider support remain absent | Shared / ERP |
 | V2-B09 | Workforce/HR boundary absent | Shared / ERP / IAM |
 | V2-B10 | Payroll boundary/provider/statutory evidence absent | ERP / payroll / finance |
 | V2-B11 | Procurement/assets/projects contracts absent | Shared / ERP |
@@ -87,7 +88,7 @@ Group membership never grants cross-tenant access.
 3. **P0-05 — execute Nabhold progressive controlled staging onboarding to IDENTITY_TENANT_ACCEPTED_NOT_PRODUCTION.**
 4. **P0-06 — activate the first qualified capability: Nabhold workload + CMS R0.**
 5. **P0-07 — R0 protected E2E and acceptance pack.**
-6. **P1-01 — accept and publish finance F1 contracts.**
+6. **P1-01 — DRAFT wire source merged in Shared #319/#321; ADR/ERP semantic acceptance and native/provider implementation remain.**
 7. **P1-02 — FinanceBaseline + live iDempiere proof.**
 8. **P1-03 — finance F2 plus procurement/assets/projects.**
 9. **P1-04/P1-05 — workforce then payroll.**
@@ -323,3 +324,34 @@ This delta is an append-only evidence correction to the 14 October register. Ear
 **Execution ordering:** finish Infrastructure INT-02 mandatory IAM/CP positive and negative evidence, then INT-03 Nabhold confidential BFF, CP and CMS integration. In parallel, Shared/ERP may develop F1 contracts after contract steward/ERP decisions; native Trade-A–D, ERP, Payments D2, Subscriptions and Trade Docs enforcement remain engine-owned.
 
 **No promotion:** G01 independent legal evidence, G02 real progressive onboarding, G04 real Principals/grants, G05 CMS provider readiness, G16 protected staging, G17 sign-off and G18 production are unchanged and unproven by these code merges. A group holding interest is not a cross-tenant grant.
+
+
+## 18. Independent Finance F1 source completion — 16 October 2026
+
+Sponsor direction: proceed with engineering that does **not** depend on
+Infrastructure #35. Finance F1 wire contracts/fixtures/CI form an independent
+source lane; this does not waive integration, legal, provider or release gates.
+
+| Increment | Immutable source evidence | Readiness consequence |
+|---|---|---|
+| Finance design checkpoint | Shared [#319](https://github.com/baobab-platform/shared/pull/319) MERGED, `27eb77a367d6c9f2a2368cdffcae73cd5d544571` | Review-only candidate repaired; it is not the consumer contract |
+| SH-NAB-FIN-02 DRAFT wire tranche | Shared [#321](https://github.com/baobab-platform/shared/pull/321) MERGED, `2aa057dcaa475450450ff1166e8e4c1cb8f5d33c` | Three DRAFT/EXPERIMENTAL keys, common types/six wire schemas, 26 synthetic examples, 27 Finance tests, offline validation and lock/CI documentation |
+| Final-head contract/Foundation checks | Tested Shared `eee834ec4f97b93bb9f7975e3ea020de1e3cac28`; all 29 checks complete: 22 success, seven applicable skips | Source conformance; no provider, runtime financial or operational certification |
+| Existing INT-02 workload observation | Infrastructure `0f6cbac`, [run 38929279122](https://github.com/baobab-platform/infrastructure/actions/runs/38929279122) | L4-IAM-02 PASS only; four other scenario aggregates BLOCKED; #35 remains unmerged |
+
+Current Shared vocabulary now includes `finance.ledger.read`,
+`finance.journal.manage` and `finance.statement.read`. DRAFT catalogue presence
+is distinct from accepting Proposed ADR-SHARED-033 or certifying ERP support.
+
+The wire tranche covers operation-specific journal requirements and positive/zero
+instructions, typed chart/balance/entry rows, exact signed historical corrections,
+ERP-owned book scope, snapshot continuation, historical baseline versions and
+statement reconciliation lineage. Current CP/native authority, arithmetic balance,
+precision, closed periods, maker/checker, durable idempotency, native COMMIT and
+actual trial-balance reconciliation remain ERP/Finance acceptance obligations.
+No estate may substitute fixture validation or metadata for those proofs.
+
+See the [full evidence and next owner tasks](evidence/finance-f1-source-2026-10-16.md).
+G03 has advanced DRAFT source. G06 remains blocked for operational F1; G01/G02,
+protected G04/G05/G16/G17 and G18 are not promoted. No R0/R1/R2/R3 release is
+accepted. Infrastructure #35 was not changed by this Finance increment.

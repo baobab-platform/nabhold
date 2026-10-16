@@ -9,6 +9,7 @@ v2.0 is aligned to accepted ADR-BCP-026, ADR-BCP-027, Baobab EA Implementation P
 | Document | Purpose |
 |---|---|
 | [NAB-GOLIVE-MP-001.md](NAB-GOLIVE-MP-001.md) | Accepted v2.0 programme authority |
+| [evidence/finance-f1-source-2026-10-16.md](evidence/finance-f1-source-2026-10-16.md) | Merged independent F1 DRAFT contracts, exact CI/source pointers and outstanding native acceptance |
 | [register.md](register.md) | Live gate/blocker/decision status; update whenever a gate materially changes |
 | [evidence/README.md](evidence/README.md) | Evidence-index rules and immutable acceptance pointers |
 | [capability-demand-census.md](capability-demand-census.md) | Direct/conditional/indirect capability demand by release |
@@ -67,3 +68,13 @@ Kratos accounts and CP administrative grants. Shared/IAM also repair the
 previous rejection of the existing `content:entry:resolve` scope; no workload
 or capability is promoted by that syntax correction. See the register's
 non-staging source increment section for exact PRs and remaining acceptance.
+
+
+## Independent Finance F1 source lane — 16 October 2026
+
+Shared #319/#321 are merged. The Shared catalogue includes three F1
+DRAFT/EXPERIMENTAL keys and validated ledger/journal/statement wire schemas.
+[Source evidence](evidence/finance-f1-source-2026-10-16.md) distinguishes this
+completed wire increment from Proposed ADR-SHARED-033 acceptance, actual ERP
+provider support and signed Finance/operational qualification. Source work was
+independent of Infrastructure #35; G06 and R1 operational acceptance remain open.
