@@ -306,3 +306,20 @@ Disabled by default; no real client/credential/identity or capability is created
 The current native handoff's identity-only scope contract is not silently expanded:
 a CP-audience human token with approved authority:self is still required.
 Executive and CMS authority remain separate and release-gated. P0-04 is PARTIAL.
+
+
+## 17. Evidence reconciliation — 16 October 2026 (EA v2.2)
+
+This delta is an append-only evidence correction to the 14 October register. Earlier baseline rows remain dated history; where conflicting, use these **verified PR statuses**, not the stale descriptions above.
+
+| Nabhold gate | Verified source evidence | Gate disposition |
+|---|---|---|
+| G04 / executive IAM | [IAM #116](https://github.com/baobab-platform/baobab-iam/pull/116) MERGED; [Nabhold #57](https://github.com/baobab-platform/nabhold/pull/57) MERGED | Source advanced; dormant human client, no independently approved executive Principal or real access |
+| G04 / L4 current authority | [Infrastructure #34](https://github.com/baobab-platform/infrastructure/pull/34) MERGED; [#35](https://github.com/baobab-platform/infrastructure/pull/35) OPEN/DRAFT | INT-01 foundation exists; INT-02 required real IAM↔CP acceptance outstanding |
+| G05/R0 | Nabhold OIDC/BFF #55 merged previously; #57 source guard merged | No accepted full IAM↔CP↔CMS L4-02, binding or protected R0 evidence |
+| G03/G06 Finance | Shared ADR-SHARED-033 remains **Proposed**; F1 keys are not registered | F1 is design/source work only; no finance capability activated or certified |
+| EA-R03 downstream | [Shared #318](https://github.com/baobab-platform/shared/pull/318) and [CP #405](https://github.com/baobab-platform/baobab-cp/pull/405) MERGED | Trade-0 authority foundation, not a Nabhold commercial trading capability or EA Gate D |
+
+**Execution ordering:** finish Infrastructure INT-02 mandatory IAM/CP positive and negative evidence, then INT-03 Nabhold confidential BFF, CP and CMS integration. In parallel, Shared/ERP may develop F1 contracts after contract steward/ERP decisions; native Trade-A–D, ERP, Payments D2, Subscriptions and Trade Docs enforcement remain engine-owned.
+
+**No promotion:** G01 independent legal evidence, G02 real progressive onboarding, G04 real Principals/grants, G05 CMS provider readiness, G16 protected staging, G17 sign-off and G18 production are unchanged and unproven by these code merges. A group holding interest is not a cross-tenant grant.
