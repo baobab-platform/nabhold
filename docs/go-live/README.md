@@ -78,3 +78,8 @@ DRAFT/EXPERIMENTAL keys and validated ledger/journal/statement wire schemas.
 completed wire increment from Proposed ADR-SHARED-033 acceptance, actual ERP
 provider support and signed Finance/operational qualification. Source work was
 independent of Infrastructure #35; G06 and R1 operational acceptance remain open.
+
+The [INT-02 prerequisite source checkpoint](evidence/int02-prerequisite-source-2026-10-16.md)
+records merged CP/IAM/Shared repairs without promoting Infrastructure #35 or
+any protected onboarding/release gate. Its actual final-head integration and
+provider qualification remain required before INT-03.
