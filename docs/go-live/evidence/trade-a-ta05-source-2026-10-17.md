@@ -1,9 +1,21 @@
 # Independent Trade-A TA-05 engineering evidence
 
 Date: 17 October 2026. Programme: Nabhold Go-Live v2.0 / EA v2.2 EA-R03,
-LA-05 and P0-04B. Direction: implement engineering independent of #35.
+LA-05 / Trade-A. Direction: implement engineering independent of #35.
 Governing contract: Accepted Shared ADR-SHARED-039; Trade ADR-0010 §28,
 ADR-0014 and ADR-0015. Nabhold remains a consumer/presentation boundary.
+
+**Claim:** IMPLEMENTED Trade-A TA-05 source kernel and receipt hardening only;
+not complete Trade-A enforcement or a Nabhold onboarding/identity exit.
+**Evidence class:** Source and unit tests, with linked engine-local native
+regression evidence; not L4 or live protected dependency qualification.
+**Reviewer role/date:** automated engineering source/CI review, 17 October 2026;
+independent programme/gate reviewer sign-off PENDING. Standing merge
+instructions authorise source integration, not gate acceptance.
+**Simulation/provider declaration:** actual disposable Medusa/PostgreSQL17
+with explicitly synthetic CP authority for the TA-05 regression; no real
+external-provider, legal, merchant or protected-runtime acceptance is asserted.
+Nabhold P0-04/P0-04B operator identity and authority preparation remain separate.
 
 ## Source record
 
