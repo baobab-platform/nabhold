@@ -51,3 +51,16 @@ for (const route of ["/portfolio", "/portfolio/zuribeans", "/insights", "/sector
     expect(errors).toEqual([]);
   });
 }
+
+// ADR-SHARED-040: the public layout, not a leaf page, owns the one main
+// landmark. Multiple landmarks confuse skip links and assistive technology.
+for (const route of ["/", "/markets", "/markets/map"]) {
+  test(`public page has exactly one skip target and main landmark: ${route}`, async ({ page }) => {
+    await page.goto(route);
+    const main = page.getByRole("main");
+    await expect(main).toHaveCount(1);
+    await expect(main).toHaveAttribute("id", "main");
+    await expect(main.getByRole("heading", { level: 1 })).toBeVisible();
+    await expect(page.locator('a[href="#main"]')).toHaveCount(1);
+  });
+}
