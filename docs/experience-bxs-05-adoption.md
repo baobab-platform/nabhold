@@ -20,3 +20,7 @@ verified legal/market disclosures, keyboard country-list alternatives and
 per-subsidiary autonomous market status. Require visual and axe receipts,
 reviewed snapshots and fail-closed context integration before replacing
 existing presentation paths.
+
+## BXS-05C published package adoption
+
+The authorised Shared publication and SHA512 registry verification passed for 0.2.0. This branch adds the exact published tokens and geo-core packages with private npm token injection. Scope BXS colours only to the editorial map subtree; do NOT replace existing Nabhold gold or infer trade/market authority. The map calls Shared's coordinate guard without delegating legal market/status/operational truth. CI uses read-only GITHUB_TOKEN for packages; Docker builds require a temporary BuildKit `npm_token` secret, never a Docker ARG or runtime environment variable. Consumer admission remains subject to frozen lock, repository package access, browser and full mandatory CI.

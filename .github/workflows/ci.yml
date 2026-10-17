@@ -29,8 +29,12 @@ jobs:
         uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
         with:
           node-version: "24.21.0"
+          registry-url: "https://npm.pkg.github.com"
+          scope: "@baobab-platform"
 
-      - name: Install dependencies
+      - name: Install locked packages with read-only GitHub registry permission
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: pnpm install --frozen-lockfile
 
       - name: Lint

@@ -1,5 +1,8 @@
 import type { Metadata } from "next";
 import "./globals.css";
+// Additive namespaced BXS tokens; no change to Nabhold corporate brand authority.
+import "@baobab-platform/experience-tokens/base.css";
+import "@baobab-platform/experience-tokens/themes/nabhold.css";
 
 import { getContentGateway } from "@/lib/content";
 import { Inter } from "next/font/google";
