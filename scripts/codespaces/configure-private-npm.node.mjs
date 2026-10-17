@@ -66,7 +66,7 @@ test("Reconfiguration removes old GitHub token lines and remains idempotent", ()
   const fixture = run({
     GITHUB_TOKEN: "synthetic-temporary-repo-token",
     BAOBAB_PACKAGES_READ_TOKEN: "",
-  }, "//npm.pkg.github.com/:_authToken=synthetic-old-expired-token\n");
+  }, "  //npm.pkg.github.com/:_authToken = synthetic-old-expired-token\n");
   try {
     assert.equal(fixture.result.status, 0, fixture.result.stderr);
     const config = fixture.read();
