@@ -10,10 +10,9 @@
  * Access to the package itself must still be granted by GitHub; this helper
  * cannot create an entitlement, modify scopes or bypass pnpm supply-chain CI.
  */
-import { chmodSync, existsSync, mkdtempSync, readFileSync, renameSync, rmSync, writeFileSync } from "node:fs";
-import { homedir, tmpdir } from "node:os";
+import { chmodSync, existsSync, mkdirSync, readFileSync, renameSync, rmSync, writeFileSync } from "node:fs";
+import { homedir } from "node:os";
 import { dirname, join } from "node:path";
-import { mkdirSync } from "node:fs";
 
 const AUTH_KEY = "//npm.pkg.github.com/:_authToken";
 const REGISTRY = "@baobab-platform:registry=https://npm.pkg.github.com";
