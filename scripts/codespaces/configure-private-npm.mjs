@@ -17,6 +17,9 @@ import { dirname, join } from "node:path";
 const AUTH_KEY = "//npm.pkg.github.com/:_authToken";
 const REGISTRY = "@baobab-platform:registry=https://npm.pkg.github.com";
 const SECRET_NAME = "BAOBAB_PACKAGES_READ_TOKEN";
+// npmrc is INI: spaces around '=' are valid. Removing only an exact
+// `key=` prefix could leave a previously persisted secret on disk.
+const EXISTING_GITHUB_AUTH = /^\/\/npm\.pkg\.github\.com\/:_authToken\s*=/i;
 const tokenVariable = process.env[SECRET_NAME]
   ? SECRET_NAME
   : process.env.GITHUB_TOKEN
@@ -37,7 +40,7 @@ if (!tokenVariable) {
   const current = existsSync(npmrc) ? readFileSync(npmrc, "utf8") : "";
   const retained = current.split(/\r?\n/).filter((line) =>
     line.trim() &&
-    !line.trim().startsWith(`${AUTH_KEY}=`) &&
+    !EXISTING_GITHUB_AUTH.test(line.trim()) &&
     line.trim() !== REGISTRY,
   );
   retained.push(REGISTRY);
