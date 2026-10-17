@@ -33,7 +33,7 @@ jobs:
           scope: "@baobab-platform"
 
       - name: Verify Codespaces user-level registry bootstrap cannot leak token values
-        run: node --test scripts/codespaces/configure-private-npm.test.mjs
+        run: node --test scripts/codespaces/configure-private-npm.node.mjs
 
       - name: Install locked packages with read-only GitHub registry permission
         env:
