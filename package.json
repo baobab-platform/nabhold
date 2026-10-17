@@ -43,6 +43,7 @@
     "@baobab-platform/experience-geo-core": "0.2.0"
   },
   "devDependencies": {
+    "axe-core": "4.13.0",
     "@eslint/eslintrc": "3.3.7",
     "@playwright/test": "1.64.0",
     "@testing-library/jest-dom": "7.0.1",
