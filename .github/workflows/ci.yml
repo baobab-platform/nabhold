@@ -30,7 +30,9 @@ jobs:
         with:
           node-version: "24.21.0"
 
-      - name: Install dependencies
+      - name: Install locked packages with read-only GitHub registry permission
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: pnpm install --frozen-lockfile
 
       - name: Lint
