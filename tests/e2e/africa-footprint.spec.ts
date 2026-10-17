@@ -8,6 +8,7 @@ for (const width of [390, 1440]) {
   test(`map selection has an equivalent country-list control at ${width}px`, async ({ page }) => {
     await page.setViewportSize({ width, height: 900 });
     await page.goto("/markets/map");
+    if (width >= 1024) await expect(page.getByRole("link", { name: "Executive login", exact: true })).toHaveCSS("color", "rgb(255, 255, 255)");
     const countries = page.getByRole("list", { name: "Mapped countries and territories" });
     await expect(countries.getByRole("button")).toHaveCount(51);
     const search = page.getByRole("searchbox", { name: "Find a mapped country or territory" });
@@ -17,7 +18,7 @@ for (const width of [390, 1440]) {
     await page.addScriptTag({ path: require.resolve("axe-core/axe.min.js") });
     const report = await page.evaluate(async () => {
       const axe = (window as unknown as { axe: { run: (node: Element, options: unknown) => Promise<AxeResults> } }).axe;
-      return axe.run(document.querySelector('[data-bx-theme="nabhold"]')!, { runOnly: { type: "tag", values: ["wcag2a", "wcag2aa", "wcag21aa", "wcag22aa"] } });
+      return axe.run(document.body, { runOnly: { type: "tag", values: ["wcag2a", "wcag2aa", "wcag21aa", "wcag22aa"] } });
     });
     expect(report.violations).toEqual([]);
     await search.fill("Angola");

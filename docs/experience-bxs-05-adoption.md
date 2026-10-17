@@ -38,3 +38,7 @@ public-domain terms, projection and omitted small states are recorded in
 `src/data/africa-geometry-provenance.json`. Disputed territories remain
 editorial geography and confer no legal or operating status. Existing scoped
 company statements and their attribution remain independent of polygon data.
+
+Visual review also exposed a pre-existing unlayered anchor reset overriding
+the executive CTA colour. The reset now lives in Tailwind base; the CTA keeps
+white-on-ink text and focus uses the AA-safe deep gold semantic token.
