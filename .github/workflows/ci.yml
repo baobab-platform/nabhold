@@ -86,6 +86,17 @@ jobs:
           NEXT_PUBLIC_SITE_URL: http://127.0.0.1:3000
         run: pnpm test:e2e
 
+      - name: Preserve reviewed map visual and browser evidence
+        if: always()
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v4.7.5
+        with:
+          name: nabhold-map-browser-evidence
+          if-no-files-found: error
+          path: |
+            tests/e2e/africa-footprint.spec.ts-snapshots/
+            test-results/
+            playwright-report/
+
   action-pinning:
     name: Enforce action pinning
     uses: baobab-platform/shared/.github/workflows/enforce-action-pinning.yml@31de2bc3dcd56128c019c640dc7e12c10ae9ca69 # v2.3.0

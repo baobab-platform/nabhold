@@ -24,3 +24,38 @@ existing presentation paths.
 ## BXS-05C published package adoption
 
 The authorised Shared publication and SHA512 registry verification passed for 0.2.0. This branch adds the exact published tokens and geo-core packages with private npm token injection. Scope BXS colours only to the editorial map subtree; do NOT replace existing Nabhold gold or infer trade/market authority. The map calls Shared's coordinate guard without delegating legal market/status/operational truth. CI uses read-only GITHUB_TOKEN for packages; Docker builds require a temporary BuildKit `npm_token` secret, never a Docker ARG or runtime environment variable. Consumer admission remains subject to frozen lock, repository package access, browser and full mandatory CI.
+
+## Country-list and geography provenance hardening
+
+Every pointer-selectable shape now has a searchable keyboard country/territory
+control, including those with no business statement. Selected detail announces
+its update without moving focus. Reduced-motion also disables transitions.
+
+The unprovenanced simplified dataset is replaced with 51 African features from
+Natural Earth 1:110m Admin 0 at upstream commit
+`ca96624a56bd078437bca8184e78163e5039ad19`. The source digest, transformation,
+public-domain terms, projection and omitted small states are recorded in
+`src/data/africa-geometry-provenance.json`. Disputed territories remain
+editorial geography and confer no legal or operating status. Existing scoped
+company statements and their attribution remain independent of polygon data.
+
+Visual review also exposed a pre-existing unlayered anchor reset overriding
+the executive CTA colour. The reset now lives in Tailwind base; the CTA keeps
+white-on-ink text and focus uses the AA-safe deep gold semantic token.
+
+## BXS-05 map browser visual acceptance receipts (17 October 2026)
+
+The 390px and 1440px Chromium/Linux Playwright references were captured by the
+normal browser job and manually inspected before admission. The one-time,
+branch-restricted transfer retrieved only the exact CI artifact from run
+`39050713226`, verified each SHA256 and committed both references. The
+privileged transfer workflow removed itself in the same commit; it is **not**
+part of the reusable/main pipeline.
+
+- 390px: `cdd93dafbf1673a0ee880614191ce799e921e2f4618bb7c25b7495dcdc7ceff4`
+- 1440px: `67553498f0d86c50adee37781f50d32917b54f476e0512ca01c47768d5399058`
+
+These are viewport regression references, not evidence of legal markets,
+cross-tenant grants, a live map provider or production go-live. Subsequent
+source changes must pass the normal unmodified screenshot comparison, axe,
+keyboard, frozen-install, Foundation and Security gates before merge.
