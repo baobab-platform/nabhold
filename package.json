@@ -17,7 +17,10 @@
     "verification:prepare": "node --experimental-strip-types scripts/prepare-legal-verification.mjs",
     "onboarding:operators:check": "node --experimental-strip-types scripts/check-onboarding-operators.mjs",
     "acceptance:protected": "node --experimental-strip-types scripts/run-protected-acceptance.mjs",
-    "test:auth-store": "vitest run --config vitest.auth-store.config.ts"
+    "test:auth-store": "vitest run --config vitest.auth-store.config.ts",
+    "integration:check": "node --experimental-strip-types scripts/integration/run.mjs check",
+    "dev:integration": "node --experimental-strip-types scripts/integration/run.mjs dev",
+    "test:e2e:integration": "node --experimental-strip-types scripts/integration/run.mjs test"
   },
   "dependencies": {
     "@base-ui/react": "^1.9.0",

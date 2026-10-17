@@ -42,3 +42,4 @@ Recorded and awaiting reviewer sign-off (not accepted):
 | G03/G06 | [`finance-f1-source-2026-10-16.md`](finance-f1-source-2026-10-16.md): merged DRAFT Finance source and unit tests | Source only; steward/gate sign-off PENDING |
 | G04 | [`int02-prerequisite-source-2026-10-16.md`](int02-prerequisite-source-2026-10-16.md): merged CP/IAM/Shared source repairs | Source only; full INT-02 and gate sign-off PENDING |
 | EA-R03 / Trade-A (source) | [`trade-a-ta05-source-2026-10-17.md`](trade-a-ta05-source-2026-10-17.md): merged central order-authority kernel and receipt hardening | Source/engine-local only; independent programme/gate sign-off PENDING; Nabhold P0-04/P0-04B unchanged |
+| INT-03 preparation (source) | [`../../testing/codespaces-integration.md`](../../testing/codespaces-integration.md): consumer harness, private configuration and handoff requirements | Source only; real integrated execution BLOCKED; gate sign-off PENDING |
