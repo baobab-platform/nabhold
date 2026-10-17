@@ -1,7 +1,8 @@
 // @vitest-environment node
 import { chmodSync, mkdtempSync, rmSync, symlinkSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
-import { join } from "node:path";
+import { dirname, join } from "node:path";
+import { rootCertificates } from "node:tls";
 import { afterEach, describe, expect, it, vi } from "vitest";
 vi.mock("server-only", () => ({}));
 import { readAuthSettings } from "../../src/lib/auth/oidc/settings";
@@ -22,7 +23,7 @@ function fixture(): Record<string, string | undefined> {
     NABHOLD_BFF_REDIS_USERNAME: "nabhold", NABHOLD_BFF_REDIS_PASSWORD: "synthetic-redis-secret",
     NABHOLD_BFF_STORE_KEYS_JSON: JSON.stringify({ local: Buffer.alloc(32, 7).toString("base64") }),
     NABHOLD_BFF_STORE_ACTIVE_KEY: "local", NABHOLD_BFF_STORE_EPOCH: "integration",
-    NODE_EXTRA_CA_CERTS: "/private/ca.pem", NABHOLD_CONTENT_DEV_FALLBACK: "false", NABHOLD_DASHBOARD_PREVIEW: "false",
+    NODE_EXTRA_CA_CERTS: privateFile(rootCertificates[0]), NABHOLD_CONTENT_DEV_FALLBACK: "false", NABHOLD_DASHBOARD_PREVIEW: "false",
     NABHOLD_CONTENT_SOURCE: "", NABHOLD_CANONICAL_HOST: "", NABHOLD_RELEASE_R0: "true", NABHOLD_RELEASE_R1: "false",
     NABHOLD_RELEASE_R2: "false", NABHOLD_RELEASE_R3: "false", NABHOLD_INTEGRATION_USERNAME: "synthetic-human",
     NABHOLD_INTEGRATION_PASSWORD: "synthetic-browser-password", NABHOLD_INTEGRATION_PRINCIPAL_ID: "019a0915-a8c0-7000-8000-000000000001",
@@ -66,6 +67,22 @@ describe("integration configuration boundary", () => {
       const partial = { ...env }; delete partial[key];
       expect(() => integrationSettings(partial)).toThrow("Integration configuration refused;");
     }
+  });
+  it("refuses missing, relative, directory, symlink and malformed CA files", () => {
+    const env = fixture();
+    const ca = env.NODE_EXTRA_CA_CERTS!;
+    for (const path of ["relative-ca.pem", `${ca}.missing`, dirname(ca), privateFile("not a certificate")]) {
+      expect(() => integrationSettings({ ...env, NODE_EXTRA_CA_CERTS: path })).toThrow(IntegrationConfigurationError);
+    }
+    const link = `${ca}.link`; symlinkSync(ca, link);
+    expect(() => integrationSettings({ ...env, NODE_EXTRA_CA_CERTS: link })).toThrow(IntegrationConfigurationError);
+  });
+  it("refuses unreadable and oversized CA files without exposing their contents", () => {
+    const env = fixture(); const ca = env.NODE_EXTRA_CA_CERTS!;
+    chmodSync(ca, 0o000);
+    expect(() => integrationSettings(env)).toThrow(IntegrationConfigurationError);
+    chmodSync(ca, 0o600); writeFileSync(ca, "x".repeat(256 * 1024 + 1));
+    expect(() => integrationSettings(env)).toThrow(IntegrationConfigurationError);
   });
   it("requires an explicit private file and preserves literal dollar signs", () => {
     const env = fixture(); env.NABHOLD_OIDC_CLIENT_SECRET = "synthetic-$unexpanded-secret";

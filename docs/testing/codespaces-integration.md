@@ -61,7 +61,10 @@ Redis or their databases on public forwarded ports.
    operations. Provide random 32-byte AES keys as canonical base64 JSON, an
    active key ID and recovery epoch. No process-local session substitute.
 6. Install the disposable CA in Chromium's trust store and supply its readable
-   absolute file path through `NODE_EXTRA_CA_CERTS` before Node starts. Redis
+   absolute file path through `NODE_EXTRA_CA_CERTS` before Node starts. The
+   preflight requires a readable regular file (no symlinks), at most 256 KiB,
+   containing only valid PEM CA certificates. This verifies file syntax and
+   readability; live trust and issuer acceptance still require the browser run. Redis
    uses system trust or the optional literal multiline CA PEM separately.
    Never disable TLS verification or use Chromium certificate-ignore flags.
 7. Keep all credentials synthetic and owner-private; teardown the isolated

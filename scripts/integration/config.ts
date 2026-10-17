@@ -1,5 +1,7 @@
 import { constants, openSync, fstatSync, readSync, closeSync } from "node:fs";
 import { parseEnv } from "node:util";
+import { isAbsolute } from "node:path";
+import { X509Certificate } from "node:crypto";
 import { z } from "zod";
 
 /** Consumer-side INT-03 preparation. This describes one real Keycloak federation
@@ -64,6 +66,7 @@ export function integrationSettings(env: Record<string, string | undefined>) {
   try {
     if (env.NODE_TLS_REJECT_UNAUTHORIZED === "0" || env.NODE_OPTIONS || env.DEBUG || env.PWDEBUG) throw new Error();
     const s = schema.parse(env);
+    validateCaFile(s.NODE_EXTRA_CA_CERTS);
     if (s.NEXT_PUBLIC_SITE_URL !== s.NABHOLD_OIDC_ORIGIN ||
         s.BAOBAB_CONTROL_PLANE_API_URL !== s.NABHOLD_OIDC_CP_ORIGIN ||
         new Set([s.NABHOLD_OIDC_ORIGIN, s.NABHOLD_OIDC_CP_ORIGIN, new URL(s.NABHOLD_OIDC_ISSUER).origin]).size !== 3 ||
@@ -71,6 +74,35 @@ export function integrationSettings(env: Record<string, string | undefined>) {
         !Object.hasOwn(s.NABHOLD_BFF_STORE_KEYS_JSON, s.NABHOLD_BFF_STORE_ACTIVE_KEY)) throw new Error();
     return s;
   } catch { throw new IntegrationConfigurationError(); }
+}
+
+/** Node warns and ignores an unusable extra-CA file at startup. Validate the
+ * actual bounded, no-follow regular file now instead of accepting that warning
+ * as a trust handoff. CA certificates are public material, so owner-only mode
+ * is required for the secret environment file, not for this certificate file.
+ * This establishes readable CA syntax, not live service or chain acceptance.
+ */
+function validateCaFile(path: string) {
+  let fd: number | undefined;
+  try {
+    if (!isAbsolute(path)) throw new Error();
+    fd = openSync(path, constants.O_RDONLY | constants.O_NOFOLLOW | constants.O_NONBLOCK);
+    const stat = fstatSync(fd);
+    const limit = 256 * 1024;
+    if (!stat.isFile() || !(stat.mode & 0o444) || stat.size > limit) throw new Error();
+    const bytes = Buffer.alloc(limit + 1);
+    let length = 0;
+    while (length < bytes.length) {
+      const count = readSync(fd, bytes, length, bytes.length - length, null);
+      if (!count) break;
+      length += count;
+    }
+    if (!length || length > limit) throw new Error();
+    const text = new TextDecoder("utf-8", { fatal: true }).decode(bytes.subarray(0, length));
+    const certificates = text.match(/-----BEGIN CERTIFICATE-----[\s\S]*?-----END CERTIFICATE-----/g);
+    if (!certificates?.length || text.replace(/-----BEGIN CERTIFICATE-----[\s\S]*?-----END CERTIFICATE-----/g, "").trim()) throw new Error();
+    for (const pem of certificates) if (!new X509Certificate(pem).ca) throw new Error();
+  } finally { if (fd !== undefined) closeSync(fd); }
 }
 
 /** Never source shell text or let Next's automatic .env.local selection choose
@@ -81,7 +113,7 @@ export function integrationSettings(env: Record<string, string | undefined>) {
 export function loadIntegrationEnvironment(source: Record<string, string | undefined> = process.env) {
   let fd: number | undefined;
   try {
-    if (!source.NABHOLD_INTEGRATION_ENV_FILE) throw new Error();
+    if (!source.NABHOLD_INTEGRATION_ENV_FILE || !isAbsolute(source.NABHOLD_INTEGRATION_ENV_FILE)) throw new Error();
     fd = openSync(source.NABHOLD_INTEGRATION_ENV_FILE, constants.O_RDONLY | constants.O_NOFOLLOW | constants.O_NONBLOCK);
     const stat = fstatSync(fd);
     if (!stat.isFile() || stat.size > 32768 || stat.uid !== process.getuid?.() || (stat.mode & 0o077)) throw new Error();
