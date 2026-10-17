@@ -12,7 +12,8 @@ for (const width of [390, 1440]) {
     await expect(countries.getByRole("button")).toHaveCount(51);
     const search = page.getByRole("searchbox", { name: "Find a mapped country or territory" });
     await page.emulateMedia({ reducedMotion: "reduce" });
-    await expect(page).toHaveScreenshot(`africa-footprint-${width}.png`, { fullPage: true, animations: "disabled", style: "nextjs-portal { display: none !important; }", maxDiffPixelRatio: 0.001 });
+    await page.addStyleTag({ content: "nextjs-portal { display: none !important; }" });
+    await expect(page).toHaveScreenshot(`africa-footprint-${width}.png`, { fullPage: true, animations: "disabled", maxDiffPixelRatio: 0.001 });
     await page.addScriptTag({ path: require.resolve("axe-core/axe.min.js") });
     const report = await page.evaluate(async () => {
       const axe = (window as unknown as { axe: { run: (node: Element, options: unknown) => Promise<AxeResults> } }).axe;
