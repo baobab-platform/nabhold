@@ -53,6 +53,8 @@ describe("integration configuration boundary", () => {
     ["BAOBAB_CONTROL_PLANE_API_URL", "https://different.integration.test"],
     ["NABHOLD_OIDC_CP_ORIGIN", "https://nabhold.integration.test"],
     ["NABHOLD_INTEGRATION_CP_SHA", "main"], ["NABHOLD_BFF_STORE_ENABLED", "false"],
+    ["NABHOLD_BFF_STORE_ACTIVE_KEY", "local\n"], ["NABHOLD_INTEGRATION_CP_SHA", "a".repeat(40) + "\n"],
+    ["NABHOLD_OIDC_CLIENT_ID", "nabhold-integration\n"], ["NABHOLD_BFF_REDIS_PORT", "6379\n"],
     ["NABHOLD_BFF_STORE_ACTIVE_KEY", "missing"], ["NABHOLD_BFF_STORE_KEYS_JSON", "not-json"],
     ["NODE_TLS_REJECT_UNAUTHORIZED", "0"], ["NODE_OPTIONS", "--inspect"], ["DEBUG", "pw:*"], ["PWDEBUG", "1"],
   ])("refuses unsafe %s", (key, value) => {

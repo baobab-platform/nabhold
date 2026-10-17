@@ -9,13 +9,15 @@ import { z } from "zod";
 export class IntegrationConfigurationError extends Error {
   constructor() { super("Integration configuration refused; consult docs/testing/codespaces-integration.md."); }
 }
-const identifier = z.string().regex(/^[a-z][a-z0-9-]{0,31}$/);
+// JavaScript $ also matches before a terminal newline. Require true end of
+// input so pins, key IDs and client names cannot differ from runtime values.
+const identifier = z.string().regex(/^[a-z][a-z0-9-]{0,31}$(?![\s\S])/);
 const https = z.string().url().refine(value => {
   const u = new URL(value);
   return u.protocol === "https:" && !u.username && !u.password && !u.search && !u.hash;
 });
 const origin = https.refine(value => new URL(value).origin === value);
-const pin = z.string().regex(/^[0-9a-f]{40}$/);
+const pin = z.string().regex(/^[0-9a-f]{40}$(?![\s\S])/);
 const schema = z.object({
   NABHOLD_INTEGRATION_PROFILE: z.literal("keycloak-identity-smoke"),
   NABHOLD_INTEGRATION_SYNTHETIC: z.literal("true"),
@@ -28,20 +30,20 @@ const schema = z.object({
   NABHOLD_OIDC_ENVIRONMENT: z.literal("integration"),
   NABHOLD_OIDC_ORIGIN: origin,
   NABHOLD_OIDC_ISSUER: https,
-  NABHOLD_OIDC_CLIENT_ID: z.string().regex(/^nabhold-[a-z0-9-]+$/).max(256),
+  NABHOLD_OIDC_CLIENT_ID: z.string().regex(/^nabhold-[a-z0-9-]+$(?![\s\S])/).max(256),
   NABHOLD_OIDC_CLIENT_SECRET: z.string().min(16).max(4096),
   NABHOLD_OIDC_ID_TOKEN_ALGORITHM: z.enum(["RS256", "ES256"]),
   NABHOLD_OIDC_INTROSPECTION_ENDPOINT: https,
   NABHOLD_OIDC_CP_ORIGIN: origin,
   BAOBAB_CONTROL_PLANE_API_URL: origin,
   NABHOLD_BFF_STORE_ENABLED: z.literal("true"),
-  NABHOLD_BFF_REDIS_HOST: z.string().regex(/^[a-zA-Z0-9.-]+$/).max(253),
-  NABHOLD_BFF_REDIS_PORT: z.string().regex(/^\d+$/).refine(v => Number(v) > 0 && Number(v) <= 65535),
+  NABHOLD_BFF_REDIS_HOST: z.string().regex(/^[a-zA-Z0-9.-]+$(?![\s\S])/).max(253),
+  NABHOLD_BFF_REDIS_PORT: z.string().regex(/^\d+$(?![\s\S])/).refine(v => Number(v) > 0 && Number(v) <= 65535),
   NABHOLD_BFF_REDIS_USERNAME: z.string().min(1).max(256),
   NABHOLD_BFF_REDIS_PASSWORD: z.string().min(1).max(4096),
   NABHOLD_BFF_REDIS_CA_PEM: z.string().max(16384).optional(),
   NABHOLD_BFF_STORE_KEYS_JSON: z.string().transform(v => JSON.parse(v) as unknown).pipe(
-    z.record(identifier, z.string().regex(/^[A-Za-z0-9+/]{43}=$/).refine(v => Buffer.from(v, "base64").toString("base64") === v))
+    z.record(identifier, z.string().regex(/^[A-Za-z0-9+/]{43}=$(?![\s\S])/).refine(v => Buffer.from(v, "base64").toString("base64") === v))
       .refine(v => Object.keys(v).length >= 1 && Object.keys(v).length <= 3)),
   NABHOLD_BFF_STORE_ACTIVE_KEY: identifier,
   NABHOLD_BFF_STORE_EPOCH: identifier,
