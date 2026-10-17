@@ -1,7 +1,7 @@
 # Nabhold Go-Live Register — v2.0
 
 **Masterplan:** [NAB-GOLIVE-MP-001 v2.0](NAB-GOLIVE-MP-001.md)  
-**Baseline:** 14 October 2026; latest source reconciliation 16 October 2026
+**Baseline:** 14 October 2026; latest independent source reconciliation 17 October 2026
 **Status model:** architecture, contract, code, migration, synthetic test, protected staging, external evidence and operational certification are tracked separately.
 
 This register records source/runtime evidence known from the repositories. It is not live production telemetry.
@@ -378,3 +378,20 @@ certification was created. #35 remains open. INT-03 depends on full INT-02.
 G04 source advances; real onboarding, G05/R0, G16/G17 and G18 remain unaccepted.
 This checkpoint supersedes stale prerequisite PR statuses above while retaining
 the dated history. Finance DRAFT source status in section 18 is unchanged.
+
+
+## 20. Independent native engineering — 17 October 2026
+
+Trade #153's central Trade-A order-authority PEP and append-only receipts
+advance the engine-owned EA-R03 / Trade-A lane without depending on
+Infrastructure #35. [The source evidence record](evidence/trade-a-ta05-source-2026-10-17.md)
+records its reviewed persistence-error and native class/type fixes, contract
+pin, migration, validation and remaining entry-point/COMMIT acceptance work.
+
+This is source/engine-local synthetic-authority evidence. TA-06/07/08 and
+Trade-B/C/D remain; EA-R03/LA-05 are PARTIAL. Nabhold P0-04/P0-04B
+operator identity, current grants and protected staging exits remain unchanged.
+No Nabhold/Thamani/ZuriBeans
+Principal, seller mandate, tenant access, provider certification, protected
+R0/R1/R2/R3 release or production authority is created. Finance F1 source,
+INT-02 acceptance and real founding-group governance retain their own gates.
