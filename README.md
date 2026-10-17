@@ -69,14 +69,3 @@ tracks the central order-authority and durable receipt boundary, including
 review repairs and native regression coverage. This lane is independent of
 Infrastructure #35; entry-point wiring, native COMMIT closure, L4 and protected
 release acceptance remain separate. Nabhold gains no trading or tenant authority.
-
-## Codespaces integration preparation
-
-The [integration runbook](docs/testing/codespaces-integration.md) and
-[private environment template](.env.integration.example) prepare a separate
-real IAM/CP/TLS Redis browser profile. After Infrastructure supplies the private
-network/client/fixture handoff, use `pnpm integration:check`,
-`pnpm dev:integration`, and `pnpm test:e2e:integration`.
-Existing public development and fallback browser tests remain separate.
-This is identity/session smoke preparation, not completed INT-03, CMS/ERP
-acceptance, or authority to activate protected releases.

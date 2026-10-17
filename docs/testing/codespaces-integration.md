@@ -79,7 +79,7 @@ through the accepted authority and provider boundaries.
 
 ## Commands after receiving the handoff
 
-Use the repository-declared Node 22 and pnpm versions. Install the matching
+Use the repository-declared Node 24 and pnpm 11.24.0 versions. Install the matching
 Playwright Chromium (`pnpm exec playwright install chromium`) or set
 `PLAYWRIGHT_CHROMIUM_EXECUTABLE_PATH` to the preinstalled baobab-dev binary.
 

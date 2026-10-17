@@ -395,22 +395,3 @@ No Nabhold/Thamani/ZuriBeans
 Principal, seller mandate, tenant access, provider certification, protected
 R0/R1/R2/R3 release or production authority is created. Finance F1 source,
 INT-02 acceptance and real founding-group governance retain their own gates.
-
-## 21. INT-03 consumer harness preparation — 17 October 2026
-
-Nabhold now prepares a distinct `keycloak-identity-smoke` Playwright configuration,
-owner-private environment loading and explicit integration launch/check commands.
-The [runbook](../testing/codespaces-integration.md) specifies the outstanding
-Infrastructure handoff and the exact source-versus-runtime claim boundary.
-
-**Claim/evidence class:** source and synthetic configuration unit coverage only;
-real integrated browser execution is BLOCKED pending the private network,
-registered Nabhold client, synthetic human/CP mapping and TLS Redis handoff.
-Declared source pins are syntax-validated, not independently attested by Nabhold.
-**Reviewer role/date:** automated engineering source review, 17 October 2026;
-independent gate sign-off PENDING. No live provider acceptance is asserted.
-
-Infrastructure #35/INT-02 remains a separate prerequisite; this increment does
-not modify or qualify it. Real IAM revocation/MFA/context/tenant negatives,
-CMS capability acceptance and future accepted ERP Finance journeys remain.
-G04B/G05/G16/G17/G18 and all release acceptance statuses are unchanged.

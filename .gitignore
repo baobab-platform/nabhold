@@ -6,7 +6,3 @@ coverage/
 .env
 .env.local
 *.tsbuildinfo
-
-# Private integration handoff (including browser credentials and BFF keys).
-.env.integration.local
-.integration/
