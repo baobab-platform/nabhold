@@ -208,3 +208,15 @@ button:focus-visible {
   body { @apply bg-background text-foreground; }
   html { @apply font-sans; }
 }
+
+/* Estate-owned editorial status colours; these are display aliases, never
+   legal registration, market participation or operating-authority decisions. */
+[data-bx-theme="nabhold"] {
+  --nab-map-registered:#e3ba61;
+  --nab-map-operating:#32644c;
+  --nab-map-interest:#b4c9d1;
+  --nab-map-unspecified:#c9c7be;
+}
+@media(prefers-reduced-motion:reduce) {
+  *,*::before,*::after { transition-duration:0.01ms!important; scroll-behavior:auto!important; }
+}

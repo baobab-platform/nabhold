@@ -1,0 +1,19 @@
+{
+  "source": "Natural Earth 1:110m Admin 0 countries",
+  "sourceCommit": "ca96624a56bd078437bca8184e78163e5039ad19",
+  "sourceUrl": "https://github.com/nvkelso/natural-earth-vector/blob/ca96624a56bd078437bca8184e78163e5039ad19/geojson/ne_110m_admin_0_countries.geojson",
+  "sourceSha256": "6866c877d39cba9c357620878839b336d569f8c662d3cfab4cb1dbe2d39c977f",
+  "licence": "Public domain",
+  "licenceUrl": "https://www.naturalearthdata.com/about/terms-of-use/",
+  "projection": "Equirectangular editorial Africa viewport",
+  "transformation": "CONTINENT=Africa; preserve polygon/ring topology; round coordinates to 3 decimals; sort by ADMIN",
+  "displayFeatureCount": 51,
+  "omittedSmallStates": [
+    "Cabo Verde",
+    "Comoros",
+    "Mauritius",
+    "S\u00e3o Tom\u00e9 and Pr\u00edncipe",
+    "Seychelles"
+  ],
+  "boundaryNotice": "Coarse editorial geometry includes disputed territories; it is not a legal boundary decision or a complete country inventory."
+}

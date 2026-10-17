@@ -24,3 +24,17 @@ existing presentation paths.
 ## BXS-05C published package adoption
 
 The authorised Shared publication and SHA512 registry verification passed for 0.2.0. This branch adds the exact published tokens and geo-core packages with private npm token injection. Scope BXS colours only to the editorial map subtree; do NOT replace existing Nabhold gold or infer trade/market authority. The map calls Shared's coordinate guard without delegating legal market/status/operational truth. CI uses read-only GITHUB_TOKEN for packages; Docker builds require a temporary BuildKit `npm_token` secret, never a Docker ARG or runtime environment variable. Consumer admission remains subject to frozen lock, repository package access, browser and full mandatory CI.
+
+## Country-list and geography provenance hardening
+
+Every pointer-selectable shape now has a searchable keyboard country/territory
+control, including those with no business statement. Selected detail announces
+its update without moving focus. Reduced-motion also disables transitions.
+
+The unprovenanced simplified dataset is replaced with 51 African features from
+Natural Earth 1:110m Admin 0 at upstream commit
+`ca96624a56bd078437bca8184e78163e5039ad19`. The source digest, transformation,
+public-domain terms, projection and omitted small states are recorded in
+`src/data/africa-geometry-provenance.json`. Disputed territories remain
+editorial geography and confer no legal or operating status. Existing scoped
+company statements and their attribution remain independent of polygon data.
