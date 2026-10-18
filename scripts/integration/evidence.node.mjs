@@ -5,6 +5,8 @@ import { execFileSync } from "node:child_process";
 import { mkdtempSync, readFileSync, writeFileSync, rmSync, statSync, mkdirSync, symlinkSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
+import fs from "node:fs";
+import { syncBuiltinESMExports } from "node:module";
 import { scenarios, SmokeObservations, startEvidence, writeObservations, finishEvidence } from "./evidence.ts";
 import IntegrationReporter from "../../tests/platform/reporter.ts";
 
@@ -32,13 +34,13 @@ function observations(status = "passed") {
   for (const id of scenarios) value.endTest(id, status);
   return value;
 }
-const receipt = run => JSON.parse(readFileSync(join(run.directory, "receipt.json"), "utf8"));
+const receipt = run => JSON.parse(readFileSync(join(run.directory, "completed", "receipt.json"), "utf8"));
 
 test("complete smoke keeps exact local/declared pins, private files and verifiable digest", t => {
   const f = fixture(t), run = f.start();
   writeObservations(run.directory, observations().finish(true));
   assert.equal(finishEvidence(run, 0), true);
-  const bytes = readFileSync(join(run.directory, "receipt.json"), "utf8");
+  const bytes = readFileSync(join(run.directory, "completed", "receipt.json"), "utf8");
   const value = JSON.parse(bytes);
   assert.equal(value.outcome, "PASS");
   assert.equal(value.acceptanceClaimed, false);
@@ -48,9 +50,9 @@ test("complete smoke keeps exact local/declared pins, private files and verifiab
   assert.equal(value.profile, "keycloak-identity-smoke");
   assert.equal(bytes.includes(f.env.NABHOLD_INTEGRATION_PASSWORD), false);
   assert.equal(bytes.includes(f.env.NABHOLD_OIDC_ISSUER), false);
-  assert.equal(readFileSync(join(run.directory, "receipt.sha256"), "utf8"), createHash("sha256").update(bytes).digest("hex") + "  receipt.json\n");
+  assert.equal(readFileSync(join(run.directory, "completed", "receipt.sha256"), "utf8"), createHash("sha256").update(bytes).digest("hex") + "  receipt.json\n");
   assert.equal(statSync(run.directory).mode & 0o777, 0o700);
-  for (const name of ["started.json", "observations.json", "receipt.json", "receipt.sha256"]) {
+  for (const name of ["started.json", "observations.json", "completed/receipt.json", "completed/receipt.sha256"]) {
     assert.equal(statSync(join(run.directory, name)).mode & 0o777, 0o600);
   }
   assert.throws(() => finishEvidence(run, 0)); // Write once; no green overwrite.
@@ -90,7 +92,7 @@ test("unexpected/duplicate scenarios, filtered suite and global errors cannot pa
     const run = f.start(), value = observations(); change(value);
     writeObservations(run.directory, value.finish(true));
     assert.equal(finishEvidence(run, 0), false);
-    assert.equal(readFileSync(join(run.directory, "receipt.json"), "utf8").includes("secret"), false);
+    assert.equal(readFileSync(join(run.directory, "completed", "receipt.json"), "utf8").includes("secret"), false);
   }
 });
 test("arbitrary/malformed/oversized reporter payload is never copied into receipt", t => {
@@ -100,7 +102,7 @@ test("arbitrary/malformed/oversized reporter payload is never copied into receip
     const run = f.start();
     writeFileSync(join(run.directory, "observations.json"), text);
     assert.equal(finishEvidence(run, 0), false);
-    assert.equal(readFileSync(join(run.directory, "receipt.json"), "utf8").includes("private"), false);
+    assert.equal(readFileSync(join(run.directory, "completed", "receipt.json"), "utf8").includes("private"), false);
   }
 });
 test("uncommitted/untracked source and non-exact dependency refs are refused", t => {
@@ -132,7 +134,7 @@ test("actual reporter maps fixed annotations without serializing error/title/att
   for (const testCase of tests) reporter.onTestEnd(testCase, { status: "passed", error: { message: "private access token" }, attachments: ["private cookie"] });
   reporter.onEnd({ status: "passed" });
   assert.equal(finishEvidence(run, 0), true);
-  assert.equal(readFileSync(join(run.directory, "receipt.json"), "utf8").includes("private"), false);
+  assert.equal(readFileSync(join(run.directory, "completed", "receipt.json"), "utf8").includes("private"), false);
 });
 
 test("actual reporter preserves setup error and absent scenario outcomes", t => {
@@ -149,3 +151,22 @@ test("actual reporter preserves setup error and absent scenario outcomes", t => 
   assert.equal(receipt(run).observations.invalid, true);
   assert.equal(receipt(run).observations.results[scenarios[3]], "notRun");
 });
+
+for (const operation of ["digest-write", "file-sync", "publish"]) {
+  test(`partial finalization (${operation}) never publishes a completed PASS`, t => {
+    const run = fixture(t).start();
+    writeObservations(run.directory, observations().finish(true));
+    const method = operation === "digest-write" ? "writeFileSync" : operation === "file-sync" ? "fsyncSync" : "renameSync";
+    const original = fs[method];
+    const mock = t.mock.method(fs, method, (...args) => {
+      if (operation !== "digest-write" || String(args[0]).endsWith("receipt.sha256")) throw new Error("Synthetic finalization fault");
+      return original(...args);
+    });
+    syncBuiltinESMExports();
+    try {
+      assert.throws(() => finishEvidence(run, 0), /Synthetic finalization fault/);
+      assert.equal(fs.existsSync(join(run.directory, "completed")), false);
+      assert.equal(fs.existsSync(join(run.directory, "receipt.json")), false);
+    } finally { mock.mock.restore(); syncBuiltinESMExports(); }
+  });
+}

@@ -38,7 +38,7 @@ try {
       try {
         const passed = evidence ? finishEvidence(evidence, code) : code === 0;
         process.exitCode = passed ? 0 : (code || 2);
-        if (evidence) console.log(`Sanitized identity-smoke receipt: ${evidence.directory}/receipt.json; acceptance NOT CLAIMED.`);
+        if (evidence) console.log(`Sanitized identity-smoke receipt: ${evidence.directory}/completed/receipt.json; acceptance NOT CLAIMED.`);
       } catch {
         console.error("Integration receipt unavailable; no acceptance evidence produced.");
         process.exitCode = 2;

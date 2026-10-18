@@ -146,14 +146,19 @@ The launcher prints the receipt path after the browser process terminates.
 | NAB-ID-04 | Real federation login/current CP identity, confidential cookie, CSRF denial and server-side local logout revocation |
 
 The reporter writes only these fixed identifiers and framework statuses.
-`receipt.json` requires all four checks passed, a complete reporter result and
+`completed/receipt.json` requires all four checks passed, a complete reporter result and
 successful process exit for an identity-smoke `PASS`. Missing/filtered/duplicate/
 skipped checks, setup errors, crashes and interrupted children produce
 `INCOMPLETE_OR_FAILED`; absent observations remain `notRun`. No title, diagnostic,
 attachment, host, Principal, cookie or credential is copied into the receipt.
-`started.json`, `observations.json`, `receipt.json` and `receipt.sha256` are
-write-once, mode 0600 files inside a mode 0700 directory. Results from a previous
-run cannot satisfy the new run. A forced termination of the launcher itself may
+`started.json`, `observations.json`, `completed/receipt.json` and
+`completed/receipt.sha256` are write-once, mode 0600 files inside mode 0700
+directories. Both final files and their staging directory are synchronized
+before an atomic directory rename publishes `completed`; the parent is then
+synchronized. A failed staging write, staging synchronization or pre-publication crash leaves
+only `.finalizing`, which is incomplete even if it contains a PASS candidate.
+Only the complete published pair is a receipt. Results from a previous run
+cannot satisfy the new run. A forced termination of the launcher itself may
 leave only `started.json`; that is incomplete, never PASS.
 
 The SHA-256 file detects alteration; it is **not a signature or independent
