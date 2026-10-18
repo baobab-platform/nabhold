@@ -1,7 +1,7 @@
 # Nabhold Go-Live Register — v2.0
 
 **Masterplan:** [NAB-GOLIVE-MP-001 v2.0](NAB-GOLIVE-MP-001.md)  
-**Baseline:** 14 October 2026; latest independent source reconciliation 17 October 2026
+**Baseline:** 14 October 2026; latest source reconciliation 18 October 2026
 **Status model:** architecture, contract, code, migration, synthetic test, protected staging, external evidence and operational certification are tracked separately.
 
 This register records source/runtime evidence known from the repositories. It is not live production telemetry.
@@ -414,3 +414,44 @@ Infrastructure #35/INT-02 remains a separate prerequisite; this increment does
 not modify or qualify it. Real IAM revocation/MFA/context/tenant negatives,
 CMS capability acceptance and future accepted ERP Finance journeys remain.
 G04B/G05/G16/G17/G18 and all release acceptance statuses are unchanged.
+
+## 22. G17 / INT-03 identity-smoke evidence preparation — 18 October 2026
+
+Current Nabhold source `8e7bf62` already contains the G04B-04 executive
+authorisation seam and merged Codespaces harness (#62), Experience adoption
+and registry bootstrap (#68). No open Nabhold PR was returned by the initial
+repository query. The earlier G04B-03-only queue descriptions are historical:
+G04B-04 source exists, but its concrete human/context adapter remains blocked
+by the CP-owned same-principal/delegation contract. Current CP
+`a0fef3a05718bb7f3f41dc47746521d0bd91921e` continues to protect runtime context
+and capability resolution with workload authentication; an `authority:self`
+human token must not be substituted or its context redeemed by another actor.
+
+Infrastructure #35 remains OPEN at
+`272697ca96bf7aa08dbbb1b805e2b8acd4f8cc4a`. Its final-head `Real Keycloak -> CP
+L4-01 acceptance` check is FAILURE even though Foundation/source checks and
+L4-00 pass. INT-02 is not accepted; the full live INT-03 prerequisite remains.
+Shared ADR-SHARED-036 was consulted at
+`672e16ff4450b5265bb47c6ed2b6850e276e2b60` for evidence boundaries and
+Infrastructure-owned orchestration. No contract or provider authority changes.
+
+This independent source increment adds sanitized, write-once identity-smoke
+receipts with the actual clean Nabhold source pin, explicitly unattested
+dependency pins, fixed per-scenario results and a SHA-256 digest. Failed,
+skipped, filtered, duplicate, interrupted and unexecuted checks cannot become
+PASS. Reporter errors, titles, attachments and credential-bearing values never
+enter the receipt. The [consumer runbook](../testing/codespaces-integration.md)
+defines this estate-local observation format and its limits; this is not a
+canonical Shared acceptance schema or signed operational evidence.
+
+**Claim:** IMPLEMENTED source preparation only. **Evidence class:** source and
+synthetic receipt/reporter tests; no real IAM/CP/CMS/ERP/browser journey was run
+for this increment. **Reviewer role/date:** automated engineering source review,
+18 October 2026; independent gate sign-off PENDING. Full local frozen package
+installation was blocked by absent GitHub Packages read credentials; authenticated
+final-head repository CI remains required. No mandatory check is waived.
+
+The next runtime exit remains full INT-02, then Infrastructure's private
+network/TLS/client/Redis handoff and the pinned Nabhold identity smoke, followed
+by CMS qualification and the remaining INT-03 negatives. G01/G02, G04/G05,
+G16/G17/G18 and R0–R3 are unchanged and unaccepted.

@@ -4,16 +4,20 @@ import { integrationSettings } from "../../scripts/integration/config";
 const s = integrationSettings(process.env);
 const sessionName = "__Host-nabhold-session";
 
-test("anonymous sessions and unsolicited callbacks are denied", async ({ request }) => {
+test("anonymous sessions are denied", { annotation: { type: "nabhold-scenario", description: "NAB-ID-01" } }, async ({ request }) => {
   const session = await request.get("/api/auth/session");
   expect(session.status()).toBe(401);
+});
+test("unsolicited callbacks are denied", { annotation: { type: "nabhold-scenario", description: "NAB-ID-02" } }, async ({ request }) => {
   const callback = await request.get("/api/auth/callback?code=unsolicited&state=unsolicited");
   expect(callback.status()).toBe(401);
+});
+test("cross-origin login initiation is denied", { annotation: { type: "nabhold-scenario", description: "NAB-ID-03" } }, async ({ request }) => {
   const crossOrigin = await request.post("/api/auth/login", { headers: { Origin: "https://untrusted.example.test" }, maxRedirects: 0 });
   expect(crossOrigin.status()).toBe(401);
 });
 
-test("real federation login checks CP identity and local logout revokes custody", async ({ page, context }) => {
+test("real federation login checks CP identity and local logout revokes custody", { annotation: { type: "nabhold-scenario", description: "NAB-ID-04" } }, async ({ page, context }) => {
   await page.goto("/sign-in");
   await page.getByRole("button", { name: "Continue with Baobab IAM" }).click();
   // This adapter deliberately targets the real Keycloak federation profile.

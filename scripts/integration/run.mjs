@@ -1,6 +1,7 @@
 #!/usr/bin/env node
 import { spawn } from "node:child_process";
 import { loadIntegrationEnvironment } from "./config.ts";
+import { startEvidence, finishEvidence } from "./evidence.ts";
 
 /** The real dependency stack and HTTPS edge belong to Infrastructure. This
  * launcher cannot silently create mocks or reuse the isolated fallback server.
@@ -15,6 +16,11 @@ try {
   } else {
     // Synthetic browser credentials belong only in the browser-test process.
     const childEnv = { ...env };
+    // Declared dependency pins are not runtime attestations. The clean local
+    // source pin and per-run directory prevent accidental stale-result reuse.
+    const evidence = mode === "test" ? startEvidence(env) : null;
+    delete childEnv.NABHOLD_INTEGRATION_RUN_DIRECTORY;
+    if (evidence) childEnv.NABHOLD_INTEGRATION_RUN_DIRECTORY = evidence.directory;
     if (mode === "dev") {
       delete childEnv.NABHOLD_INTEGRATION_USERNAME;
       delete childEnv.NABHOLD_INTEGRATION_PASSWORD;
@@ -25,8 +31,21 @@ try {
       : ["exec", "playwright", "test", "--config", "playwright.integration.config.ts"];
     const child = spawn("pnpm", args, { env: childEnv, stdio: mode === "dev" ? "ignore" : "inherit", shell: false });
     for (const signal of ["SIGINT", "SIGTERM"]) process.once(signal, () => child.kill(signal));
-    child.once("error", () => { console.error("Integration process failed to start."); process.exitCode = 2; });
-    child.once("exit", code => { process.exitCode = code ?? 2; });
+    let finished = false;
+    const finish = (code) => {
+      if (finished) return;
+      finished = true;
+      try {
+        const passed = evidence ? finishEvidence(evidence, code) : code === 0;
+        process.exitCode = passed ? 0 : (code || 2);
+        if (evidence) console.log(`Sanitized identity-smoke receipt: ${evidence.directory}/receipt.json; acceptance NOT CLAIMED.`);
+      } catch {
+        console.error("Integration receipt unavailable; no acceptance evidence produced.");
+        process.exitCode = 2;
+      }
+    };
+    child.once("error", () => { console.error("Integration process failed to start."); finish(2); });
+    child.once("exit", finish);
   }
 } catch {
   console.error("Integration configuration refused; consult docs/testing/codespaces-integration.md.");

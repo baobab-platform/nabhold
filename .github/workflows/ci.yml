@@ -35,6 +35,9 @@ jobs:
       - name: Verify Codespaces user-level registry bootstrap cannot leak token values
         run: node --test scripts/codespaces/configure-private-npm.node.mjs
 
+      - name: Verify sanitized integration evidence and incomplete-run denial
+        run: node --experimental-strip-types --test scripts/integration/evidence.node.mjs
+
       - name: Install locked packages with read-only GitHub registry permission
         env:
           NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
