@@ -129,6 +129,55 @@ diagnostics for failures; do not enable protocol debug logging around secrets.
 These controls do not sanitize upstream reverse-proxy/issuer logging: the
 Infrastructure profile must enforce equivalent custody there.
 
+### G17 identity-smoke observations
+
+`test:e2e:integration` requires a **clean committed Nabhold checkout**, then
+creates an owner-private `.integration/identity-smoke-*` directory for that run.
+`started.json` records the actual local Nabhold commit and the four declared
+Infrastructure/IAM/CP/Shared pins. Dependency pins remain **unattested operator
+declarations** until Infrastructure binds them to the running components.
+The launcher prints the receipt path after the browser process terminates.
+
+| Scenario | Observation |
+|---|---|
+| NAB-ID-01 | Anonymous session denied |
+| NAB-ID-02 | Unsolicited callback denied |
+| NAB-ID-03 | Cross-origin login initiation denied |
+| NAB-ID-04 | Real federation login/current CP identity, confidential cookie, CSRF denial and server-side local logout revocation |
+
+The reporter writes only these fixed identifiers and framework statuses.
+`completed/receipt.json` requires all four checks passed, a complete reporter result and
+successful process exit for an identity-smoke `PASS`. Missing/filtered/duplicate/
+skipped checks, setup errors, crashes and interrupted children produce
+`INCOMPLETE_OR_FAILED`; absent observations remain `notRun`. No title, diagnostic,
+attachment, host, Principal, cookie or credential is copied into the receipt.
+`started.json`, `observations.json`, `completed/receipt.json` and
+`completed/receipt.sha256` are write-once, mode 0600 files inside mode 0700
+directories. Both final files and their staging directory are synchronized
+before an atomic directory rename publishes `completed`; the parent is then
+synchronized. A failed staging write, staging synchronization or pre-publication crash leaves
+only `.finalizing`, which is incomplete even if it contains a PASS candidate.
+Only the complete published pair is a receipt. Results from a previous run
+cannot satisfy the new run. A forced termination of the launcher itself may
+leave only `started.json`; that is incomplete, never PASS.
+
+The SHA-256 file detects alteration; it is **not a signature or independent
+attestation**. Infrastructure owns immutable artifact retention and runtime
+provenance. A successful receipt describes only this synthetic-human identity
+smoke. It explicitly sets `acceptanceClaimed=false` and
+`dependencyRuntimeAttested=false`; it cannot qualify INT-02, full INT-03, CMS,
+ERP, protected staging or a release. No real run is asserted by unit tests.
+
+Run receipt/reporter regression checks without package-registry credentials:
+
+```bash
+node --experimental-strip-types --test scripts/integration/evidence.node.mjs
+```
+
+CI runs those checks before installing packages. Rollback: revert this source
+increment and retain existing observations under the evidence policy; never
+reinterpret an old identity smoke as full integration acceptance.
+
 Source unit tests cover configuration rejection, private file handling and
 compatibility with the real OIDC/store factories; they are mandatory in normal
 `pnpm test` CI. Real browser smoke is invoked explicitly once Infrastructure
@@ -149,8 +198,10 @@ Do not add a skipped/mock integration job and report full integration as green.
   enable the canonical CMS capability profile or prove public content readiness.
 - Add ERP Finance journeys only when their accepted provider operations exist;
   pair browser journeys with native persistence/COMMIT and accounting evidence.
-- Produce immutable sanitized run evidence tied to source pins and obtain
-  independent gate review. G04B/G05/G16/G17/G18 and R0–R3 remain unaccepted.
+- Retain and attest the sanitized identity-smoke receipts through Infrastructure,
+  independently verify deployed source pins, expand evidence for the remaining
+  scenarios and obtain independent gate review. G04B/G05/G16/G17/G18 and R0–R3
+  remain unaccepted.
 
 Implementation references: [Playwright web-server lifecycle](https://playwright.dev/docs/test-webserver)
 and [trace contents](https://playwright.dev/docs/trace-viewer-intro). The separate
