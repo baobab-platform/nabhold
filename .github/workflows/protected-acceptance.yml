@@ -6,6 +6,7 @@ on:
 permissions:
   contents: read
   actions: read
+  packages: read
 
 concurrency:
   group: nabhold-protected-staging-acceptance
@@ -20,6 +21,9 @@ jobs:
     timeout-minutes: 15
     container:
       image: ghcr.io/baobab-platform/baobab-dev:1.4.4-frontend-e2e
+      credentials:
+        username: ${{ github.actor }}
+        password: ${{ secrets.GITHUB_TOKEN }}
       options: --user 0
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
