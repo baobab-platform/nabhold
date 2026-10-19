@@ -10,6 +10,7 @@ v2.0 is aligned to accepted ADR-BCP-026, ADR-BCP-027, Baobab EA Implementation P
 |---|---|
 | [NAB-GOLIVE-MP-001.md](NAB-GOLIVE-MP-001.md) | Accepted v2.0 programme authority |
 | [evidence/finance-f1-source-2026-10-16.md](evidence/finance-f1-source-2026-10-16.md) | Merged independent F1 DRAFT contracts, exact CI/source pointers and outstanding native acceptance |
+| [evidence/progress-audit-2026-10-19.md](evidence/progress-audit-2026-10-19.md) | Fresh merged-source, PR and acceptance reconciliation; INT-02/C4/INT-03 boundaries |
 | [register.md](register.md) | Live gate/blocker/decision status; update whenever a gate materially changes |
 | [evidence/README.md](evidence/README.md) | Evidence-index rules and immutable acceptance pointers |
 | [capability-demand-census.md](capability-demand-census.md) | Direct/conditional/indirect capability demand by release |
@@ -83,5 +84,6 @@ independent of Infrastructure #35; G06 and R1 operational acceptance remain open
 
 The [INT-02 prerequisite source checkpoint](evidence/int02-prerequisite-source-2026-10-16.md)
 records merged CP/IAM/Shared repairs without promoting Infrastructure #35 or
-any protected onboarding/release gate. Its actual final-head integration and
-provider qualification remain required before INT-03.
+any protected onboarding/release gate. The [19 October audit](evidence/progress-audit-2026-10-19.md) supersedes its
+historical open status: #35 is merged with frozen synthetic Actions qualification.
+Full INT-03 and protected native C4 qualification remain separate outstanding gates.

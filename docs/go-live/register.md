@@ -1,8 +1,14 @@
 # Nabhold Go-Live Register — v2.0
 
 **Masterplan:** [NAB-GOLIVE-MP-001 v2.0](NAB-GOLIVE-MP-001.md)  
-**Baseline:** 14 October 2026; latest source reconciliation 18 October 2026
+**Baseline:** 14 October 2026; latest source reconciliation 19 October 2026
 **Status model:** architecture, contract, code, migration, synthetic test, protected staging, external evidence and operational certification are tracked separately.
+
+**Current reconciliation:** [19 October fresh implementation audit](evidence/progress-audit-2026-10-19.md)
+supersedes older claims that Infrastructure #35/INT-02 remains open. INT-02 is
+accepted only for its frozen real-component/synthetic Actions source set.
+C4-03 protected Kratos/Hydra→CP, full INT-03 and every protected release remain
+unaccepted. See section 23 for the next dependency-ordered work.
 
 This register records source/runtime evidence known from the repositories. It is not live production telemetry.
 The [16 October Finance F1 source evidence](evidence/finance-f1-source-2026-10-16.md) and section 18 supersede older Finance source/PR-status claims while preserving their dated history.
@@ -455,3 +461,48 @@ The next runtime exit remains full INT-02, then Infrastructure's private
 network/TLS/client/Redis handoff and the pinned Nabhold identity smoke, followed
 by CMS qualification and the remaining INT-03 negatives. G01/G02, G04/G05,
 G16/G17/G18 and R0–R3 are unchanged and unaccepted.
+
+
+## 23. Fresh implementation audit and INT-03 prerequisites — 19 October 2026
+
+[The fresh audit](evidence/progress-audit-2026-10-19.md) reconciles current merged
+source, accepted Shared EA v2.2/ADR-SHARED-036, provider declarations, all open
+PRs in the eight affected repositories and exact check outcomes.
+
+- **Completed:** Infrastructure #35 merged at `03ad3f488e19ad446328ba6827363730e4252409`;
+  frozen final-pin Actions run `39108198886` passes all mandatory INT-02 groups,
+  actual Pulse provider assertions and teardown. Shared's accepted qualification
+  register records the exact tested dependencies and evidence digests. This
+  does not qualify subsequently changed IAM/CP pins automatically.
+- **Source already present:** confidential encrypted Redis custody, OIDC BFF,
+  current IAM/CP self-identity, G04B-04 deny-by-default authorisation seam and
+  identity-smoke receipt tooling. Do not implement those seams again.
+- **Current work:** IAM #126's formatting failure repaired and all 46 final-head
+  checks completed successfully/applicably skipped before reviewed merge at
+  `5bc1a7c4200a7b5dd029452c9d305408fb4a286e`. Its C4-03E receipt verifier and
+  C4-04A observation are non-authorising. IAM #127 repairs the missing Keycloak
+  `basic` access-token subject mapper in the dormant Nabhold human profile.
+  Infrastructure #36 adds INT-03A private handoff generation and source/security
+  interoperability checks. Candidate source is not an executed integration.
+- **Reviewed/merged:** Nabhold #73/#74, after final-head checks, preserve Node 24,
+  private Shared Experience package pins and Codespaces bootstrap boundaries.
+  #71/#72 received artifact-comment/Foundation source-pin fixes and merged
+  at `d684134f49c82878d7b0352719ab4153345fa8f3` /
+  `eb67b9f7b6616f78edc8b4628baec10ee7203062` after all 29 final-head
+  checks completed successfully/applicably skipped.
+- **Still blocked:** real legal verification/SoD/onboarding; C4-03 registered
+  native provider→protected CP and C4-04B/C governance/consumption; connected
+  Nabhold login/session smoke; current CMS certification/binding and full
+  INT-03; executive same-principal/delegation protocol; real AWS/protected
+  staging, business acceptance and production activation.
+
+Next eligible order: finish the reviewed prerequisite PRs → provide/run the
+actual private INT-03 identity network/client/CP/Redis journey → independent
+CMS provider/context/binding and published/preview acceptance → full INT-03
+negative/teardown evidence. The native C4 protected lane keeps its own unmet
+registration/credential/evidence gates. Real Nabhold progressive onboarding and
+R0 require their independently accepted identities, not the disposable fixture.
+F1 source design/provider work remains a separate non-production lane; ERP
+native posting guards do not establish canonical F1 support. Subscriptions
+still declares a simulated, non-production billing provider. G01/G02/G04/G05,
+G06/G10, G16/G17/G18 and all R0–R3 release acceptance states remain unchanged.
