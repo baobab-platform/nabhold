@@ -78,9 +78,11 @@ export function integrationSettings(env: Record<string, string | undefined>) {
 
 /** Node warns and ignores an unusable extra-CA file at startup. Validate the
  * actual bounded, no-follow regular file now instead of accepting that warning
- * as a trust handoff. CA certificates are public material, so owner-only mode
- * is required for the secret environment file, not for this certificate file.
- * This establishes readable CA syntax, not live service or chain acceptance.
+ * as a trust handoff. Public CA certificates may be owner-readable 0644, but
+ * must belong to this process's owner, have one link and deny writes by other
+ * users. Node reopens this path at child startup: the operator must protect
+ * parent directories and keep the file unchanged throughout the run. This
+ * establishes readable CA syntax, not live service or chain acceptance.
  */
 function validateCaFile(path: string) {
   let fd: number | undefined;
@@ -89,7 +91,8 @@ function validateCaFile(path: string) {
     fd = openSync(path, constants.O_RDONLY | constants.O_NOFOLLOW | constants.O_NONBLOCK);
     const stat = fstatSync(fd);
     const limit = 256 * 1024;
-    if (!stat.isFile() || !(stat.mode & 0o444) || stat.size > limit) throw new Error();
+    if (!stat.isFile() || stat.uid !== process.getuid?.() || stat.nlink !== 1 ||
+        !(stat.mode & 0o400) || (stat.mode & 0o022) || stat.size > limit) throw new Error();
     const bytes = Buffer.alloc(limit + 1);
     let length = 0;
     while (length < bytes.length) {
@@ -116,7 +119,8 @@ export function loadIntegrationEnvironment(source: Record<string, string | undef
     if (!source.NABHOLD_INTEGRATION_ENV_FILE || !isAbsolute(source.NABHOLD_INTEGRATION_ENV_FILE)) throw new Error();
     fd = openSync(source.NABHOLD_INTEGRATION_ENV_FILE, constants.O_RDONLY | constants.O_NOFOLLOW | constants.O_NONBLOCK);
     const stat = fstatSync(fd);
-    if (!stat.isFile() || stat.size > 32768 || stat.uid !== process.getuid?.() || (stat.mode & 0o077)) throw new Error();
+    if (!stat.isFile() || stat.size > 32768 || stat.uid !== process.getuid?.() ||
+        stat.nlink !== 1 || !(stat.mode & 0o400) || (stat.mode & 0o077)) throw new Error();
     const bytes = Buffer.alloc(32769);
     let length = 0;
     while (length < bytes.length) {

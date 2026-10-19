@@ -62,8 +62,13 @@ Redis or their databases on public forwarded ports.
    active key ID and recovery epoch. No process-local session substitute.
 6. Install the disposable CA in Chromium's trust store and supply its readable
    absolute file path through `NODE_EXTRA_CA_CERTS` before Node starts. The
-   preflight requires a readable regular file (no symlinks), at most 256 KiB,
-   containing only valid PEM CA certificates. This verifies file syntax and
+   preflight requires an owner-readable regular file belonging to the invoking
+   UID, with one hard link, no symlink and no group/other write permission, at
+   most 256 KiB, containing only valid PEM CA certificates. Public 0644 CA
+   bundles are allowed; credential dotenv files remain owner-private. Protect
+   all parent directories from replacement and keep these files unchanged
+   throughout the run: Node reads the CA path again at child startup.
+   This verifies file syntax and
    readability; live trust and issuer acceptance still require the browser run. Redis
    uses system trust or the optional literal multiline CA PEM separately.
    Never disable TLS verification or use Chromium certificate-ignore flags.

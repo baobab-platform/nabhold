@@ -54,3 +54,5 @@ Recorded and awaiting reviewer sign-off (not accepted):
 | G17 identity smoke (source) | [Register §22](../register.md#22-g17--int-03-identity-smoke-evidence-preparation--18-october-2026): fixed scenario receipts, exact local source and unattested dependency pins | Source and synthetic reporter tests only; real execution/retention/attestation and independent sign-off PENDING |
 
 | Current implementation audit | [`progress-audit-2026-10-19.md`](progress-audit-2026-10-19.md) | Repository/CI reconciliation, not a new signed release/cryptographic attestation; C4 and INT-03 protected exits remain open |
+
+| INT-03 implementation review | [int03-implementation-review-2026-10-19.md](int03-implementation-review-2026-10-19.md) | Fresh source/scenario/CI reconciliation and consumer file-trust hardening; connected INT-03 and protected acceptance OPEN |

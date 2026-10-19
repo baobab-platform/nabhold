@@ -1,5 +1,5 @@
 // @vitest-environment node
-import { chmodSync, mkdtempSync, rmSync, symlinkSync, writeFileSync } from "node:fs";
+import { chmodSync, linkSync, mkdtempSync, rmSync, symlinkSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { dirname, join } from "node:path";
 import { rootCertificates } from "node:tls";
@@ -84,6 +84,27 @@ describe("integration configuration boundary", () => {
     chmodSync(ca, 0o600); writeFileSync(ca, "x".repeat(256 * 1024 + 1));
     expect(() => integrationSettings(env)).toThrow(IntegrationConfigurationError);
   });
+  it("allows a public owner-controlled CA but refuses shared writes and aliases", () => {
+    const env = fixture(); const ca = env.NODE_EXTRA_CA_CERTS!;
+    chmodSync(ca, 0o644);
+    expect(integrationSettings(env).NABHOLD_INTEGRATION_PROFILE).toBe("keycloak-identity-smoke");
+    for (const mode of [0o620, 0o602, 0o666]) {
+      chmodSync(ca, mode);
+      expect(() => integrationSettings(env)).toThrow(IntegrationConfigurationError);
+    }
+    chmodSync(ca, 0o600); linkSync(ca, `${ca}.alias`);
+    expect(() => integrationSettings(env)).toThrow(IntegrationConfigurationError);
+  });
+  it("refuses files when the process cannot establish the expected owner", () => {
+    const env = fixture(); const path = privateFile(dotenv(env));
+    // Exercise the ownership decision without requiring chown privileges or
+    // another host account in the test runner's single-UID namespace.
+    const owner = vi.spyOn(process, "getuid").mockReturnValue(process.getuid!() + 1);
+    try {
+      expect(() => integrationSettings(env)).toThrow(IntegrationConfigurationError);
+      expect(() => loadIntegrationEnvironment({ NABHOLD_INTEGRATION_ENV_FILE: path })).toThrow(IntegrationConfigurationError);
+    } finally { owner.mockRestore(); }
+  });
   it("requires an explicit private file and preserves literal dollar signs", () => {
     const env = fixture(); env.NABHOLD_OIDC_CLIENT_SECRET = "synthetic-$unexpanded-secret";
     const path = privateFile(dotenv(env));
@@ -100,6 +121,13 @@ describe("integration configuration boundary", () => {
     writeFileSync(path, `${dotenv(fixture())}\nNODE_OPTIONS=--inspect\n`);
     expect(() => loadIntegrationEnvironment({ NABHOLD_INTEGRATION_ENV_FILE: path })).toThrow(IntegrationConfigurationError);
     writeFileSync(path, "a".repeat(32769));
+    expect(() => loadIntegrationEnvironment({ NABHOLD_INTEGRATION_ENV_FILE: path })).toThrow(IntegrationConfigurationError);
+  });
+  it("refuses hard-linked or owner-unreadable credential files", () => {
+    const path = privateFile(dotenv(fixture()));
+    chmodSync(path, 0o200);
+    expect(() => loadIntegrationEnvironment({ NABHOLD_INTEGRATION_ENV_FILE: path })).toThrow(IntegrationConfigurationError);
+    chmodSync(path, 0o600); linkSync(path, `${path}.alias`);
     expect(() => loadIntegrationEnvironment({ NABHOLD_INTEGRATION_ENV_FILE: path })).toThrow(IntegrationConfigurationError);
   });
 });

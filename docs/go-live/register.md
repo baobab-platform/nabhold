@@ -515,3 +515,25 @@ F1 source design/provider work remains a separate non-production lane; ERP
 native posting guards do not establish canonical F1 support. Subscriptions
 still declares a simulated, non-production billing provider. G01/G02/G04/G05,
 G06/G10, G16/G17/G18 and all R0–R3 release acceptance states remain unchanged.
+
+
+## 24. INT-03 engineering progress review — 19 October 2026
+
+[The focused INT-03 review](evidence/int03-implementation-review-2026-10-19.md)
+rechecks all eight current main heads and open PR check inventories. INT-03A is
+merged source preparation. No connected INT-03B or full NAB-01–04 execution is
+evidenced. The smaller NAB-ID-01–04 smoke does not replace the mandatory matrix.
+The review identifies and corrects the consumer's weaker CA ownership/shared
+write/hard-link checks and credential hard-link handling; local configuration,
+receipt, Codespaces and Infrastructure handoff tests pass. Exact-head CI/review
+is required for this source increment; no protected gate is promoted.
+
+Infrastructure's main INT-02 regression succeeds at run `39263711772`, scoped
+to its frozen pins. A separate main-only L3 run `39263711884` fails RabbitMQ
+management/queue and APISIX admin probes; root cause remains for owning-lane
+triage. Do not describe all main CI as green or relabel either run INT-03.
+Next: actual private IAM/CP/BFF/TLS Redis lifecycle and browser smoke, then
+CMS qualification/current binding and full matrix negatives/runtime evidence.
+Native protected C4, legal/SoD/onboarding, staging, production and R0–R3 remain
+open. There is no authority to bypass caller-owned contexts or enable executive
+operations from `authority:self` identity alone.
