@@ -38,7 +38,7 @@ GitHub CI is inspected and new CI is awaited, never waived.
 | IAM | `839834da3c25994724ccc9c7a06baa68fb40f752` | #122/#123 merged; native C4 protected execution remains outstanding; #126 is an unmerged readiness/evidence increment at audit start |
 | CP | `3810b8222fa6df09b829e7c725d534af10b1155c` | Protected identity-runtime source and current context/binding checks exist; another actor cannot redeem a human-owned context |
 | Infrastructure | `03ad3f488e19ad446328ba6827363730e4252409` | #35 merged; fixed INT-02 real IAM/CP/Pulse suite, no complete Nabhold handoff or CMS profile |
-| CMS | `b72ff38dc5aefb2e6b859b06044f592b86c8fd24` | Canonical content route, Organisation/current CP checks and hierarchical scopes merged; provider `PARTIAL`, `production_permitted=false` |
+| CMS | `b72ff38dc5aefb2e6b859b06044f592b86c8fd24` | Canonical content route, Organisation/current CP checks and hierarchical scopes merged; provider `PARTIAL`, `production_permitted=false`; CI/Docker still on Node 22, requiring Node 24 convergence before production-shaped qualification |
 | ERP | `0bcf6d1b9d0ec262a1400eb9ce83981305e5d32d` | Native iDempiere placement/posting fences and synthetic native proofs exist; no qualified Nabhold canonical F1 provider |
 | Subscriptions | `52c69906343d7b1afee08a88b8d3afe118af0428` | Contract convergence merged; declared temporary billing provider is simulated and `production_permitted=false` |
 
@@ -53,8 +53,8 @@ GitHub CI is inspected and new CI is awaited, never waived.
 | INT-01 | Merged L4 Foundation and real Actions dependency/cleanup proof | Separate interactive Codespaces observation, protected operational acceptance |
 | INT-02 | #35 merged; final-pin Actions real IAM/CP/Pulse synthetic qualification accepted | No automatic qualification of later source pins; no C4/Ory, Nabhold, staging or production implication |
 | C4-03 | #123 live-runner source; real released/backport Ory mechanics and browser/passkey engineering are separate facts | Actual registered Kratos/Hydra→protected CP B–E execution, current registrations/validator credentials, withdrawal and accepted provenance |
-| C4-04A/B/C | #126 candidate read-only current-authority/health observation and integrity-only receipt verifier | #126 reviewed source merged; independent CP-governed support/activation and running consumer negatives; CRITICAL AdministrativeGrant remains prohibited |
-| INT-03A | Existing Nabhold smoke + receipt code; new IAM subject-mapper repair and Infrastructure private-handoff candidate | Merge reviewed source; generated files alone do not provision or verify identity |
+| C4-04A/B/C | #126 merged read-only current-authority/health observation and integrity-only receipt verifier | #126 reviewed source merged; independent CP-governed support/activation and running consumer negatives; CRITICAL AdministrativeGrant remains prohibited |
+| INT-03A | Existing Nabhold smoke + receipt code; IAM subject-mapper repair and Infrastructure private-handoff source merged | Run actual connected lab; generated files alone do not provision or verify identity |
 | INT-03B / NAB-01/02 | Concrete BFF identity consumer exists | Actual connected private HTTPS, issuer/client/CP mapping/TLS Redis/browser journey and negatives; owner-bound runtime source evidence and teardown |
 | INT-03 / NAB-03 | CMS provider/consumer source exists | Independent qualification and current grants/binding/context; actual published/preview, publish/unpublish, tenant/audience/revocation/outage assertions |
 | P0-05 / G02 | Progressive onboarding source and synthetic acceptance | Execute real controlled Nabhold admission; identity/tenant acceptance is not production activation |
@@ -100,9 +100,9 @@ semantically approved. Independent upgrades remain distinct from Go-Live scope.
 
 | PR lane | Finding / action | Merge rule |
 |---|---|---|
-| IAM #126 | Failed `provider-contract` log identifies one extra blank line rejected by gofmt; repaired at `cd378f04c66a4c957bc302a50d1e310fb63c25d6` | All 46 head checks completed successfully/applicably skipped before merge `5bc1a7c4200a7b5dd029452c9d305408fb4a286e`. Automated review triggered on ready arrived after merge with two valid file-input findings; corrective #128 (`190cc179231ddb13b3ae7640e48d4748bd58c6e8`) has focused/race tests passing and awaits mandatory CI/review. C4 protected gates stay open |
-| IAM #127 | Explicit Nabhold scope list omitted Keycloak `basic`, which supplies access-token subject; fixed dormant profile/validator and mandatory real-realm exact-scope/native-mapper assertions | Eight focused tests and syntax/source checks pass. New real-realm assertion corrected for OIDC openid meta-value; bootstrap now repairs built-in basic only on the existing dormant client; legacy fixtures test that repair. New head `2c001bf9b894f6239f3e02c7c0107376e8843e8c` awaits actual variants; browser/CP acceptance is separate |
-| Infrastructure #36 | New private handoff preparation; per-run secrets/AES/epoch, exact Redis namespace ACL, strict dormant-client cloning, atomic private files and explicit unverified manifest | 12 source/security/actual-Node interoperability tests and 92 existing INT-02 tests pass locally. Review cleanup finding fixed at `1c1b2a3f7fbeba089523c8a524b3532f9c36061b`; new final-head real-process regression required. Exact current Nabhold configuration validator also accepted the generated bundle locally; no network proof claimed |
+| IAM #126 | Failed `provider-contract` log identifies one extra blank line rejected by gofmt; repaired at `cd378f04c66a4c957bc302a50d1e310fb63c25d6` | All 46 head checks completed successfully/applicably skipped before merge `5bc1a7c4200a7b5dd029452c9d305408fb4a286e`. Automated review triggered on ready arrived after merge with two valid file-input findings; corrective #128 head `190cc179231ddb13b3ae7640e48d4748bd58c6e8` passed all 45 final-head checks/zero-finding automated review and merged at `63db55c87fda13762fc438a6d32a885a63ddb353`. Both original findings resolved; local focused/broader/race tests pass (foreign-owner chown fixture unavailable in the single-UID local namespace). C4 protected gates stay open |
+| IAM #127 | Explicit Nabhold scope list omitted Keycloak `basic`, which supplies access-token subject; fixed dormant profile/validator and mandatory real-realm exact-scope/native-mapper assertions | Eight focused tests and syntax/source checks pass. New real-realm assertion corrected for OIDC openid meta-value; bootstrap now repairs built-in basic only on the existing dormant client; legacy fixtures test that repair. Head `2c001bf9b894f6239f3e02c7c0107376e8843e8c` passed all 45 checks; review resolved and merged `b2e6dbe879bd2d6757287c9b03947dddbc19a024`. Actual legacy suite 140/140; connected BFF/CP acceptance remains separate |
+| Infrastructure #36 | New private handoff preparation; per-run secrets/AES/epoch, exact Redis namespace ACL, strict dormant-client cloning, atomic private files and explicit unverified manifest | 12 source/security/actual-Node interoperability tests and 92 existing INT-02 tests pass locally. Review cleanup finding fixed at `1c1b2a3f7fbeba089523c8a524b3532f9c36061b`; all 33 final-head checks/review passed, merged `84079fa6720da5e1dd5f14d9d0b0d3b0dd149f28`. Exact current Nabhold configuration validator also accepted the generated bundle locally; no network proof claimed |
 | Nabhold #73/#74 | Setup action and compatible dependency/lock updates reviewed; Node 24, private package pins and Codespaces controls retained | All 28 head checks completed without failures before merge; merged `68fea868` / `55af5bd3` |
 | Nabhold #71 | Updated artifact SHA retained an incorrect release comment | Fixed comment; all 29 final-head checks completed successfully/applicably skipped; reviewed merge `d684134f49c82878d7b0352719ab4153345fa8f3` |
 | Nabhold #72 | Workflow SHA moved but `foundation_ref` stayed on old source | Aligned source/ref; all 29 final-head checks completed successfully/applicably skipped; reviewed merge `eb67b9f7b6616f78edc8b4628baec10ee7203062` |
@@ -152,3 +152,15 @@ F1/ERP and other independent source lanes can proceed where accepted contracts
 permit, but do not expand Nabhold into subsidiary trading, copy engine data into
 CP/BFF, mint grants from group relationships or unlock a release to show progress.
 **No R0/R1/R2/R3 release, protected staging or production readiness is accepted.**
+
+
+## Final source closure for this increment
+
+Reviewed source merges: Nabhold #71–74, IAM #126/#127/#128, Infrastructure #36
+and CMS #38. CMS #37 is closed as superseded. Every merge used its expected
+head after mandatory checks and resolved review; #126’s ready-triggered review
+arrived after merge and its two findings were subsequently corrected in #128.
+The audit/register updates themselves require their own final-head checks.
+No protected C4/INT-03, real legal/onboarding, R0–R3 or production gate changes.
+The next substantive engineering increment remains actual governed private
+BFF/Redis identity execution, followed by CMS qualification and full INT-03.

@@ -23,7 +23,7 @@ The [16 October Finance F1 source evidence](evidence/finance-f1-source-2026-10-1
 | G01C group relationships/mandates | BLOCKED | CP relationship/mandate machinery exists; no accepted real control/mandate evidence for programme use | Evidence-backed relationships/mandates |
 | G02 Organisation-first onboarding | IMPLEMENTED-NOT-EXECUTED | CP progressive application, independent review/decision, TenantOnboardingRequest v2 and RegisterProgressiveTenantV2 implemented; synthetic four-business PG17 acceptance exists | Execute real Nabhold controlled staging flow |
 | G03 capability programme | IN PROGRESS | Shared catalogue has 25 keys including three DRAFT/EXPERIMENTAL F1 entries; ADR-SHARED-033 remains Proposed | F1 semantic/provider acceptance + subsequent domains |
-| G04 IAM | PARTIAL | Secure local provider bootstrap implemented (IAM #113); registered hierarchical workload scope syntax converged (Shared #305 / IAM #114); nabhold-backend stays PROVISIONED | Authenticated operator diagnostic implemented; real native/CP Principals, grants, workload credential and protected acceptance remain |
+| G04 IAM | PARTIAL | Provider bootstrap, OIDC/TLS Redis custody, current IAM/CP self-identity, executive authorisation seam and repaired dormant human profile implemented; C4 evidence/readiness source exists; nabhold-backend stays PROVISIONED | Actual registered native C4 qualification, real Principals/SoD, governed workload/CMS and connected BFF acceptance remain |
 | G05 CMS / R0 | PARTIAL | Organisation-first consumer/provider source convergence implemented; CMS support PARTIAL and production_permitted=false | P0-04 protected identity + P0-06 live IAM/CP/binding + P0-07 R0 acceptance |
 | G06 ERP finance | BLOCKED | Shared #319/#321 merged F1 DRAFT wire contracts; no certified ERP F1 provider | FinanceBaseline + F1 + live iDempiere |
 | G07 Workforce/HR | BLOCKED | No accepted canonical workforce contract/provider surface | Shared/domain decision + implementation |
@@ -479,11 +479,20 @@ PRs in the eight affected repositories and exact check outcomes.
   identity-smoke receipt tooling. Do not implement those seams again.
 - **Current work:** IAM #126's formatting failure repaired and all 46 final-head
   checks completed successfully/applicably skipped before reviewed merge at
-  `5bc1a7c4200a7b5dd029452c9d305408fb4a286e`. Its C4-03E receipt verifier and
+  `5bc1a7c4200a7b5dd029452c9d305408fb4a286e`. Ready-triggered automated
+  review arrived after merge with two file-input findings; corrective IAM #128
+  merged at `63db55c87fda13762fc438a6d32a885a63ddb353` after all 45 final-head
+  checks and zero-finding automated review. Both original findings are resolved.
+  Its C4-03E receipt verifier and
   C4-04A observation are non-authorising. IAM #127 repairs the missing Keycloak
-  `basic` access-token subject mapper in the dormant Nabhold human profile.
-  Infrastructure #36 adds INT-03A private handoff generation and source/security
-  interoperability checks. Candidate source is not an executed integration.
+  `basic` access-token subject mapper in the dormant Nabhold human profile;
+  #127 merged at `b2e6dbe879bd2d6757287c9b03947dddbc19a024` after all 45
+  final-head checks and resolved review. The real legacy suite passes 140/140,
+  including pre-existing dormant-client repair; no connected BFF run is implied.
+  Infrastructure #36 merged at `84079fa6720da5e1dd5f14d9d0b0d3b0dd149f28`
+  after all 33 final-head checks and resolved review; its 12 handoff tests and
+  actual Node/consumer validation establish source preparation only. The
+  existing IAM/CP/Pulse regression and teardown pass; no Nabhold runtime run is claimed.
 - **Reviewed/merged:** Nabhold #73/#74, after final-head checks, preserve Node 24,
   private Shared Experience package pins and Codespaces bootstrap boundaries.
   #71/#72 received artifact-comment/Foundation source-pin fixes and merged
