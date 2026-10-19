@@ -1,5 +1,13 @@
 # Nabhold Codespaces — GHCR image and private organisation package access
 
+**Image provenance:** the published [baobab-dev v1.4.4 release](https://github.com/baobab-platform/baobab-dev/releases/tag/v1.4.4) records
+`frontend` digest `sha256:1b3165067912eacbca96b576efb67e0428850b1ff1a953aa9013127a01635371`
+and `frontend-e2e` digest `sha256:eb9c401cea16c4f333c28b250dd455e505752dfc6d11e9779a182a02bc207213`.
+Both consumer image references are pinned to these values. The manifest/digest
+identity is still subject to a **real** registry pull and release signature
+verification by the authorised runner; published notes alone do not
+prove the currently reachable registry content.
+
 **Scope:** Nabhold first, before rolling out a reviewed pattern to ZuriBeans,
 Thamani and Baobab engines. This is a development environment, **not**
 production or protected IAM/CP acceptance. Do not place Docker credentials,
