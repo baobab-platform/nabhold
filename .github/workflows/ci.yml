@@ -15,11 +15,59 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
+  codespaces-contract:
+    name: Codespaces lifecycle and registry contract (no private image)
+    runs-on: ubuntu-26.04
+    permissions:
+      contents: read
+    steps:
+      # Run before pulling an organisation GHCR job image. This job remains
+      # diagnostic even if baobab-dev's separate Actions access is missing.
+      - name: Check out reviewed configuration
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - name: Install public pinned Node runtime
+        uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
+        with:
+          node-version: "24.21.0"
+      - name: Verify private package and prebuild-safe Codespaces contract
+        run: node --test scripts/codespaces/*.node.mjs
+
+  ghcr-access:
+    name: GHCR read-only immutable image preflight
+    runs-on: ubuntu-26.04
+    permissions:
+      contents: read
+      packages: read
+    steps:
+      # This job uses a public runner and does not require the private image
+      # to START. If it fails 403, grant Nabhold *Actions* access on the
+      # org's baobab-dev package; Codespaces access is a different ACL.
+      - name: Authenticate to GHCR using only repository package-read authority
+        env:
+          GHCR_READ_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          set +x
+          printf '%s' "$GHCR_READ_TOKEN" | docker login ghcr.io --username "$GITHUB_ACTOR" --password-stdin >/dev/null
+      - name: Check exact published frontend and browser image digests
+        shell: bash
+        run: |
+          set -euo pipefail
+          docker buildx imagetools inspect 'ghcr.io/baobab-platform/baobab-dev:1.4.4-frontend@sha256:1b3165067912eacbca96b576efb67e0428850b1ff1a953aa9013127a01635371' >/dev/null
+          docker buildx imagetools inspect 'ghcr.io/baobab-platform/baobab-dev:1.4.4-frontend-e2e@sha256:eb9c401cea16c4f333c28b250dd455e505752dfc6d11e9779a182a02bc207213' >/dev/null
+          echo "GHCR_READ_VERIFIED (Actions only; Codespaces ACL separately required)"
+
   quality:
     name: Quality gates
     runs-on: ubuntu-26.04
     container:
-      image: ghcr.io/baobab-platform/baobab-dev:1.4.4-frontend-e2e
+      image: ghcr.io/baobab-platform/baobab-dev:1.4.4-frontend-e2e@sha256:eb9c401cea16c4f333c28b250dd455e505752dfc6d11e9779a182a02bc207213
+      credentials:
+        username: ${{ github.actor }}
+        password: ${{ secrets.GITHUB_TOKEN }}
       options: --user 0
     steps:
       - name: Checkout source
@@ -32,8 +80,8 @@ jobs:
           registry-url: "https://npm.pkg.github.com"
           scope: "@baobab-platform"
 
-      - name: Verify Codespaces user-level registry bootstrap cannot leak token values
-        run: node --test scripts/codespaces/configure-private-npm.node.mjs
+      - name: Verify Codespaces lifecycle, org package grants and token-free bootstrap
+        run: node --test scripts/codespaces/*.node.mjs
 
       - name: Verify sanitized integration evidence and incomplete-run denial
         run: node --experimental-strip-types --test scripts/integration/evidence.node.mjs
