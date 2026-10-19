@@ -45,13 +45,13 @@ export function diagnostic(status, output = "") {
   if (status === "ETIMEDOUT" || /ETIMEDOUT|ENOTFOUND|ECONNRESET|EAI_AGAIN|ERR_SOCKET_TIMEOUT/i.test(raw)) {
     return "Network/DNS/TLS problem reaching GitHub Packages; check Codespaces egress and GitHub status.";
   }
-  if (/\b401\b|E401|UNAUTHORIZED|NO AUTHORIZATION HEADER/i.test(raw)) {
+  if (/(?:^|\D)401(?:\D|$)|E401|UNAUTHORIZED|NO AUTHORIZATION HEADER/i.test(raw)) {
     return "GitHub Packages authentication rejected (401). Check the injected Codespaces token and read:packages entitlement.";
   }
-  if (/\b403\b|E403|FORBIDDEN/i.test(raw)) {
+  if (/(?:^|\D)403(?:\D|$)|E403|FORBIDDEN/i.test(raw)) {
     return "GitHub Packages permission denied (403). Review organisation SSO and the package's Codespaces/Actions repository access.";
   }
-  if (/\b404\b|E404|NOT_FOUND/i.test(raw)) {
+  if (/(?:^|\D)404(?:\D|$)|E404|NOT_FOUND/i.test(raw)) {
     return "Package version not visible (404). Confirm publication, exact version and package read access; private packages may hide permission denial as 404.";
   }
   return "GitHub Packages check failed. Verify package access, the published version, registry availability and pnpm/Corepack.";
