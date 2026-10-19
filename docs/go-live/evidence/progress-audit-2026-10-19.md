@@ -25,8 +25,9 @@ ADR-SUB-0001/0014/0016. Proposed Finance ADR-SHARED-033 is not treated as Accept
 Source examination is focused on the next dependency closure and declared
 support. It does not claim a new line-by-line security audit of every engine.
 No real protected issuer/CP deployment, AWS account or live enterprise legal
-evidence was available in this workspace. Docker and Go are absent locally;
-required existing GitHub CI is inspected and new CI is awaited, never waived.
+evidence was available in this workspace. Docker remains absent locally. Go 1.27.2 was subsequently obtained from its
+official release and checksum-verified for the #128 focused/race tests. Required
+GitHub CI is inspected and new CI is awaited, never waived.
 
 ## Source baseline
 
@@ -99,13 +100,13 @@ semantically approved. Independent upgrades remain distinct from Go-Live scope.
 
 | PR lane | Finding / action | Merge rule |
 |---|---|---|
-| IAM #126 | Failed `provider-contract` log identifies one extra blank line rejected by gofmt; repaired at `cd378f04c66a4c957bc302a50d1e310fb63c25d6` | All 46 final-head checks completed successfully/applicably skipped; reviewed merge `5bc1a7c4200a7b5dd029452c9d305408fb4a286e`; C4 protected gates stay open |
+| IAM #126 | Failed `provider-contract` log identifies one extra blank line rejected by gofmt; repaired at `cd378f04c66a4c957bc302a50d1e310fb63c25d6` | All 46 head checks completed successfully/applicably skipped before merge `5bc1a7c4200a7b5dd029452c9d305408fb4a286e`. Automated review triggered on ready arrived after merge with two valid file-input findings; corrective #128 (`190cc179231ddb13b3ae7640e48d4748bd58c6e8`) has focused/race tests passing and awaits mandatory CI/review. C4 protected gates stay open |
 | IAM #127 | Explicit Nabhold scope list omitted Keycloak `basic`, which supplies access-token subject; fixed dormant profile/validator and mandatory real-realm exact-scope/native-mapper assertions | Eight focused tests and syntax/source checks pass. New real-realm assertion corrected for OIDC openid meta-value; bootstrap now repairs built-in basic only on the existing dormant client; legacy fixtures test that repair. New head `2c001bf9b894f6239f3e02c7c0107376e8843e8c` awaits actual variants; browser/CP acceptance is separate |
-| Infrastructure #36 | New private handoff preparation; per-run secrets/AES/epoch, exact Redis namespace ACL, strict dormant-client cloning, atomic private files and explicit unverified manifest | 11 new source/security/actual-Node interoperability tests and 92 existing INT-02 tests pass locally; mandatory real-process regression still required |
+| Infrastructure #36 | New private handoff preparation; per-run secrets/AES/epoch, exact Redis namespace ACL, strict dormant-client cloning, atomic private files and explicit unverified manifest | 12 source/security/actual-Node interoperability tests and 92 existing INT-02 tests pass locally. Review cleanup finding fixed at `1c1b2a3f7fbeba089523c8a524b3532f9c36061b`; new final-head real-process regression required. Exact current Nabhold configuration validator also accepted the generated bundle locally; no network proof claimed |
 | Nabhold #73/#74 | Setup action and compatible dependency/lock updates reviewed; Node 24, private package pins and Codespaces controls retained | All 28 head checks completed without failures before merge; merged `68fea868` / `55af5bd3` |
 | Nabhold #71 | Updated artifact SHA retained an incorrect release comment | Fixed comment; all 29 final-head checks completed successfully/applicably skipped; reviewed merge `d684134f49c82878d7b0352719ab4153345fa8f3` |
 | Nabhold #72 | Workflow SHA moved but `foundation_ref` stayed on old source | Aligned source/ref; all 29 final-head checks completed successfully/applicably skipped; reviewed merge `eb67b9f7b6616f78edc8b4628baec10ee7203062` |
-| CMS #37/#38 | Logs show split Vitest/coverage major updates violate their exact peer relationship | Paired repair pushed to #38 at `645e8a86a0e850afacda8a33cf17e75b9274e469`; clean install, 259 tests, types/lint pass locally; mandatory CI remains required; #37 superseded only after merge |
+| CMS #37/#38 | Logs show split Vitest/coverage major updates violate their exact peer relationship | Paired repair #38 at `645e8a86a0e850afacda8a33cf17e75b9274e469` passed 29 head checks and review; merged `e2001e5fcc26301dd019575b49db6f782e71714e`. Clean install, 259 tests and types/lint pass locally; #37 closed as superseded |
 | CMS #27/#28/#29 | Separate major ESLint/TypeScript/GraphQL changes fail dependency/build gates; Payload's accepted compatibility must be retained | No blind major upgrade or merge based on unrelated green checks |
 | ERP #108 | networknt 3.x breaks current Jackson/schema-validator API compilation | Requires an owner-reviewed migration with unchanged canonical schema validation/native posting proofs; remain unmerged |
 | CP #398/#399 | Proposed Node 26/runtime types contradict the accepted Node 24 baseline; #398 also fails because corepack is absent in that image | Do not bypass the platform runtime standard to make an automated major update green |
