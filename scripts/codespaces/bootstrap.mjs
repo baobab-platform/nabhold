@@ -14,7 +14,7 @@
  * print a raw token. Package versions come from the immutable manifest.
  */
 import { readFileSync } from "node:fs";
-import { dirname, join } from "node:path";
+import { dirname, join, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 import { spawnSync } from "node:child_process";
 
@@ -120,6 +120,6 @@ export function runBootstrap({ executeCommand = execute, log = console.log, fail
   return 0;
 }
 
-if (process.argv[1] && fileURLToPath(new URL(`file://${process.argv[1]}`)) === SOURCE) {
+if (process.argv[1] && resolve(process.argv[1]) === SOURCE) {
   process.exitCode = runBootstrap();
 }
