@@ -5,7 +5,7 @@ The corporate frontend for Nabhold Group Africa: an institutional public presenc
 ## GitHub Codespaces
 
 Nabhold uses the reviewed `ghcr.io/baobab-platform/baobab-dev:1.4.4-frontend`
-image, Node 24 and pnpm 11.24.0. Codespaces privately forwards Next.js on port
+image **pinned to its v1.4.4 release SHA-256 digest**, Node 24 and pnpm 11.24.0. Codespaces privately forwards Next.js on port
 3000. The two exact published Shared dependencies are
 `@baobab-platform/experience-tokens@0.3.1` and
 `@baobab-platform/experience-geo-core@0.3.1`; they are **npm packages at
