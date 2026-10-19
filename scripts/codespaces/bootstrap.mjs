@@ -64,10 +64,10 @@ function execute(binary, args, options = {}) {
   });
 }
 
-export function runBootstrap({ executeCommand = execute, log = console.log, fail = console.error } = {}) {
+export function runBootstrap({ executeCommand = execute, log = console.log, fail = console.error,\n  runtimeVersion = process.versions.node, manifestOverride = null } = {}) {
   let manifest;
   try {
-    manifest = JSON.parse(readFileSync(join(root, "package.json"), "utf8"));
+    manifest = manifestOverride ?? JSON.parse(readFileSync(join(root, "package.json"), "utf8"));
     if (manifest.packageManager !== `pnpm@${PINNED_PNPM}`) {
       throw new Error("manifest pnpm version differs from the reviewed Codespaces baseline");
     }
