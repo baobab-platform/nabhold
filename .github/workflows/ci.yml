@@ -20,6 +20,9 @@ jobs:
     runs-on: ubuntu-26.04
     container:
       image: ghcr.io/baobab-platform/baobab-dev:1.4.4-frontend-e2e
+      credentials:
+        username: ${{ github.actor }}
+        password: ${{ secrets.GITHUB_TOKEN }}
       options: --user 0
     steps:
       - name: Checkout source
@@ -32,8 +35,8 @@ jobs:
           registry-url: "https://npm.pkg.github.com"
           scope: "@baobab-platform"
 
-      - name: Verify Codespaces user-level registry bootstrap cannot leak token values
-        run: node --test scripts/codespaces/configure-private-npm.node.mjs
+      - name: Verify Codespaces lifecycle, org package grants and token-free bootstrap
+        run: node --test scripts/codespaces/*.node.mjs
 
       - name: Verify sanitized integration evidence and incomplete-run denial
         run: node --experimental-strip-types --test scripts/integration/evidence.node.mjs
