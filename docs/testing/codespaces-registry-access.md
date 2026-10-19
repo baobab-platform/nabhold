@@ -59,6 +59,14 @@ existing Codespaces or override organisation policy.
    Do **not** loosen organisation-wide visibility, make private packages
    public, or add `write:packages` merely to repair a read operation.
 
+Nabhold's CI now includes an **independent `ghcr-access` job** on a
+standard runner: it signs into GHCR using only the job's `packages:read`
+`GITHUB_TOKEN` and inspects the two exact immutable image digests **before**
+the containerized quality job. A failure here identifies Actions image-access
+or registry content problems independently from Codespaces. A green result
+does *not* establish a Codespaces package permission grant; package
+administrators must still complete step 2.
+
 **These GitHub package and organisation settings are administrative actions.
 This PR cannot inspect or grant them, and does not claim they were changed.**
 
