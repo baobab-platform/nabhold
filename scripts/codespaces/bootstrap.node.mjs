@@ -40,7 +40,7 @@ function mockRun({ blockPackage = "", authStatus = 0 } = {}) {
     if (args.some((s) => String(s).endsWith("configure-private-npm.mjs"))) return { status: authStatus };
     if (args[0] === "--version") return { status: 0, stdout: "11.24.0\n" };
     if (args[0] === "view") {
-      if (String(args[1]).includes(blockPackage)) return { status: 1, stderr: "HTTP 403; SECRET-CANARY" };
+      if (blockPackage && String(args[1]).includes(blockPackage)) return { status: 1, stderr: "HTTP 403; SECRET-CANARY" };
       return { status: 0, stdout: "0.3.1\n" };
     }
     if (args[0] === "install") return { status: 0 };
@@ -58,10 +58,7 @@ function mockRun({ blockPackage = "", authStatus = 0 } = {}) {
 test("successful bootstrap validates exact package metadata before immutable install", () => {
   const x = mockRun();
   assert.equal(x.result, 0, x.stderr.join("\n"));
-  assert.deepEqual(x.calls.map((c) => c.args[0]), [
-    process.execPath.includes("node") ? x.calls[0].args[0] : "unused",
-    "--version", "view", "view", "install",
-  ]);
+  assert.deepEqual(x.calls.slice(1).map((c) => c.args[0]), ["--version", "view", "view", "install"]);
   assert.ok(x.calls[0].args[0].endsWith("configure-private-npm.mjs"));
   assert.ok(x.calls[2].args.includes("--registry"));
   assert.ok(x.calls[2].args.includes("https://npm.pkg.github.com"));
