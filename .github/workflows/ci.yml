@@ -34,6 +34,32 @@ jobs:
       - name: Verify private package and prebuild-safe Codespaces contract
         run: node --test scripts/codespaces/*.node.mjs
 
+  ghcr-access:
+    name: GHCR read-only immutable image preflight
+    runs-on: ubuntu-26.04
+    permissions:
+      contents: read
+      packages: read
+    steps:
+      # This job uses a public runner and does not require the private image
+      # to START. If it fails 403, grant Nabhold *Actions* access on the
+      # org's baobab-dev package; Codespaces access is a different ACL.
+      - name: Authenticate to GHCR using only repository package-read authority
+        env:
+          GHCR_READ_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          set +x
+          printf '%s' "$GHCR_READ_TOKEN" | docker login ghcr.io --username "$GITHUB_ACTOR" --password-stdin >/dev/null
+      - name: Check exact published frontend and browser image digests
+        shell: bash
+        run: |
+          set -euo pipefail
+          docker buildx imagetools inspect 'ghcr.io/baobab-platform/baobab-dev:1.4.4-frontend@sha256:1b3165067912eacbca96b576efb67e0428850b1ff1a953aa9013127a01635371' >/dev/null
+          docker buildx imagetools inspect 'ghcr.io/baobab-platform/baobab-dev:1.4.4-frontend-e2e@sha256:eb9c401cea16c4f333c28b250dd455e505752dfc6d11e9779a182a02bc207213' >/dev/null
+          echo "GHCR_READ_VERIFIED (Actions only; Codespaces ACL separately required)"
+
   quality:
     name: Quality gates
     runs-on: ubuntu-26.04
