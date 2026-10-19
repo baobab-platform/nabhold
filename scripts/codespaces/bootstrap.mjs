@@ -64,15 +64,16 @@ function execute(binary, args, options = {}) {
   });
 }
 
-export function runBootstrap({ executeCommand = execute, log = console.log, fail = console.error,\n  runtimeVersion = process.versions.node, manifestOverride = null } = {}) {
+export function runBootstrap({ executeCommand = execute, log = console.log, fail = console.error,
+  runtimeVersion = process.versions.node, manifestOverride = null } = {}) {
   let manifest;
   try {
     manifest = manifestOverride ?? JSON.parse(readFileSync(join(root, "package.json"), "utf8"));
     if (manifest.packageManager !== `pnpm@${PINNED_PNPM}`) {
       throw new Error("manifest pnpm version differs from the reviewed Codespaces baseline");
     }
-    const major = Number(process.versions.node.split(".")[0]);
-    if (major !== 24 || Number(process.versions.node.split(".")[1]) < 19) {
+    const [major, minor] = runtimeVersion.split(".").map(Number);
+    if (major !== 24 || minor < 19) {
       throw new Error("Node 24.19+ is required; use the reviewed baobab-dev frontend image");
     }
   } catch (error) {
