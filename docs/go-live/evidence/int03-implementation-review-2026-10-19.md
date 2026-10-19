@@ -62,8 +62,8 @@ Passing the smoke cannot close full INT-03 or remove CMS/negative requirements.
 All open PR heads in the eight repositories were queried with up to 100 check
 runs per head. No Nabhold PR was open at review start. Failed mandatory suites
 remain on CMS #27/#28/#29, ERP #108, CP #398 and Shared #292/#294. CMS #31
-currently has no failed check, unlike the earlier audit's historical grouping;
-green checks alone do not establish that a major ESLint update is compatible
+currently has no failed check; green checks alone do not establish that a major
+ESLint update is compatible
 with the accepted runtime/peer baseline. CP #399 remains a Node 26 type-baseline
 conflict despite green CI. Other green dependency PRs remain separate semantic
 review work; this review does not bulk-approve them or claim resolved errors.
