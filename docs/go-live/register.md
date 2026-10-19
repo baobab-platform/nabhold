@@ -340,31 +340,200 @@ source lane; this does not waive integration, legal, provider or release gates.
 
 | Increment | Immutable source evidence | Readiness consequence |
 |---|---|---|
-| Finance design checkpoint | Shared [#319](https://github.com/baobab-platform/shared/pull/319) MERGED, `27eb77a367d6c9f2a2368cdffcae73cd5d544571` | Review-only candidate repaired;…6186 tokens truncated…h the real OIDC/store factories; they are mandatory in normal
-`pnpm test` CI. Real browser smoke is invoked explicitly once Infrastructure
-provides the environment. Its success message explicitly withholds acceptance.
-Do not add a skipped/mock integration job and report full integration as green.
+| Finance design checkpoint | Shared [#319](https://github.com/baobab-platform/shared/pull/319) MERGED, `27eb77a367d6c9f2a2368cdffcae73cd5d544571` | Review-only candidate repaired; it is not the consumer contract |
+| SH-NAB-FIN-02 DRAFT wire tranche | Shared [#321](https://github.com/baobab-platform/shared/pull/321) MERGED, `2aa057dcaa475450450ff1166e8e4c1cb8f5d33c` | Three DRAFT/EXPERIMENTAL keys, common types/six wire schemas, 26 synthetic examples, 27 Finance tests, offline validation and lock/CI documentation |
+| Final-head contract/Foundation checks | Tested Shared `eee834ec4f97b93bb9f7975e3ea020de1e3cac28`; all 29 checks complete: 22 success, seven applicable skips | Source conformance; no provider, runtime financial or operational certification |
+| Existing INT-02 workload observation | Infrastructure `0f6cbac`, [run 38929279122](https://github.com/baobab-platform/infrastructure/actions/runs/38929279122) | L4-IAM-02 PASS only; four other scenario aggregates BLOCKED; #35 remains unmerged |
 
-## Remaining INT-03 and release work
+Current Shared vocabulary now includes `finance.ledger.read`,
+`finance.journal.manage` and `finance.statement.read`. DRAFT catalogue presence
+is distinct from accepting Proposed ADR-SHARED-033 or certifying ERP support.
 
-- Complete #35's real IAM↔CP mandatory scenarios and review/merge qualification.
-- Deliver the above network/TLS/client/Redis/fixture handoff and run this smoke
-  against the actual pinned stack in Codespaces and CI.
-- Extend provider-owned fixtures for Kratos, MFA/step-up, IAM revocation, expired
-  sessions, CP deactivation, grant changes, wrong audience, unavailable services
-  and independent subsidiary/external-tenant denials. This suite does not yet
-  test business authority, Organisation context or tenant membership.
-- Add real CMS `content.entry.resolve` context, binding and publish/unpublish
-  acceptance with fallback disabled. Current identity-only smoke does not
-  enable the canonical CMS capability profile or prove public content readiness.
-- Add ERP Finance journeys only when their accepted provider operations exist;
-  pair browser journeys with native persistence/COMMIT and accounting evidence.
-- Retain and attest the sanitized identity-smoke receipts through Infrastructure,
-  independently verify deployed source pins, expand evidence for the remaining
-  scenarios and obtain independent gate review. G04B/G05/G16/G17/G18 and R0–R3
-  remain unaccepted.
+The wire tranche covers operation-specific journal requirements and positive/zero
+instructions, typed chart/balance/entry rows, exact signed historical corrections,
+ERP-owned book scope, snapshot continuation, historical baseline versions and
+statement reconciliation lineage. Current CP/native authority, arithmetic balance,
+precision, closed periods, maker/checker, durable idempotency, native COMMIT and
+actual trial-balance reconciliation remain ERP/Finance acceptance obligations.
+No estate may substitute fixture validation or metadata for those proofs.
 
-Implementation references: [Playwright web-server lifecycle](https://playwright.dev/docs/test-webserver)
-and [trace contents](https://playwright.dev/docs/trace-viewer-intro). The separate
-configuration intentionally leaves server lifecycle with Infrastructure and
-avoids credential-bearing trace artifacts.
+See the [full evidence and next owner tasks](evidence/finance-f1-source-2026-10-16.md).
+G03 has advanced DRAFT source. G06 remains blocked for operational F1; G01/G02,
+protected G04/G05/G16/G17 and G18 are not promoted. No R0/R1/R2/R3 release is
+accepted. Infrastructure #35 was not changed by this Finance increment.
+
+## 19. INT-02 prerequisite source closure — 16 October 2026
+
+Sponsor direction: implement the recommended repairs towards Infrastructure #35.
+The [prerequisite source evidence](evidence/int02-prerequisite-source-2026-10-16.md)
+records merged CP #407/#408, IAM #117 and Shared #322 with immutable commits,
+review status, evidence class and synthetic/provider boundaries.
+
+Current governed PRIMARY authority and metrics, packaged browser themes, and a
+PROVISIONED Pulse test-caller ceiling are source progress. Infrastructure's
+browser/code/S256/MFA, four-principal isolation and explicit workload-registry
+loading remain candidates until the actual final-head run proves them.
+Historical source-only or partial workload results do not establish full L4.
+
+L4-CP-02 remains BLOCKED for an actual qualified provider and its current
+health/binding/contract/market/instance/isolation negatives. Shared's proof
+bootstrap requires an owner-governed decision; its only existing exception was
+not broadened. No new caller was promoted to ACTIVE, and no fake provider
+certification was created. #35 remains open. INT-03 depends on full INT-02.
+
+G04 source advances; real onboarding, G05/R0, G16/G17 and G18 remain unaccepted.
+This checkpoint supersedes stale prerequisite PR statuses above while retaining
+the dated history. Finance DRAFT source status in section 18 is unchanged.
+
+
+## 20. Independent native engineering — 17 October 2026
+
+Trade #153's central Trade-A order-authority PEP and append-only receipts
+advance the engine-owned EA-R03 / Trade-A lane without depending on
+Infrastructure #35. [The source evidence record](evidence/trade-a-ta05-source-2026-10-17.md)
+records its reviewed persistence-error and native class/type fixes, contract
+pin, migration, validation and remaining entry-point/COMMIT acceptance work.
+
+This is source/engine-local synthetic-authority evidence. TA-06/07/08 and
+Trade-B/C/D remain; EA-R03/LA-05 are PARTIAL. Nabhold P0-04/P0-04B
+operator identity, current grants and protected staging exits remain unchanged.
+No Nabhold/Thamani/ZuriBeans
+Principal, seller mandate, tenant access, provider certification, protected
+R0/R1/R2/R3 release or production authority is created. Finance F1 source,
+INT-02 acceptance and real founding-group governance retain their own gates.
+
+## 21. INT-03 consumer harness preparation — 17 October 2026
+
+Nabhold now prepares a distinct `keycloak-identity-smoke` Playwright configuration,
+owner-private environment loading and explicit integration launch/check commands.
+The [runbook](../testing/codespaces-integration.md) specifies the outstanding
+Infrastructure handoff and the exact source-versus-runtime claim boundary.
+
+**Claim/evidence class:** source and synthetic configuration unit coverage only;
+real integrated browser execution is BLOCKED pending the private network,
+registered Nabhold client, synthetic human/CP mapping and TLS Redis handoff.
+Declared source pins are syntax-validated, not independently attested by Nabhold.
+**Reviewer role/date:** automated engineering source review, 17 October 2026;
+independent gate sign-off PENDING. No live provider acceptance is asserted.
+
+Infrastructure #35/INT-02 remains a separate prerequisite; this increment does
+not modify or qualify it. Real IAM revocation/MFA/context/tenant negatives,
+CMS capability acceptance and future accepted ERP Finance journeys remain.
+G04B/G05/G16/G17/G18 and all release acceptance statuses are unchanged.
+
+## 22. G17 / INT-03 identity-smoke evidence preparation — 18 October 2026
+
+Current Nabhold source `8e7bf62` already contains the G04B-04 executive
+authorisation seam and merged Codespaces harness (#62), Experience adoption
+and registry bootstrap (#68). No open Nabhold PR was returned by the initial
+repository query. The earlier G04B-03-only queue descriptions are historical:
+G04B-04 source exists, but its concrete human/context adapter remains blocked
+by the CP-owned same-principal/delegation contract. Current CP
+`a0fef3a05718bb7f3f41dc47746521d0bd91921e` continues to protect runtime context
+and capability resolution with workload authentication; an `authority:self`
+human token must not be substituted or its context redeemed by another actor.
+
+Infrastructure #35 remains OPEN at
+`272697ca96bf7aa08dbbb1b805e2b8acd4f8cc4a`. Its final-head `Real Keycloak -> CP
+L4-01 acceptance` check is FAILURE even though Foundation/source checks and
+L4-00 pass. INT-02 is not accepted; the full live INT-03 prerequisite remains.
+Shared ADR-SHARED-036 was consulted at
+`672e16ff4450b5265bb47c6ed2b6850e276e2b60` for evidence boundaries and
+Infrastructure-owned orchestration. No contract or provider authority changes.
+
+This independent source increment adds sanitized, write-once identity-smoke
+receipts with the actual clean Nabhold source pin, explicitly unattested
+dependency pins, fixed per-scenario results and a SHA-256 digest. Failed,
+skipped, filtered, duplicate, interrupted and unexecuted checks cannot become
+PASS. Reporter errors, titles, attachments and credential-bearing values never
+enter the receipt. The [consumer runbook](../testing/codespaces-integration.md)
+defines this estate-local observation format and its limits; this is not a
+canonical Shared acceptance schema or signed operational evidence.
+
+**Claim:** IMPLEMENTED source preparation only. **Evidence class:** source and
+synthetic receipt/reporter tests; no real IAM/CP/CMS/ERP/browser journey was run
+for this increment. **Reviewer role/date:** automated engineering source review,
+18 October 2026; independent gate sign-off PENDING. Full local frozen package
+installation was blocked by absent GitHub Packages read credentials; authenticated
+final-head repository CI remains required. No mandatory check is waived.
+
+The next runtime exit remains full INT-02, then Infrastructure's private
+network/TLS/client/Redis handoff and the pinned Nabhold identity smoke, followed
+by CMS qualification and the remaining INT-03 negatives. G01/G02, G04/G05,
+G16/G17/G18 and R0–R3 are unchanged and unaccepted.
+
+
+## 23. Fresh implementation audit and INT-03 prerequisites — 19 October 2026
+
+[The fresh audit](evidence/progress-audit-2026-10-19.md) reconciles current merged
+source, accepted Shared EA v2.2/ADR-SHARED-036, provider declarations, all open
+PRs in the eight affected repositories and exact check outcomes.
+
+- **Completed:** Infrastructure #35 merged at `03ad3f488e19ad446328ba6827363730e4252409`;
+  frozen final-pin Actions run `39108198886` passes all mandatory INT-02 groups,
+  actual Pulse provider assertions and teardown. Shared's accepted qualification
+  register records the exact tested dependencies and evidence digests. This
+  does not qualify subsequently changed IAM/CP pins automatically.
+- **Source already present:** confidential encrypted Redis custody, OIDC BFF,
+  current IAM/CP self-identity, G04B-04 deny-by-default authorisation seam and
+  identity-smoke receipt tooling. Do not implement those seams again.
+- **Current work:** IAM #126's formatting failure repaired and all 46 final-head
+  checks completed successfully/applicably skipped before reviewed merge at
+  `5bc1a7c4200a7b5dd029452c9d305408fb4a286e`. Ready-triggered automated
+  review arrived after merge with two file-input findings; corrective IAM #128
+  merged at `63db55c87fda13762fc438a6d32a885a63ddb353` after all 45 final-head
+  checks and zero-finding automated review. Both original findings are resolved.
+  Its C4-03E receipt verifier and
+  C4-04A observation are non-authorising. IAM #127 repairs the missing Keycloak
+  `basic` access-token subject mapper in the dormant Nabhold human profile;
+  #127 merged at `b2e6dbe879bd2d6757287c9b03947dddbc19a024` after all 45
+  final-head checks and resolved review. The real legacy suite passes 140/140,
+  including pre-existing dormant-client repair; no connected BFF run is implied.
+  Infrastructure #36 merged at `84079fa6720da5e1dd5f14d9d0b0d3b0dd149f28`
+  after all 33 final-head checks and resolved review; its 12 handoff tests and
+  actual Node/consumer validation establish source preparation only. The
+  existing IAM/CP/Pulse regression and teardown pass; no Nabhold runtime run is claimed.
+- **Reviewed/merged:** Nabhold #73/#74, after final-head checks, preserve Node 24,
+  private Shared Experience package pins and Codespaces bootstrap boundaries.
+  #71/#72 received artifact-comment/Foundation source-pin fixes and merged
+  at `d684134f49c82878d7b0352719ab4153345fa8f3` /
+  `eb67b9f7b6616f78edc8b4628baec10ee7203062` after all 29 final-head
+  checks completed successfully/applicably skipped.
+- **Still blocked:** real legal verification/SoD/onboarding; C4-03 registered
+  native provider→protected CP and C4-04B/C governance/consumption; connected
+  Nabhold login/session smoke; current CMS certification/binding and full
+  INT-03; executive same-principal/delegation protocol; real AWS/protected
+  staging, business acceptance and production activation.
+
+Next eligible order: finish the reviewed prerequisite PRs → provide/run the
+actual private INT-03 identity network/client/CP/Redis journey → independent
+CMS provider/context/binding and published/preview acceptance → full INT-03
+negative/teardown evidence. The native C4 protected lane keeps its own unmet
+registration/credential/evidence gates. Real Nabhold progressive onboarding and
+R0 require their independently accepted identities, not the disposable fixture.
+F1 source design/provider work remains a separate non-production lane; ERP
+native posting guards do not establish canonical F1 support. Subscriptions
+still declares a simulated, non-production billing provider. G01/G02/G04/G05,
+G06/G10, G16/G17/G18 and all R0–R3 release acceptance states remain unchanged.
+
+
+## 24. INT-03 engineering progress review — 19 October 2026
+
+[The focused INT-03 review](evidence/int03-implementation-review-2026-10-19.md)
+rechecks all eight current main heads and open PR check inventories. INT-03A is
+merged source preparation. No connected INT-03B or full NAB-01–04 execution is
+evidenced. The smaller NAB-ID-01–04 smoke does not replace the mandatory matrix.
+The review identifies and corrects the consumer's weaker CA ownership/shared
+write/hard-link checks and credential hard-link handling; local configuration,
+receipt, Codespaces and Infrastructure handoff tests pass. Exact-head CI/review
+is required for this source increment; no protected gate is promoted.
+
+Infrastructure's main INT-02 regression succeeds at run `39263711772`, scoped
+to its frozen pins. A separate main-only L3 run `39263711884` fails RabbitMQ
+management/queue and APISIX admin probes; root cause remains for owning-lane
+triage. Do not describe all main CI as green or relabel either run INT-03.
+Next: actual private IAM/CP/BFF/TLS Redis lifecycle and browser smoke, then
+CMS qualification/current binding and full matrix negatives/runtime evidence.
+Native protected C4, legal/SoD/onboarding, staging, production and R0–R3 remain
+open. There is no authority to bypass caller-owned contexts or enable executive
+operations from `authority:self` identity alone.
