@@ -13,7 +13,7 @@ const devcontainer = JSON.parse(readFileSync(resolve(root, ".devcontainer/devcon
 const app = JSON.parse(readFileSync(resolve(root, "package.json"), "utf8"));
 
 test("Codespaces uses reviewed organization GHCR image with no insecure fallback", () => {
-  assert.equal(devcontainer.image, "ghcr.io/baobab-platform/baobab-dev:1.4.4-frontend");
+  assert.equal(devcontainer.image, "ghcr.io/baobab-platform/baobab-dev:1.4.4-frontend@sha256:1b3165067912eacbca96b576efb67e0428850b1ff1a953aa9013127a01635371");
   assert.equal(devcontainer.remoteUser, "vscode");
   assert.equal(devcontainer.init, true);
   assert.equal(devcontainer.updateRemoteUserUID, true);
