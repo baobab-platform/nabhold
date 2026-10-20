@@ -665,3 +665,33 @@ delivery, and the real form must present exact Origin and return 303.
 pinned real-component execution. This is not full INT-03/NAB-01–04, CMS,
 protected C4, legal/onboarding, staging, production or R0–R3 acceptance.
 Rollback is in the integration runbook.
+
+
+## 30. Connected identity-smoke qualification — 20 October 2026
+
+[The exact evidence delta](evidence/int03-identity-qualified-2026-10-20.md)
+records merged Infrastructure #37 at `de1ced0c9cc1aba6f89caec0b337b48f097eb240`,
+Nabhold #80/#81 and the actual successful run `39481595139`.
+All four NAB-ID cases, selected real prerequisites, runtime provenance and
+teardown pass. All 35 Infrastructure final-head checks clear with zero-finding
+review; both application fixes passed all 29 checks and final-head review.
+#81 passes 359 unit/five TLS Redis/23 public browser tests.
+
+**Evidence class:** REAL_COMPONENT_SYNTHETIC_DATA on GitHub Actions, exact
+bounded pins only. Local/interactive Codespaces execution was not performed
+here. The GitHub-reported retained artifact digest is recorded separately from
+independent downloaded/sidecar verification, which was unavailable here.
+The observed prerequisite log contains 89 named true checks and 14/14 browser
+sub-checks; do not reuse historical 90-check summaries for this run.
+
+This supersedes historical pending/failed *identity-smoke* state in sections
+25–29. It does not accept full NAB-01–04/INT-03, CMS, native protected C4,
+executive authority, legal/onboarding, protected staging, production or R0–R3.
+
+Next dependency: existing Nabhold/CMS ports need current same-Principal workload
+token/context integration and actual qualified provider/published-content
+execution, with negatives and teardown. Shared `nabhold-backend` remains
+PROVISIONED; the accepted Pulse-only bootstrap cannot be reused. [Shared draft
+#354](https://github.com/baobab-platform/shared/pull/354) makes the bounded CMS
+evidence-producer decision reviewable without changing authority. CMS Node 24
+convergence remains an independent eligible engineering task.

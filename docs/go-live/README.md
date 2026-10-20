@@ -88,3 +88,11 @@ records merged CP/IAM/Shared repairs without promoting Infrastructure #35 or
 any protected onboarding/release gate. The [19 October audit](evidence/progress-audit-2026-10-19.md) supersedes its
 historical open status: #35 is merged with frozen synthetic Actions qualification.
 Full INT-03 and protected native C4 qualification remain separate outstanding gates.
+
+
+[The 20 October connected identity evidence](evidence/int03-identity-qualified-2026-10-20.md)
+records reviewed merged #37/#80/#81 and the successful exact-pin Actions smoke.
+This advances only bounded synthetic identity integration; full INT-03, CMS,
+native protected C4, legal/onboarding, staging and R0–R3 remain OPEN. The
+[register](register.md) records the next CMS dependency and non-authorising
+Shared bootstrap proposal.
