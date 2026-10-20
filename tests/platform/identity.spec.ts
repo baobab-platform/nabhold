@@ -41,7 +41,15 @@ test("real federation login checks CP identity and local logout revokes custody"
     authorization.searchParams.get("redirect_uri") === `${s.NABHOLD_OIDC_ORIGIN}/api/auth/callback`).toBe(true);
   await page.locator("#username").fill(s.NABHOLD_INTEGRATION_USERNAME);
   await page.locator("#password").fill(s.NABHOLD_INTEGRATION_PASSWORD);
+  const completion = page.waitForResponse(response => response.request().isNavigationRequest() &&
+    new URL(response.url()).pathname === "/api/auth/callback");
   await page.locator("#kc-login").click();
+  const callback = await completion;
+  // A committed same-origin document ends the cross-site redirect chain before
+  // the browser requests /account with its unchanged SameSite=Strict cookie.
+  expect(callback.status()).toBe(200);
+  expect(callback.headers()["content-type"]?.startsWith("text/html")).toBe(true);
+  expect(callback.headers()["referrer-policy"] === "no-referrer").toBe(true);
   await page.waitForURL(`${s.NABHOLD_OIDC_ORIGIN}/account`);
   await expect(page.getByRole("heading", { name: "Identity checked", exact: true })).toBeVisible();
   const response = await context.request.get(`${s.NABHOLD_OIDC_ORIGIN}/api/auth/session`);

@@ -89,11 +89,34 @@ describe("OIDC login, confidential callback and current authority", () => {
   it("uses the configured public callback behind an explicitly trusted TLS proxy", async () => {
     const f = fixture(true), login = await f.login();
     const callback = await f.handlers.callback(f.request(login.callback, login.cookie));
-    expect(callback.status).toBe(303);
-    expect(callback.headers.get("location")).toBe(settings.origin + "/account");
+    expect(callback.status).toBe(200);
+    expect(callback.headers.get("location")).toBeNull();
     const session = callback.cookies.get(SESSION)!;
     expect(session.sameSite).toBe("strict");
     expect((await f.handlers.session(f.request("/api/auth/session", `${SESSION}=${session.value}`))).status).toBe(200);
+  });
+  it("commits a fixed script-free completion document without reflecting OAuth or identity values", async () => {
+    const f = fixture(), login = await f.login();
+    const response = await f.handlers.callback(f.request(login.callback, login.cookie));
+    expect(response.status).toBe(200);
+    expect(response.headers.get("location")).toBeNull();
+    expect(response.headers.get("content-type")).toBe("text/html; charset=utf-8");
+    expect(response.headers.get("cache-control")).toContain("no-store");
+    expect(response.headers.get("referrer-policy")).toBe("no-referrer");
+    expect(response.headers.get("x-frame-options")).toBe("DENY");
+    expect(response.headers.get("content-security-policy")).toBe(
+      "default-src 'none'; base-uri 'none'; form-action 'none'; frame-ancestors 'none'");
+    const body = await response.text();
+    expect(body).toContain('<meta http-equiv="refresh" content="0;url=/account">');
+    expect(body).toContain('<a href="/account">');
+    expect(body).not.toMatch(/<script|<form|https:|state=|code=/);
+    for (const privateValue of ["fixture-one-time-code", principal, "synthetic-private-access-token",
+      response.cookies.get(SESSION)!.value, ...new URLSearchParams(login.callback.split("?")[1]).values()]) {
+      expect(body).not.toContain(privateValue);
+    }
+    const session = response.cookies.get(SESSION)!;
+    expect(session).toMatchObject({ secure: true, httpOnly: true, sameSite: "strict", path: "/" });
+    expect((await f.handlers.callback(f.request(login.callback, login.cookie))).status).toBe(401);
   });
   it("does not trust proxy headers without deployment opt-in", async () => {
     const f = fixture(), request = new NextRequest("https://0.0.0.0:3000/api/auth/login", {
@@ -127,7 +150,7 @@ describe("OIDC login, confidential callback and current authority", () => {
     const f = fixture(), login = await f.login();
     for (const c of login.response.cookies.getAll()) { expect(c.secure).toBe(true); expect(c.httpOnly).toBe(true); expect(c.sameSite).toBe("lax"); expect(c.path).toBe("/"); }
     const callback = await f.handlers.callback(f.request(login.callback, login.cookie));
-    expect(callback.status).toBe(303); expect(callback.headers.get("location")).toBe(settings.origin + "/account");
+    expect(callback.status).toBe(200); expect(callback.headers.get("location")).toBeNull();
     const session = callback.cookies.get(SESSION)!;
     expect(session.value).toMatch(/^[A-Za-z0-9_-]{43}$/); expect(session.sameSite).toBe("strict");
     expect(callback.cookies.get(ATTEMPT)?.maxAge).toBe(0); expect(callback.cookies.get(BINDING)?.maxAge).toBe(0);
@@ -181,7 +204,7 @@ describe("OIDC login, confidential callback and current authority", () => {
   it("caps custody at the current introspection expiry", async () => {
     const f = fixture(), login = await f.login(); f.alter({ tokenLifetime: 120 });
     const response = await f.handlers.callback(f.request(login.callback, login.cookie));
-    expect(response.status).toBe(303);
+    expect(response.status).toBe(200);
     const session = await f.store.readSession(response.cookies.get(SESSION)!.value);
     expect(session!.expiresAt).toBeLessThanOrEqual(Date.now() + 120000);
     expect(response.cookies.get(SESSION)!.maxAge).toBeLessThanOrEqual(120);
@@ -192,7 +215,7 @@ describe("OIDC login, confidential callback and current authority", () => {
     const old = await f.store.createSession({ issuer: settings.issuer, subject: "old-provider-subject", accessToken: "old-token",
       csrfToken: "a".repeat(43), createdAt: Date.now(), expiresAt: Date.now() + 60000 });
     const response = await f.handlers.callback(f.request(login.callback, `${login.cookie}; ${SESSION}=${old}`));
-    expect(response.status).toBe(303); expect(await f.store.readSession(old)).toBeNull();
+    expect(response.status).toBe(200); expect(await f.store.readSession(old)).toBeNull();
     expect(response.cookies.get(SESSION)?.value).not.toBe(old);
   });
   it("fails closed when disabled or storage is unavailable", async () => {
