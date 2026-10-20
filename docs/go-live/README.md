@@ -11,6 +11,7 @@ v2.0 is aligned to accepted ADR-BCP-026, ADR-BCP-027, Baobab EA Implementation P
 | [NAB-GOLIVE-MP-001.md](NAB-GOLIVE-MP-001.md) | Accepted v2.0 programme authority |
 | [evidence/finance-f1-source-2026-10-16.md](evidence/finance-f1-source-2026-10-16.md) | Merged independent F1 DRAFT contracts, exact CI/source pointers and outstanding native acceptance |
 | [evidence/progress-audit-2026-10-19.md](evidence/progress-audit-2026-10-19.md) | Fresh merged-source, PR and acceptance reconciliation; INT-02/C4/INT-03 boundaries |
+| [evidence/int03-connected-audit-2026-10-20.md](evidence/int03-connected-audit-2026-10-20.md) | Connected lifecycle progress, failed attempts and remaining acceptance exits |
 | [register.md](register.md) | Live gate/blocker/decision status; update whenever a gate materially changes |
 | [evidence/README.md](evidence/README.md) | Evidence-index rules and immutable acceptance pointers |
 | [capability-demand-census.md](capability-demand-census.md) | Direct/conditional/indirect capability demand by release |

@@ -537,3 +537,20 @@ CMS qualification/current binding and full matrix negatives/runtime evidence.
 Native protected C4, legal/SoD/onboarding, staging, production and R0–R3 remain
 open. There is no authority to bypass caller-owned contexts or enable executive
 operations from `authority:self` identity alone.
+
+
+## 25. Connected INT-03 audit — 20 October 2026
+
+[The connected audit](evidence/int03-connected-audit-2026-10-20.md) records the
+current merged heads, Infrastructure #37's unmerged real-component lifecycle,
+failed connected attempts and remaining acceptance exits. Nabhold #76 is merged;
+its consumer file-trust work is complete. The new lifecycle uses actual private
+IAM/CP/Pulse prerequisites, synthetic identity mapping, BFF and TLS Redis, with
+observed runtime pins and cleanup. It is not accepted merely because source
+tests or an earlier prerequisite stage passed. Candidate `502b9e7363a7dae22940a26c9a168ab3957bda72`
+has 34 passing local tests and resolved trigger findings; final connected CI and
+review are required before merge.
+
+Full INT-03, CMS qualification, protected native C4, real legal/onboarding,
+staging, production and R0–R3 remain open. The frozen accepted INT-02 scope is
+unchanged. No release flag, grant, provider lifecycle or legal fact is promoted.
