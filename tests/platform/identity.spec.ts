@@ -67,7 +67,14 @@ test("real federation login checks CP identity and local logout revokes custody"
   // Preserve the old opaque handle privately to prove server-side revocation,
   // rather than counting deletion of the browser cookie as successful logout.
   const stale = cookie!;
+  const logoutResponse = page.waitForResponse(response => response.request().method() === "POST" &&
+    new URL(response.url()).pathname === "/api/auth/logout");
   await page.getByRole("button", { name: "Sign out of Nabhold", exact: true }).click();
+  const logout = await logoutResponse;
+  // Native form submission must preserve exact Origin; never accept opaque
+  // origins or bypass CSRF to accommodate an incompatible referrer policy.
+  expect(logout.request().headers()["origin"] === s.NABHOLD_OIDC_ORIGIN).toBe(true);
+  expect(logout.status()).toBe(303);
   await page.waitForURL(`${s.NABHOLD_OIDC_ORIGIN}/sign-in`);
   await context.addCookies([stale]);
   const revoked = await context.request.get(`${s.NABHOLD_OIDC_ORIGIN}/api/auth/session`);

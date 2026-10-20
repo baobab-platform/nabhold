@@ -77,3 +77,11 @@ test("identity routes fail closed without activation and account data is never a
   await expect(page.getByRole("button", { name: "Continue with Baobab IAM" })).toBeDisabled();
   await expect(page.locator('input[type="password"]')).toHaveCount(0);
 });
+
+
+test("account form policy preserves same-origin Origin while protocol routes suppress referrers", async ({ request }) => {
+  const account = await request.get("/account", { maxRedirects: 0 });
+  const session = await request.get("/api/auth/session");
+  expect(account.headers()["referrer-policy"]).toBe("same-origin");
+  expect(session.headers()["referrer-policy"]).toBe("no-referrer");
+});
