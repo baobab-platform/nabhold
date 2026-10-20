@@ -50,6 +50,23 @@ describe("content security policy", () => {
     }
   });
 
+  it("allows the configured IAM origin only as a form navigation destination", () => {
+    const policy = buildCsp({ surface: "public", formActionOrigin: "https://iam.example.test" });
+    expect(directive(policy, "form-action")).toEqual(["'self'", "https://iam.example.test"]);
+    for (const name of ["script-src", "connect-src", "frame-ancestors", "base-uri", "img-src"]) {
+      expect(directive(policy, name)).not.toContain("https://iam.example.test");
+    }
+  });
+
+  it.each(["http://iam.test", "//iam.test", "https://*.test", "https://user:pass@iam.test",
+    "https://iam.test/path", "https://iam.test?x=1", "https://iam.test#fragment",
+    "https://iam.test;script-src", "https://iam.test,evil.test", "https://iam.test evil.test",
+    "https://iam.test\n", "https://iam.test/", "https://iam.test:99999"])(
+    "rejects unsafe CSP form origin %j", value => {
+      expect(() => buildCsp({ surface: "public", formActionOrigin: value })).toThrow();
+    },
+  );
+
   it("allows eval and plain HTTP only in development", () => {
     const dev = buildCsp({ surface: "public", development: true });
     const prod = buildCsp({ surface: "public", development: false });

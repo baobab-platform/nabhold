@@ -2635,3 +2635,29 @@ The enduring architecture is:
 The enduring rule is:
 
 > **Login proves identity, not authority. Executive status does not create superuser privilege. Every protected Nabhold operation must be authorised in its actual tenant, legal-entity, Digital Estate and capability context, with business authority remaining in the appropriate domain.**
+
+## Implementation clarification — sign-in browser navigation (20 October 2026)
+
+The confidential code/S256 flow includes top-level browser navigation to the
+configured Baobab IAM issuer. This differs from browser API access: credentialed
+CMS/ERP/CP/domain API calls remain server-side. On the exact `/sign-in` page,
+CSP `form-action` permits self and only the validated configured HTTPS issuer
+origin so the login POST can follow its server-generated redirect. Every other
+page retains self-only forms; script/connect/frame/base restrictions do not gain
+that origin. Query parameters, Host and forwarded headers never select an issuer
+or CSP source. Disabled/malformed authentication retains the self-only policy.
+No wildcard, insecure origin, arbitrary URL or CSP directive delimiter is allowed.
+
+This implements the existing federated identity decision, with no change to its
+Accepted status, authority, CSRF/PKCE/nonce checks, Strict session cookies, CP
+current identity requirement or separate executive grants. See the
+[W3C CSP navigation directive](https://www.w3.org/TR/CSP3/#directive-form-action)
+and [MDN browser redirect note](https://developer.mozilla.org/en-US/docs/Web/HTTP/Reference/Headers/Content-Security-Policy/form-action).
+Source and synthetic browser execution remain separate from protected native
+C4, legal/onboarding, CMS qualification and production acceptance.
+
+Sign-in entry links SHALL load a fresh browser document so that its CSP is
+installed. A Next RSC/client navigation cannot relax the previous document's
+policy. The shared estate link component uses native navigation for sign-in,
+including desktop/mobile header and CMS footer/CTA entry points; unrelated
+routes retain normal Next navigation and CMS link values remain unchanged.

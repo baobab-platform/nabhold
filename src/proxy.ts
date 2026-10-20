@@ -1,6 +1,7 @@
 import { NextResponse, type NextRequest } from "next/server";
 
 import { canonicalRedirectUrl } from "@/lib/security/canonical-host";
+import { readAuthSettings } from "@/lib/auth/oidc/settings";
 import {
   buildCsp,
   cspHeaderName,
@@ -24,10 +25,18 @@ export function proxy(request: NextRequest) {
 
   const surface = surfaceForPath(request.nextUrl.pathname);
   const nonce = surface === "protected" ? generateNonce() : undefined;
+  let formActionOrigin: string | undefined;
+  if (request.nextUrl.pathname === "/sign-in") {
+    try {
+      const auth = readAuthSettings();
+      if (auth) formActionOrigin = new URL(auth.issuer).origin;
+    } catch { /* Invalid/disabled authentication keeps the self-only policy. */ }
+  }
   const policy = buildCsp({
     surface,
     nonce,
     development: process.env.NODE_ENV !== "production",
+    formActionOrigin,
   });
   const headerName = cspHeaderName(process.env.NABHOLD_CSP_MODE);
 

@@ -13,9 +13,10 @@
  *   no foreign script hosts, no objects, no framing, no base/form hijack,
  *   and the browser may connect only to this origin.
  *
- * The browser never calls IAM, CMS, ERP or Pulse directly (all calls are
- * server-side), so `connect-src` stays `'self'`. Adding a browser-visible
- * origin is a deliberate change to this file plus an ADR note.
+ * Domain API calls remain server-side, so `connect-src` stays `'self'`.
+ * Federated login also requires top-level browser navigation to the configured
+ * IAM origin. Only the sign-in route supplies that form-action exception;
+ * see ADR-NAB-0004's CSP implementation clarification.
  */
 export type CspSurface = "public" | "protected";
 
@@ -25,6 +26,8 @@ export interface CspOptions {
   nonce?: string;
   /** Development needs eval for React refresh; never set in production. */
   development?: boolean;
+  /** Server-validated HTTPS IAM origin; sign-in navigation only, never an API/script source. */
+  formActionOrigin?: string;
 }
 
 export function generateNonce(): string {
@@ -51,6 +54,16 @@ export function buildCsp(options: CspOptions): string {
 
   if (development) scriptSrc.push("'unsafe-eval'");
 
+  const formAction = ["'self'"];
+  if (options.formActionOrigin !== undefined) {
+    const value = options.formActionOrigin;
+    // A CSP source is a single token, not an arbitrary URL or directive list.
+    // URL canonicalisation alone does not reject every CSP delimiter in hosts.
+    if (!/^https:\/\/(?:[a-z0-9.-]+|\[[a-f0-9:]+\])(?::[0-9]+)?$/i.test(value) ||
+        new URL(value).origin !== value) throw new Error("Invalid IAM form origin.");
+    formAction.push(value);
+  }
+
   const directives: string[][] = [
     ["default-src", "'self'"],
     ["script-src", ...scriptSrc],
@@ -61,7 +74,7 @@ export function buildCsp(options: CspOptions): string {
     ["connect-src", "'self'"],
     ["object-src", "'none'"],
     ["base-uri", "'self'"],
-    ["form-action", "'self'"],
+    ["form-action", ...formAction],
     ["frame-ancestors", "'none'"],
     ["manifest-src", "'self'"],
   ];

@@ -1,4 +1,4 @@
-import Link from "next/link";
+import { EstateLink as Link } from "@/components/navigation/estate-link";
 import { ArrowUpRight, Network, Trees } from "lucide-react";
 import { getContentGateway } from "@/lib/content";
 
