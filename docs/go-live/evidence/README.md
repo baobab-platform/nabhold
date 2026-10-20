@@ -56,3 +56,5 @@ Recorded and awaiting reviewer sign-off (not accepted):
 
 | INT-03 implementation review | [int03-implementation-review-2026-10-19.md](int03-implementation-review-2026-10-19.md) | Fresh source/scenario/CI reconciliation and consumer file-trust hardening; connected INT-03 and protected acceptance OPEN |
 | Connected INT-03 audit | [int03-connected-audit-2026-10-20.md](int03-connected-audit-2026-10-20.md) | Current merged source, unmerged lifecycle, failed real-component attempts and exact-head acceptance gates; full INT-03 OPEN |
+
+| Connected identity-smoke qualification | [int03-identity-qualified-2026-10-20.md](int03-identity-qualified-2026-10-20.md) | #37/#80/#81 merged; bounded Actions NAB-ID-01–04 PASS; full INT-03/CMS/protected/release acceptance OPEN; independent archive verification not claimed |
