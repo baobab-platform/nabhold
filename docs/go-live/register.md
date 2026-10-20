@@ -633,7 +633,7 @@ and every current IAM/CP validation. Unit coverage checks restrictive headers,
 fixed destination, absence of reflected OAuth/identity values and replay denial;
 the real browser case requires HTML completion before account/session/logout.
 **Evidence class:** source candidate; CI, authorised review and pinned live
-execution remain required. Automated review allowance is currently exhausted,
-so no review or merge gate is waived. Full INT-03, CMS, native protected C4,
+execution remain required. An earlier automated review request hit an exhausted allowance;
+subsequent exact-head review is retried without waiving any merge gate. Full INT-03, CMS, native protected C4,
 real legal/onboarding, protected staging, production and R0–R3 remain OPEN.
 Rollback is described in the integration runbook.
