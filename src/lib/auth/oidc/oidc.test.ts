@@ -199,7 +199,7 @@ describe("OIDC login, confidential callback and current authority", () => {
     const f = fixture();
     const off = authHandlers({ settings: () => null, store: () => f.store });
     expect((await off.login(f.request("/api/auth/login", "", "POST"))).status).toBe(404);
-    const broken = authHandlers({ settings: () => ({ ...settings, trustProxy: proxy }), store: () => null });
+    const broken = authHandlers({ settings: () => settings, store: () => null });
     expect((await broken.login(f.request("/api/auth/login", "", "POST"))).status).toBe(401);
     expect(f.fetcher).not.toHaveBeenCalled();
   });
