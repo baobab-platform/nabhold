@@ -19,7 +19,7 @@ const settings: AuthSettings = { origin: "https://estate.example.test", issuer: 
 const principal = "019a0915-a8c0-7000-8000-000000000001";
 const keys = generateKeyPairSync("rsa", { modulusLength: 2048 });
 const json = (data: unknown, status = 200) => Response.json(data, { status });
-function fixture() {
+function fixture(proxy = false) {
   const records = new Map<string, string>();
   const execute: ConfidentialBackend["execute"] = async ([op, key, value]) => {
     if (op === "SET") { if (records.has(key)) return null; records.set(key, value); return "OK"; }
@@ -63,9 +63,10 @@ function fixture() {
     }
     throw new Error("Unexpected fixture destination");
   });
-  const handlers = authHandlers({ settings: () => settings, store: () => store, fetcher });
+  const handlers = authHandlers({ settings: () => ({ ...settings, trustProxy: proxy }), store: () => store, fetcher });
   function request(path: string, cookie = "", method = "GET", body?: string, origin = settings.origin) {
-    return new NextRequest(settings.origin + path, { method, headers: { cookie, origin, "sec-fetch-site": "same-origin",
+    return new NextRequest((proxy ? "https://0.0.0.0:3000" : settings.origin) + path, { method, headers: { cookie, origin, "sec-fetch-site": "same-origin",
+      ...(proxy ? { host: "estate.example.test", "x-forwarded-host": "estate.example.test", "x-forwarded-proto": "https" } : {}),
       ...(body !== undefined ? { "content-type": "application/x-www-form-urlencoded" } : {}) }, ...(body !== undefined ? { body } : {}) });
   }
   async function login() {
@@ -85,6 +86,43 @@ function fixture() {
 }
 afterEach(() => vi.unstubAllEnvs());
 describe("OIDC login, confidential callback and current authority", () => {
+  it("uses the configured public callback behind an explicitly trusted TLS proxy", async () => {
+    const f = fixture(true), login = await f.login();
+    const callback = await f.handlers.callback(f.request(login.callback, login.cookie));
+    expect(callback.status).toBe(303);
+    expect(callback.headers.get("location")).toBe(settings.origin + "/account");
+    const session = callback.cookies.get(SESSION)!;
+    expect(session.sameSite).toBe("strict");
+    expect((await f.handlers.session(f.request("/api/auth/session", `${SESSION}=${session.value}`))).status).toBe(200);
+  });
+  it("does not trust proxy headers without deployment opt-in", async () => {
+    const f = fixture(), request = new NextRequest("https://0.0.0.0:3000/api/auth/login", {
+      method: "POST", headers: { host: "estate.example.test", "x-forwarded-host": "estate.example.test",
+        "x-forwarded-proto": "https", origin: settings.origin, "sec-fetch-site": "same-origin" },
+    });
+    expect((await f.handlers.login(request)).status).toBe(401);
+    expect(f.fetcher).not.toHaveBeenCalled(); expect(f.records.size).toBe(0);
+  });
+  it("checks trusted proxy headers even when Next already reports the public origin", async () => {
+    const f = fixture(true);
+    const request = new NextRequest(settings.origin + "/api/auth/login", { method: "POST",
+      headers: { host: "estate.example.test", "x-forwarded-host": "attacker.test", "x-forwarded-proto": "https",
+        origin: settings.origin, "sec-fetch-site": "same-origin" } });
+    expect((await f.handlers.login(request)).status).toBe(401);
+    expect(f.fetcher).not.toHaveBeenCalled(); expect(f.records.size).toBe(0);
+  });
+  it.each([
+    ["host", "attacker.test"], ["x-forwarded-host", "attacker.test"],
+    ["x-forwarded-host", "estate.example.test,attacker.test"], ["x-forwarded-host", ""],
+    ["x-forwarded-proto", "http"], ["x-forwarded-proto", "https,http"],
+    ["x-forwarded-proto", ""], ["origin", "https://attacker.test"], ["sec-fetch-site", "cross-site"],
+  ])("rejects ambiguous or untrusted proxy input %s=%s before credentials", async (key, value) => {
+    const f = fixture(true), original = f.request("/api/auth/login", "", "POST");
+    const headers = new Headers(original.headers); headers.set(key, value);
+    const request = new NextRequest(original.url, { method: "POST", headers });
+    expect((await f.handlers.login(request)).status).toBe(401);
+    expect(f.fetcher).not.toHaveBeenCalled(); expect(f.records.size).toBe(0);
+  });
   it("completes signed OIDC + S256 + current IAM and CP, exposing only an opaque session", async () => {
     const f = fixture(), login = await f.login();
     for (const c of login.response.cookies.getAll()) { expect(c.secure).toBe(true); expect(c.httpOnly).toBe(true); expect(c.sameSite).toBe("lax"); expect(c.path).toBe("/"); }
@@ -174,7 +212,9 @@ describe("closed configuration and bounded transport", () => {
     const env = { NABHOLD_OIDC_ENABLED: "true", NABHOLD_OIDC_ENVIRONMENT: "staging", NABHOLD_OIDC_ORIGIN: settings.origin,
       NABHOLD_OIDC_ISSUER: settings.issuer, NABHOLD_OIDC_CP_ORIGIN: settings.cpOrigin, NABHOLD_OIDC_CLIENT_ID: settings.clientId,
       NABHOLD_OIDC_CLIENT_SECRET: settings.clientSecret, NABHOLD_OIDC_INTROSPECTION_ENDPOINT: settings.introspectionEndpoint };
-    expect(readAuthSettings(env)).toEqual(settings);
+    expect(readAuthSettings(env)).toEqual({ ...settings, trustProxy: false });
+    expect(readAuthSettings({ ...env, NABHOLD_OIDC_TRUST_PROXY: "true" })?.trustProxy).toBe(true);
+    expect(() => readAuthSettings({ ...env, NABHOLD_OIDC_TRUST_PROXY: "yes" })).toThrow();
     for (const change of [{ NABHOLD_OIDC_ENVIRONMENT: "production" }, { NABHOLD_OIDC_ORIGIN: "http://localhost" },
       { NABHOLD_OIDC_CP_ORIGIN: "https://cp.test/path" }, { NABHOLD_OIDC_INTROSPECTION_ENDPOINT: "https://attacker.test/introspect" },
       { NODE_TLS_REJECT_UNAUTHORIZED: "0" }]) expect(() => readAuthSettings({ ...env, ...change })).toThrow();

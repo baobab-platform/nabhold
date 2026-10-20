@@ -123,3 +123,18 @@ restore a preview identity, stale authority, old recovery epoch or plaintext sto
 Next source work is the approved CP-audience human-client/profile handoff and
 estate/context authorisation integration; protected real-client acceptance remains
 external to this source increment.
+
+## Trusted TLS proxy ingress
+
+Next 16.4.2 can construct `nextUrl` using its private bind host and port even
+when the browser used the configured HTTPS estate origin. The opt-in
+`NABHOLD_OIDC_TRUST_PROXY=true` permits that transport difference only when
+`Host` and `X-Forwarded-Host` exactly equal the configured origin's authority
+and `X-Forwarded-Proto` is exactly `https`. The ingress must overwrite all three
+headers and block direct application access. Comma-separated/absent/wrong
+forwarded values deny; no incoming header supplies a credential destination.
+The callback keeps its path/query but uses only the configured public origin.
+POST Origin and Fetch Metadata checks remain mandatory. Default false retains
+the existing exact request-URL check. Never enable this behind an untrusted or
+publicly bypassable proxy. This fixes source interoperability, not protected
+client activation, executive authority or INT-03 acceptance.

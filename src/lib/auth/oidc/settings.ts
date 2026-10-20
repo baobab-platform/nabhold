@@ -11,6 +11,7 @@ export function secureUrl(value: string): URL {
   return u;
 }
 export interface AuthSettings {
+  trustProxy?: boolean;
   origin: string; issuer: string; clientId: string; clientSecret: string;
   redirectUri: string; introspectionEndpoint: string; cpOrigin: string; algorithm: "RS256" | "ES256";
 }
@@ -30,7 +31,8 @@ export function readAuthSettings(env: Record<string, string | undefined> = proce
     const clientId = z.string().min(1).max(256).regex(/^\S+$/).parse(env.NABHOLD_OIDC_CLIENT_ID);
     const clientSecret = z.string().min(16).max(4096).parse(env.NABHOLD_OIDC_CLIENT_SECRET);
     const algorithm = z.enum(["RS256", "ES256"]).parse(env.NABHOLD_OIDC_ID_TOKEN_ALGORITHM ?? "RS256");
+    const trustProxy = z.enum(["true", "false"]).parse(env.NABHOLD_OIDC_TRUST_PROXY ?? "false") === "true";
     return { origin: origin.origin, issuer, cpOrigin: cp.origin, clientId, clientSecret,
-      redirectUri: new URL("/api/auth/callback", origin).href, introspectionEndpoint: introspection.href, algorithm };
+      redirectUri: new URL("/api/auth/callback", origin).href, introspectionEndpoint: introspection.href, algorithm, trustProxy };
   } catch { throw new AuthenticationDenied(); }
 }

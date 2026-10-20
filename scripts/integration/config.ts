@@ -29,6 +29,7 @@ const schema = z.object({
   NABHOLD_INTEGRATION_SHARED_SHA: pin,
   NEXT_PUBLIC_SITE_URL: origin,
   NABHOLD_OIDC_ENABLED: z.literal("true"),
+  NABHOLD_OIDC_TRUST_PROXY: z.enum(["true", "false"]).optional(),
   NABHOLD_OIDC_ENVIRONMENT: z.literal("integration"),
   NABHOLD_OIDC_ORIGIN: origin,
   NABHOLD_OIDC_ISSUER: https,
