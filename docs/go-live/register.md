@@ -580,3 +580,29 @@ is now the execution baseline; it retains v2.2's normative L4 matrix and the
 INT-03 identity/CMS critical path. Full INT-03, native protected C4, CMS
 qualification, real legal/onboarding, protected staging, production and R0–R3
 remain OPEN. Rollback: disable the proxy opt-in and revert this source increment.
+
+
+## 27. INT-03 sign-in CSP navigation correction — 20 October 2026
+
+Nabhold #78 merged at `76e956f02bab73449b1bd3da5c31785131bce7b4` after all
+29 checks and zero-finding exact-head review. Infrastructure candidate
+`547250757924657bd0233bc6f77ab661094ae523`,
+[run 39431429623](https://github.com/baobab-platform/infrastructure/actions/runs/39431429623),
+now performs issuer discovery and returns 303 for valid login. The browser does
+not reach IAM; NAB-ID-04 fails. The sign-in policy's self-only form-action blocks
+the intended redirected form navigation in Chromium. The next source increment
+adds only the validated configured HTTPS issuer origin to form-action on the
+exact sign-in route, with malformed/disabled/auth-source injection negatives.
+Script/connect/frame/base restrictions, other routes and all OIDC/current CP
+authority/session controls retain their existing boundaries.
+
+Archive digest `ae653ccbd421c4285502a67d7d92e3a5b014361a8695e9de0b53266850d2ec1b`,
+own receipt digest `0b2c62eba0f75324f70184c3119efcf228817134ff2b068b25a4f11e4f9f1f37`,
+prerequisite receipt and provider-proof digests were independently checked. The
+selected prerequisite passes all 90 checks/five groups; NAB-ID-01/02/03 pass;
+teardown true. Overall identity smoke FAIL; full INT-03 and protected/release
+acceptance stay OPEN. New source CI/review and a new pinned connected run are
+required. All 103 focused OIDC/config/CSP/proxy tests pass locally; the real
+browser scenario now also checks the delivered form-action policy before login.
+No provider, grant, legal fact, migration or release is activated.
+Rollback: revert the scoped CSP exception (federation will be blocked again).

@@ -18,7 +18,12 @@ test("cross-origin login initiation is denied", { annotation: { type: "nabhold-s
 });
 
 test("real federation login checks CP identity and local logout revokes custody", { annotation: { type: "nabhold-scenario", description: "NAB-ID-04" } }, async ({ page, context }) => {
-  await page.goto("/sign-in");
+  const signIn = await page.goto("/sign-in");
+  // Chromium also applies form-action to the confidential POST's redirect.
+  // The browser may navigate only to self and the server-configured IAM origin.
+  const formAction = (signIn?.headers()["content-security-policy"] ?? "").split(";")
+    .map(value => value.trim().split(/\s+/)).find(parts => parts[0] === "form-action");
+  expect(formAction?.slice(1).join(" ") === `'self' ${new URL(s.NABHOLD_OIDC_ISSUER).origin}`).toBe(true);
   await page.getByRole("button", { name: "Continue with Baobab IAM" }).click();
   // This adapter deliberately targets the real Keycloak federation profile.
   // Kratos/native login and step-up/MFA need separate provider-owned fixtures;

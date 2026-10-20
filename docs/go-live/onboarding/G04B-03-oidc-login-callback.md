@@ -138,3 +138,9 @@ POST Origin and Fetch Metadata checks remain mandatory. Default false retains
 the existing exact request-URL check. Never enable this behind an untrusted or
 publicly bypassable proxy. This fixes source interoperability, not protected
 client activation, executive authority or INT-03 acceptance.
+
+The exact sign-in page's enforced `form-action` includes self plus the validated
+configured HTTPS IAM origin. Chromium can enforce this policy on the POST
+redirect, so self-only would block the intended federation navigation. This
+exception adds no script/API/frame access and is absent from other routes.
+ADR-NAB-0004's 20 October implementation clarification records the boundary.
