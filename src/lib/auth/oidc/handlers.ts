@@ -31,8 +31,23 @@ function handle(request: NextRequest, name: string): string | undefined {
   return value;
 }
 function origin(request: NextRequest, settings: AuthSettings, mutation = false) {
-  if (request.nextUrl.origin !== settings.origin || mutation && (request.headers.get("origin") !== settings.origin ||
+  const url = new URL(request.nextUrl.href);
+  const canonical = new URL(settings.origin);
+  if (settings.trustProxy) {
+    // Next's Node adapter may construct nextUrl from its private listen address.
+    // Only an explicitly trusted, access-controlled TLS proxy may bridge that
+    // difference. It must overwrite these headers, never append caller values.
+    // No header selects the origin: the deployment's exact configured origin wins.
+    if (request.headers.get("host") !== canonical.host ||
+        request.headers.get("x-forwarded-host") !== canonical.host ||
+        request.headers.get("x-forwarded-proto") !== "https") throw new AuthenticationDenied();
+    url.protocol = canonical.protocol;
+    url.hostname = canonical.hostname;
+    url.port = canonical.port;
+  } else if (url.origin !== canonical.origin) throw new AuthenticationDenied();
+  if (mutation && (request.headers.get("origin") !== settings.origin ||
       ![null, "same-origin"].includes(request.headers.get("sec-fetch-site")))) throw new AuthenticationDenied();
+  return url;
 }
 function denied(status = 401) { return NextResponse.json({ code: "AUTHENTICATION_UNAVAILABLE_OR_DENIED" }, { status, headers }); }
 /** Dependencies are explicit only for tests; production routes always use the
@@ -44,10 +59,10 @@ export function authHandlers(deps: AuthDependencies = production) {
   function context(request: NextRequest, mutation = false) {
     const settings = deps.settings();
     if (!settings) return null;
-    origin(request, settings, mutation);
+    const url = origin(request, settings, mutation);
     const store = deps.store();
     if (!store) throw new AuthenticationDenied();
-    return { settings, store };
+    return { settings, store, url };
   }
   return {
     /** POST plus exact Origin prevents unsolicited third-party login initiation.
@@ -75,7 +90,7 @@ export function authHandlers(deps: AuthDependencies = production) {
         // GETDEL occurs before state/code/error checks or any network request.
         const transaction = await ctx.store.consumeLogin(attempt, browser);
         if (!transaction) throw new AuthenticationDenied();
-        const session = await exchange(ctx.settings, transaction, request.nextUrl, deps.fetcher);
+        const session = await exchange(ctx.settings, transaction, ctx.url, deps.fetcher);
         const current = await requireCurrentIdentity(session, ctx.settings, deps.fetcher);
         // Trusted introspection can shorten the token endpoint's advertised
         // lifetime. Custody and cookie expiry must respect that current bound.

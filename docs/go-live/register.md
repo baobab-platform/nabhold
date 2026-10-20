@@ -554,3 +554,29 @@ review are required before merge.
 Full INT-03, CMS qualification, protected native C4, real legal/onboarding,
 staging, production and R0–R3 remain open. The frozen accepted INT-02 scope is
 unchanged. No release flag, grant, provider lifecycle or legal fact is promoted.
+
+
+## 26. INT-03 trusted proxy origin correction — 20 October 2026
+
+Infrastructure #37 head `4bf7b6f0325e4a811fde7cf302420d618958c391`,
+[run 39403918329](https://github.com/baobab-platform/infrastructure/actions/runs/39403918329),
+passes the selected real IAM/CP prerequisites and NAB-ID-01/02/03; valid browser
+login receives 401 before IAM discovery and NAB-ID-04 fails. Teardown is true.
+The artifact archive digest (`dbd6a46099a0a5b7e35c4d3ba77467911cb71a77356cc2a139188f62628de2d8`)
+and own receipt sidecar were independently checked. No connected PASS is claimed.
+
+Next 16.4.2's Node adapter builds its request URL from the private bind host/port.
+The source correction adds an explicit default-off trusted TLS proxy setting,
+exact Host/forwarded-host/HTTPS checks, and canonical configured callback origin
+normalisation. POST Origin/Fetch Metadata, OIDC validation and Strict session
+cookies remain enforced. The access-controlled ingress must overwrite these
+headers and block direct application access. Seventy-eight focused OIDC/config
+tests pass, including spoofed/ambiguous headers, default-off denial and the full
+private-address callback. Final source CI/review and a new pinned connected run
+remain required; this entry does not promote source to integration acceptance.
+
+Shared's Accepted EA v2.3 (`ba5b4523ffc82cbf1b1d804b4d88ab69be04843a`)
+is now the execution baseline; it retains v2.2's normative L4 matrix and the
+INT-03 identity/CMS critical path. Full INT-03, native protected C4, CMS
+qualification, real legal/onboarding, protected staging, production and R0–R3
+remain OPEN. Rollback: disable the proxy opt-in and revert this source increment.
