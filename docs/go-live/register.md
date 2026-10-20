@@ -608,3 +608,32 @@ a document load, with desktop/mobile UI regressions. The real browser scenario
 enters through the header and checks the document form policy before login.
 No provider, grant, legal fact, migration or release is activated.
 Rollback: revert the scoped CSP exception (federation will be blocked again).
+
+
+## 28. INT-03 cross-site callback completion — 20 October 2026
+
+Nabhold #79 merged at `5f3fb6e5703f3ef64656af7231a1e4f5c2461183` after all
+29 checks and zero-finding exact-head review. Infrastructure #37 now includes a
+verified disposable-client self-audience for Keycloak introspection; the dormant
+product client remains unchanged. Product IAM audience convergence retains its
+own outstanding qualification.
+
+At Infrastructure head `8afe5a11c96ecfb1d8a18d1d8a5adba5b1157fbd`,
+[run 39475900936](https://github.com/baobab-platform/infrastructure/actions/runs/39475900936)
+passes the real prerequisite profile and reaches IAM introspection 200,
+CP self-read 200 and callback 303. Account then returns 307 to sign-in, with
+no subsequent introspection. The cross-site redirect chain withholds the
+Strict session cookie. Overall identity smoke remains FAIL; cleanup completes.
+Forty-one Infrastructure source/security tests pass. Finite HTTP diagnostics
+contain only fixed route labels, methods and status codes.
+
+The next source correction commits a fixed no-store, script-free same-origin
+completion document before navigating to account, preserving Strict cookies
+and every current IAM/CP validation. Unit coverage checks restrictive headers,
+fixed destination, absence of reflected OAuth/identity values and replay denial;
+the real browser case requires HTML completion before account/session/logout.
+**Evidence class:** source candidate; CI, authorised review and pinned live
+execution remain required. An earlier automated review request hit an exhausted allowance;
+subsequent exact-head review is retried without waiving any merge gate. Full INT-03, CMS, native protected C4,
+real legal/onboarding, protected staging, production and R0–R3 remain OPEN.
+Rollback is described in the integration runbook.

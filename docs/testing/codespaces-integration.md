@@ -212,3 +212,25 @@ Implementation references: [Playwright web-server lifecycle](https://playwright.
 and [trace contents](https://playwright.dev/docs/trace-viewer-intro). The separate
 configuration intentionally leaves server lifecycle with Infrastructure and
 avoids credential-bearing trace artifacts.
+
+
+### Cross-site callback completion and Strict custody
+
+The successful callback commits a no-store, script-free HTML document before a
+fixed declarative navigation to `/account`. A direct HTTP redirect remains part
+of the cross-site IAM navigation; Chromium withholds the Strict session cookie
+on that account request. The document starts a new same-site navigation while
+preserving Secure, HttpOnly, host-only, SameSite=Strict custody. Its only
+destination is the literal `/account`, with a visible continuation link.
+No OAuth parameter, identity, credential or caller-supplied return URL is rendered.
+A restrictive CSP forbids scripts, external resources, forms and framing;
+Referrer-Policy prevents the callback query becoming a navigation referrer.
+
+Infrastructure run [39475900936](https://github.com/baobab-platform/infrastructure/actions/runs/39475900936)
+observed successful IAM introspection, CP self-read and callback 303, followed
+by account 307 back to sign-in without another introspection request. The
+completion-document correction requires new source CI/review and actual
+cross-site browser qualification; this failed run is not acceptance.
+The connected browser case now requires callback HTML 200 before the current
+account identity/session, unchanged Strict cookie and local revocation checks.
+Rollback: revert this correction; the prior cross-site login failure returns.

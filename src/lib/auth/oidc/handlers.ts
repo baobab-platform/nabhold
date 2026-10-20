@@ -100,7 +100,22 @@ export function authHandlers(deps: AuthDependencies = production) {
         const old = handle(request, SESSION);
         if (old) await ctx.store.revokeSession(old);
         const next = await ctx.store.createSession(session);
-        const response = NextResponse.redirect(new URL("/account", ctx.settings.origin), { status: 303, headers });
+        // A 3xx continues the cross-site IAM navigation, so Chromium withholds
+        // the Strict session cookie on /account. Commit a same-origin document
+        // first; its fixed declarative navigation starts a new same-site request.
+        // No script, external resource, OAuth value or caller destination enters
+        // this document. The anchor also works if automatic refresh is disabled.
+        const response = new NextResponse(
+          '<!doctype html><html lang="en"><head><meta charset="utf-8">' +
+          '<meta name="referrer" content="no-referrer">' +
+          '<meta http-equiv="refresh" content="0;url=/account">' +
+          '<title>Completing sign-in</title></head><body>' +
+          '<p>Completing sign-in. <a href="/account">Continue to your account</a>.</p>' +
+          '</body></html>',
+          { status: 200, headers: { ...headers, "Content-Type": "text/html; charset=utf-8",
+            "Content-Security-Policy": "default-src 'none'; base-uri 'none'; form-action 'none'; frame-ancestors 'none'",
+            "X-Frame-Options": "DENY" } },
+        );
         cookie(response, SESSION, next, Math.floor((session.expiresAt - Date.now()) / 1000));
         clearAttempt(response); return response;
       } catch { const response = denied(); clearAttempt(response); return response; }
