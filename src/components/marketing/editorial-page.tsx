@@ -1,4 +1,4 @@
-import Link from "next/link";
+import { EstateLink as Link } from "@/components/navigation/estate-link";
 import { PublicBreadcrumbs, type PublicBreadcrumbItem } from "@/components/marketing/public-breadcrumbs";
 import { ArrowUpRight, type LucideIcon } from "lucide-react";
 

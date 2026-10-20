@@ -1,4 +1,4 @@
-import Link from "next/link";
+import { EstateLink as Link } from "@/components/navigation/estate-link";
 import Image from "next/image";
 import {
   ArrowUpRight,

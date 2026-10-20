@@ -1,7 +1,7 @@
 "use client"
 
 import * as React from "react"
-import Link from "next/link"
+import { EstateLink as Link } from "@/components/navigation/estate-link"
 import { MenuIcon } from "lucide-react"
 import {
   Sheet,

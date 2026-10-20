@@ -2655,3 +2655,9 @@ current identity requirement or separate executive grants. See the
 and [MDN browser redirect note](https://developer.mozilla.org/en-US/docs/Web/HTTP/Reference/Headers/Content-Security-Policy/form-action).
 Source and synthetic browser execution remain separate from protected native
 C4, legal/onboarding, CMS qualification and production acceptance.
+
+Sign-in entry links SHALL load a fresh browser document so that its CSP is
+installed. A Next RSC/client navigation cannot relax the previous document's
+policy. The shared estate link component uses native navigation for sign-in,
+including desktop/mobile header and CMS footer/CTA entry points; unrelated
+routes retain normal Next navigation and CMS link values remain unchanged.

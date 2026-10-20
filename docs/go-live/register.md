@@ -602,7 +602,9 @@ prerequisite receipt and provider-proof digests were independently checked. The
 selected prerequisite passes all 90 checks/five groups; NAB-ID-01/02/03 pass;
 teardown true. Overall identity smoke FAIL; full INT-03 and protected/release
 acceptance stay OPEN. New source CI/review and a new pinned connected run are
-required. All 103 focused OIDC/config/CSP/proxy tests pass locally; the real
-browser scenario now also checks the delivered form-action policy before login.
+required. All 115 focused OIDC/config/CSP/proxy/navigation tests pass locally. Review
+identified Next client-transition CSP retention; sign-in entry links now force
+a document load, with desktop/mobile UI regressions. The real browser scenario
+enters through the header and checks the document form policy before login.
 No provider, grant, legal fact, migration or release is activated.
 Rollback: revert the scoped CSP exception (federation will be blocked again).

@@ -64,3 +64,24 @@ for (const route of ["/", "/markets", "/markets/map"]) {
     await expect(page.locator('a[href="#main"]')).toHaveCount(1);
   });
 }
+
+// A sign-in-only CSP exception must be installed by a new document, not RSC.
+// These source/UI tests exercise navigation even while IAM is disabled; the
+// separate real-component smoke owns the credentialed federation assertions.
+for (const width of [1280, 390]) {
+  test(`executive sign-in loads a fresh document at width ${width}`, async ({ page }) => {
+    await page.setViewportSize({ width, height: 844 });
+    await page.goto("/contact");
+    const documentResponse = page.waitForResponse(response => response.request().isNavigationRequest() &&
+      new URL(response.url()).pathname === "/sign-in");
+    if (width >= 1024) {
+      await page.getByRole("banner").getByRole("link", { name: "Executive login", exact: true }).click();
+    } else {
+      await page.getByRole("button", { name: "Open menu" }).click();
+      await page.getByRole("navigation", { name: "Mobile primary" }).getByRole("link", { name: "Executive portal", exact: true }).click();
+    }
+    expect((await documentResponse).status()).toBe(200);
+    await expect(page).toHaveURL(/\/sign-in$/);
+    await expect(page.getByRole("heading", { level: 1, name: "Executive portal", exact: true })).toBeVisible();
+  });
+}

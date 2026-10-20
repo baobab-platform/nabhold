@@ -1,4 +1,4 @@
-import Link from "next/link";
+import { EstateLink as Link } from "@/components/navigation/estate-link";
 import { ArrowUpRight, LockKeyhole, ChevronDown, Building2, Landmark, Globe2, ShieldCheck, Network, BookOpen, Trees, Compass, MapPinned } from "lucide-react";
 import { MobileNav } from "@/components/marketing/mobile-nav";
 
