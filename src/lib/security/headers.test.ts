@@ -21,6 +21,17 @@ describe("security headers", () => {
     expect(headers["Permissions-Policy"]).toContain("camera=()");
   });
 
+  it("keeps protocol URLs private and preserves the account form's same-origin Origin", () => {
+    const account = headersFor("/account/:path*");
+    const protocol = headersFor("/api/auth/:path*");
+    expect(account["Referrer-Policy"]).toBe("same-origin");
+    expect(protocol["Referrer-Policy"]).toBe("no-referrer");
+    for (const headers of [account, protocol]) {
+      expect(headers["Cache-Control"]).toBe("no-store");
+      expect(headers["X-Robots-Tag"]).toBe("noindex, nofollow");
+    }
+  });
+
   it("keeps the protected workspace out of indexes and shared caches", () => {
     const headers = headersFor("/dashboard/:path*");
 

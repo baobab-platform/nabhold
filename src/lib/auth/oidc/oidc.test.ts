@@ -218,6 +218,21 @@ describe("OIDC login, confidential callback and current authority", () => {
     expect(response.status).toBe(200); expect(await f.store.readSession(old)).toBeNull();
     expect(response.cookies.get(SESSION)?.value).not.toBe(old);
   });
+  it.each([undefined, "", "null", "https://untrusted.example.test"])(
+    "denies logout with an absent, opaque or foreign Origin even with valid CSRF: %s", async origin => {
+      const f = fixture(), login = await f.login();
+      const callback = await f.handlers.callback(f.request(login.callback, login.cookie));
+      const handle = callback.cookies.get(SESSION)!.value;
+      const session = (await f.store.readSession(handle))!;
+      const body = new URLSearchParams({ csrfToken: session.csrfToken }).toString();
+      const original = f.request("/api/auth/logout", `${SESSION}=${handle}`, "POST", body);
+      const headers = new Headers(original.headers);
+      if (origin === undefined) headers.delete("origin"); else headers.set("origin", origin);
+      const response = await f.handlers.logout(new NextRequest(original.url, { method: "POST", headers, body }));
+      expect(response.status).toBe(401);
+      expect(await f.store.readSession(handle)).not.toBeNull();
+    },
+  );
   it("fails closed when disabled or storage is unavailable", async () => {
     const f = fixture();
     const off = authHandlers({ settings: () => null, store: () => f.store });

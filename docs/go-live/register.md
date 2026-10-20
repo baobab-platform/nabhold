@@ -637,3 +637,31 @@ execution remain required. An earlier automated review request hit an exhausted 
 subsequent exact-head review is retried without waiving any merge gate. Full INT-03, CMS, native protected C4,
 real legal/onboarding, protected staging, production and R0–R3 remain OPEN.
 Rollback is described in the integration runbook.
+
+
+## 29. INT-03 native logout policy correction — 20 October 2026
+
+Nabhold #80 merged at `7c950c7a92762a7478b87e68549c9114c76e20c3`, preserving
+qualified source `d655154872569c8573c19b5b30d047eef41afe3f` in main.
+All 29 checks clear, 354 unit/five TLS Redis/22 public browser tests pass,
+and exact-head automated review has zero findings.
+
+Infrastructure #37 head `f31168f5bdf5f985005524fb10d52293555c1f99`,
+[run 39478841643](https://github.com/baobab-platform/infrastructure/actions/runs/39478841643),
+now observes callback HTML 200, account 200, session 200 and repeated current
+IAM/CP checks. The Strict-cookie completion correction works. Both the expected
+invalid-CSRF request and the native logout form return 401; overall smoke FAIL.
+Teardown completes; no connected acceptance is claimed.
+
+The account's no-referrer policy produces an opaque Origin on native POSTs
+under Fetch section 3.2. The source correction uses same-origin only for account
+documents, preserving suppression of external account referrers and retaining
+no-referrer on protocol routes. Origin/Fetch Metadata, CSRF, Strict cookies,
+current authority and custody checks are unchanged. New negatives prove valid
+CSRF cannot waive missing/null/foreign Origin; header/browser checks cover
+delivery, and the real form must present exact Origin and return 303.
+
+**Evidence class:** source candidate pending CI, final-head review and fresh
+pinned real-component execution. This is not full INT-03/NAB-01–04, CMS,
+protected C4, legal/onboarding, staging, production or R0–R3 acceptance.
+Rollback is in the integration runbook.

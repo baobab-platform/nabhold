@@ -34,10 +34,15 @@ export function securityHeaderRules(): HeaderRule[] {
   return [
     { source: "/(.*)", headers: BASELINE_HEADERS },
     { source: "/dashboard/:path*", headers: PROTECTED_HEADERS },
-    // Account responses contain a canonical identity and logout CSRF token.
-    // Auth redirects/errors can contain one-time protocol material in their URL.
-    ...["/account/:path*", "/api/auth/:path*"].map(source => ({ source, headers: [
+    // Keep callback/protocol URLs out of every referrer.
+    { source: "/api/auth/:path*", headers: [
       ...PROTECTED_HEADERS, { key: "Referrer-Policy", value: "no-referrer" },
-    ] })),
+    ] },
+    // Native POST forms under no-referrer send Origin: null (Fetch §3.2).
+    // Same-origin preserves exact Origin verification for logout while still
+    // withholding account referrers from every external destination.
+    { source: "/account/:path*", headers: [
+      ...PROTECTED_HEADERS, { key: "Referrer-Policy", value: "same-origin" },
+    ] },
   ];
 }

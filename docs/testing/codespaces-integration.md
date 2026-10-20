@@ -234,3 +234,23 @@ cross-site browser qualification; this failed run is not acceptance.
 The connected browser case now requires callback HTML 200 before the current
 account identity/session, unchanged Strict cookie and local revocation checks.
 Rollback: revert this correction; the prior cross-site login failure returns.
+
+
+### Native logout Origin and account referrer policy
+
+Account documents use `Referrer-Policy: same-origin`: external destinations
+receive no account referrer, while a native same-origin POST preserves its
+Origin for the existing exact-origin CSRF check. Protocol/callback responses
+retain `no-referrer`, so OAuth query parameters never become referrers.
+The [Fetch Origin algorithm](https://fetch.spec.whatwg.org/#append-a-request-origin-header)
+sets the Origin to null on non-CORS POSTs under `no-referrer`; applying that
+policy to the account form prevents valid logout.
+
+Infrastructure run [39478841643](https://github.com/baobab-platform/infrastructure/actions/runs/39478841643)
+observes callback/account/session 200 and fresh IAM/CP identity checks, then
+both invalid-CSRF and native form logout 401. The account policy correction
+requires new source checks/review and pinned connected qualification.
+The browser now requires exact Origin and 303 on its actual form submission,
+then replays the privately retained stale opaque cookie to prove revocation.
+Null/absent/foreign Origin, bad CSRF and cross-origin requests remain denied.
+Rollback: revert the account policy; native logout will again be denied.
