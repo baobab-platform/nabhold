@@ -6,6 +6,7 @@ import {
   type WorkloadTokenProvider,
 } from "@/lib/control-plane/capability-client";
 import { pageDtoSchema, type PageDto } from "@/integrations/payload/dto/page.dto";
+import { limitedBody } from "@/lib/auth/oidc/transport";
 
 import type { BaobabContentConfig } from "./config";
 
@@ -68,6 +69,8 @@ export interface EntryResolverOptions {
   currentContextId?: () => Promise<string>;
   /** Qualification requires exact scope, not provider fallback/inheritance. */
   requireExactScope?: boolean;
+  /** Absolute, immutable end of the disposable evidence run. */
+  proofDeadline?: number;
 }
 
 export class ContentEntryResolver {
@@ -79,6 +82,7 @@ export class ContentEntryResolver {
   private cached: CachedInvocation | null = null;
   private readonly currentContextId?: () => Promise<string>;
   private readonly requireExactScope: boolean;
+  private readonly proofDeadline?: number;
 
   constructor(options: EntryResolverOptions) {
     this.config = options.config;
@@ -88,6 +92,7 @@ export class ContentEntryResolver {
     this.now = options.now ?? (() => new Date());
     this.currentContextId = options.currentContextId;
     this.requireExactScope = options.requireExactScope ?? false;
+    this.proofDeadline = options.proofDeadline;
   }
 
   async resolveEntry(contentKey: string): Promise<EntryOutcome> {
@@ -109,6 +114,9 @@ export class ContentEntryResolver {
     }
 
     const correlationId = randomUUID();
+    const remaining = this.proofDeadline === undefined ? this.config.timeoutMs : this.proofDeadline - this.now().getTime();
+    if (remaining <= 0) return { status: "unavailable", reason: "PROOF_WINDOW_CLOSED" };
+    const signal = AbortSignal.timeout(Math.max(1, Math.floor(Math.min(this.config.timeoutMs, remaining))));
     let response: Response;
     try {
       response = await this.fetchImpl(target, {
@@ -131,7 +139,7 @@ export class ContentEntryResolver {
         }),
         cache: "no-store",
         redirect: "error",
-        signal: AbortSignal.timeout(this.config.timeoutMs),
+        signal,
       });
     } catch {
       return { status: "unavailable", reason: "PROVIDER_UNREACHABLE" };
@@ -143,12 +151,17 @@ export class ContentEntryResolver {
 
     let parsed;
     try {
-      parsed = responseSchema.safeParse(await response.json());
+      parsed = responseSchema.safeParse(JSON.parse(Buffer.from(await limitedBody(response.body, signal, 256 * 1024)).toString("utf8")));
     } catch {
       return { status: "unavailable", reason: "PROVIDER_RESPONSE_NOT_JSON" };
     }
     if (!parsed.success) {
       return { status: "unavailable", reason: "PROVIDER_RESPONSE_INVALID" };
+    }
+    // Headers arriving within the window do not make a delayed body current
+    // evidence. Keep the same deadline through body completion and validation.
+    if (this.proofDeadline !== undefined && this.now().getTime() >= this.proofDeadline) {
+      return { status: "unavailable", reason: "PROOF_WINDOW_CLOSED" };
     }
 
     const { record, matched_scope } = parsed.data;

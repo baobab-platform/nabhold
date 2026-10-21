@@ -66,6 +66,8 @@ The opt-in profile is only `baobab-int03-cms-consumer` in `development`:
 - Require actual complete published singleton records in proof mode. Missing,
   denied, withdrawn, malformed or unavailable content raises a bounded error;
   no estate defaults or direct-Payload portfolio records can become proof.
+  The same absolute deadline bounds the provider request and decoded response
+  body through completion; late responses cannot become successful evidence.
 
 ## Deployment inputs and evidence boundary
 
@@ -95,7 +97,7 @@ Protocol tests exercise real maintained OAuth code with synthetic HTTPS peers,
 current introspection, audience/subject/lifecycle/expiry denials, wrong
 Organisation/tenant/country, renewal and dependency outage/restoration. They do
 not run IAM, CP, Payload, PostgreSQL or TLS Redis together. Local focused
-TypeScript validation and 85 workload/content tests pass using previously
+TypeScript validation and 87 workload/content tests pass using previously
 installed dependencies; mandatory full clean-install CI remains the merge gate.
 
 ## Next acceptance dependencies

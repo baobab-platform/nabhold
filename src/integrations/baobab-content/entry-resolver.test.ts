@@ -1,4 +1,5 @@
 import { afterEach, describe, expect, it, vi } from "vitest";
+vi.mock("server-only", () => ({}));
 
 import { CapabilityClient } from "@/lib/control-plane/capability-client";
 
@@ -92,6 +93,30 @@ function build(opts: {
 afterEach(() => vi.restoreAllMocks());
 
 describe("ContentEntryResolver", () => {
+  it("rejects a CMS response completed after the fixed proof deadline", async () => {
+    const deadline = now().getTime() + 60_000;
+    let time = now().getTime();
+    const resolver = new ContentEntryResolver({ config, now: () => new Date(time), proofDeadline: deadline,
+      capabilities: { resolve: async () => resolution() } as unknown as CapabilityClient,
+      contentTokens: { getToken: async () => "content-token" },
+      fetch: async (_input, init) => {
+        expect(init?.signal).toBeDefined();
+        time = deadline;
+        return Response.json(record());
+      },
+    });
+    expect(await resolver.resolveEntry("navigation")).toEqual({ status: "unavailable", reason: "PROOF_WINDOW_CLOSED" });
+  });
+
+  it("does not contact CMS when the proof window has already closed", async () => {
+    const fetcher = vi.fn();
+    const resolver = new ContentEntryResolver({ config, now, proofDeadline: now().getTime(),
+      capabilities: { resolve: async () => resolution() } as unknown as CapabilityClient,
+      contentTokens: { getToken: async () => "content-token" }, fetch: fetcher,
+    });
+    expect((await resolver.resolveEntry("home")).status).toBe("unavailable");
+    expect(fetcher).not.toHaveBeenCalled();
+  });
   it.each([
     { matched_scope: "FALLBACK" },
     { digital_estate_id: "neighbour-estate" }, { locale: "en-UG" }, { market_id: "ug" },
