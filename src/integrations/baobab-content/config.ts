@@ -91,7 +91,7 @@ export function getBaobabContentConfig(): BaobabContentConfig | null {
     marketId: process.env.NABHOLD_CONTENT_MARKET_ID || undefined,
     locale,
     timeoutMs:
-      Number.isInteger(configuredTimeout) && configuredTimeout > 0
+      Number.isInteger(configuredTimeout) && configuredTimeout > 0 && configuredTimeout <= 60_000
         ? configuredTimeout
         : DEFAULT_TIMEOUT_MS,
     serviceOrigins,

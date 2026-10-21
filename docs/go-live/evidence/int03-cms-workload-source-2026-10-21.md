@@ -97,7 +97,7 @@ Protocol tests exercise real maintained OAuth code with synthetic HTTPS peers,
 current introspection, audience/subject/lifecycle/expiry denials, wrong
 Organisation/tenant/country, renewal and dependency outage/restoration. They do
 not run IAM, CP, Payload, PostgreSQL or TLS Redis together. Local focused
-TypeScript validation and 87 workload/content tests pass using previously
+TypeScript validation and 89 workload/content tests pass using previously
 installed dependencies; mandatory full clean-install CI remains the merge gate.
 
 ## Next acceptance dependencies
@@ -105,8 +105,10 @@ installed dependencies; mandatory full clean-install CI remains the merge gate.
 1. The reviewed Shared decision and dependency prerequisite are merged. Implement exact-row validation and IAM-owned per-run
    caller/validator provisioning/read-back against the unmodified approved
    registry, with independent secrets and enforced deadline/teardown.
-2. Replace CMS's fixed validator-token input with maintained current acquisition
-   for the separate development validator. Never borrow production credentials.
+2. CMS #41 is merged at `7122b220d4dde83cb87884ea7a40c0535f8feff5`: current
+   independent development validator acquisition is implemented, with 298 tests,
+   all 29 final-head checks and zero-finding exact-head review. The fixture must
+   configure its explicit mode and distinct credential; no production borrowing.
 3. Start actual Node 24 CMS/PostgreSQL with synthetic published home/nav/footer;
    use existing CMS-owned setup, registered provider APIs, independent
    maker/checker certification and current health/bindings. Preserve PARTIAL /

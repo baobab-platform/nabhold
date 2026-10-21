@@ -116,9 +116,12 @@ export class ContentEntryResolver {
     const correlationId = randomUUID();
     const remaining = this.proofDeadline === undefined ? this.config.timeoutMs : this.proofDeadline - this.now().getTime();
     if (remaining <= 0) return { status: "unavailable", reason: "PROOF_WINDOW_CLOSED" };
-    const signal = AbortSignal.timeout(Math.max(1, Math.floor(Math.min(this.config.timeoutMs, remaining))));
+    let signal: AbortSignal;
     let response: Response;
     try {
+      // Injected ports can also supply malformed timing configuration. Keep
+      // signal construction inside the same bounded unavailable outcome.
+      signal = AbortSignal.timeout(Math.max(1, Math.floor(Math.min(this.config.timeoutMs, remaining))));
       response = await this.fetchImpl(target, {
         method: "POST",
         headers: {

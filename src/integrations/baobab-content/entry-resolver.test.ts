@@ -93,6 +93,15 @@ function build(opts: {
 afterEach(() => vi.restoreAllMocks());
 
 describe("ContentEntryResolver", () => {
+  it("returns unavailable for an invalid injected timeout without contacting CMS", async () => {
+    const fetcher = vi.fn();
+    const resolver = new ContentEntryResolver({ config: { ...config, timeoutMs: 4294967296 }, now,
+      capabilities: { resolve: async () => resolution() } as unknown as CapabilityClient,
+      contentTokens: { getToken: async () => "content-token" }, fetch: fetcher,
+    });
+    expect(await resolver.resolveEntry("home")).toEqual({ status: "unavailable", reason: "PROVIDER_UNREACHABLE" });
+    expect(fetcher).not.toHaveBeenCalled();
+  });
   it("rejects a CMS response completed after the fixed proof deadline", async () => {
     const deadline = now().getTime() + 60_000;
     let time = now().getTime();

@@ -724,10 +724,11 @@ CP/CMS tokens, same verified subject and fresh CP-issued context per read.
 Proof requires exact published scope/fields, context lifetime bounded by the
 run deadline and 15 minutes, and provider request/body completion before the
 run deadline. No fallback, subject impersonation or product activation is used.
-Local focused TypeScript and 87 workload/content tests pass; complete clean
-Actions results and exact review are retained on the PR. The separately named
-CMS validator's current token source is prepared in CMS #41 and has its own
-mandatory checks/review, not inherited acceptance from Nabhold.
+Local focused TypeScript and 89 workload/content tests pass; complete clean
+Actions results and exact review are retained on the PR. CMS #41 independently merged at `7122b220d4dde83cb87884ea7a40c0535f8feff5`,
+implementing the named development validator's current token source with 298
+tests, all 29 checks and zero-finding exact-head review. It does not activate
+a registry row or qualify an actual provider.
 
 Next: canonical exact-row/fixture implementation with IAM-owned provisioning
 and exact read-back, followed by actual CMS/PostgreSQL provider qualification

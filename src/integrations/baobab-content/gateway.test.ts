@@ -104,6 +104,14 @@ describe("capability gateway composition", () => {
     expect(createCapabilityContentGatewayFromEnv(transitional)).not.toBeNull();
   });
 
+  it("bounds configured timeouts before constructing a request signal", () => {
+    full();
+    vi.stubEnv("NABHOLD_CONTENT_TIMEOUT_MS", "4294967296");
+    expect(getBaobabContentConfig()?.timeoutMs).toBe(5000);
+    vi.stubEnv("NABHOLD_CONTENT_TIMEOUT_MS", "60000");
+    expect(getBaobabContentConfig()?.timeoutMs).toBe(60000);
+  });
+
   it.each([
     ["NABHOLD_CONTENT_TENANT_ID", "Nabhold"],
     ["NABHOLD_CONTENT_CONTEXT_ID", ""],
