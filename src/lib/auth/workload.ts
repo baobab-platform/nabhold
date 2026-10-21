@@ -64,7 +64,9 @@ export class DevelopmentContentWorkload {
     if (secureUrl(settings.cpOrigin).pathname !== "/") throw new AuthenticationDenied();
     if (!Number.isFinite(settings.deadline) || settings.deadline <= Date.now() || settings.deadline > Date.now() + 90 * 60_000) throw new AuthenticationDenied();
     this.config = new oauth.Configuration({ issuer: settings.issuer, token_endpoint: settings.tokenEndpoint,
-      introspection_endpoint: settings.introspectionEndpoint }, CALLER, undefined, oauth.ClientSecretBasic(settings.clientSecret));
+      // Match IAM's maintained Hydra WorkloadProvisioner authentication method.
+      // No method fallback or alternate client identity is permitted.
+      introspection_endpoint: settings.introspectionEndpoint }, CALLER, undefined, oauth.ClientSecretPost(settings.clientSecret));
     const transport = credentialFetch([settings.tokenEndpoint, settings.introspectionEndpoint], fetcher);
     this.config[oauth.customFetch] = (url, options) => transport(url, { ...options,
       body: options.body instanceof Uint8Array ? Buffer.from(options.body) : options.body });

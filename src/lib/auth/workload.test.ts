@@ -20,8 +20,11 @@ function peer() {
     if (url === settings.tokenEndpoint || url === settings.introspectionEndpoint) {
       expect(init?.redirect).toBe("error"); expect(init?.cache).toBe("no-store");
       expect(init?.signal).toBeDefined();
-      const header = new Headers(init?.headers).get("authorization")!;
-      expect(Buffer.from(header.slice(6), "base64").toString().split(":").map(v => decodeURIComponent(v))).toEqual(["baobab-int03-cms-consumer", settings.clientSecret]);
+      expect(new Headers(init?.headers).has("authorization")).toBe(false);
+      const credentials = new URLSearchParams(String(init?.body));
+      expect(credentials.getAll("client_id")).toEqual(["baobab-int03-cms-consumer"]);
+      expect(credentials.getAll("client_secret")).toEqual([settings.clientSecret]);
+      expect(new URL(url).search).toBe("");
     }
     if (state.failure === url) return Response.json({ private: "must not escape" }, { status: 503 });
     if (url === settings.tokenEndpoint) {

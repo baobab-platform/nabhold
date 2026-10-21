@@ -47,6 +47,14 @@ capability client and bounded HTTPS transport. Use maintained `openid-client`
 client-credentials and introspection rather than another OAuth implementation.
 There is no new Shared canonical contract or shadow Principal/tenant authority.
 
+The development workload uses `client_secret_post` for token acquisition and
+introspection, matching IAM's maintained Hydra WorkloadProvisioner
+(`internal/provider/ory/hydra.go`). The server-only OAuth client places the exact
+named caller credentials once in the HTTPS request body, never the URL or an
+additional Basic header. There is no authentication-method fallback. The
+45 protocol tests verify that wire contract; they do not establish actual IAM
+issuance, native protected IAM–CP acceptance or connected CMS qualification.
+
 The opt-in profile is only `baobab-int03-cms-consumer` in `development`:
 
 - Independently request CP `context:resolve` and CMS `content:entry:resolve`
