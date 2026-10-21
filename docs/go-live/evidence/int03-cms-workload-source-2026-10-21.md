@@ -122,3 +122,38 @@ Native protected Kratos/Hydra IAM–CP, executive authority, legal admission,
 protected staging, production and R0–R3 remain OPEN. Nabhold stays non-trading;
 parent/subsidiary relationships confer no access. The earlier identity artifact
 digest remains GitHub-reported, not independently downloaded/rehashed here.
+
+## Subsequent audit and activation hold
+
+After Nabhold #83 merged at `0d0a51551004140958c41eb4f30a9a27fc7f995e`,
+the fresh six-main audit found Shared at `409d780d05f7825ab1228649541032d42a7b0b13`,
+CMS at `7122b220d4dde83cb87884ea7a40c0535f8feff5`, and IAM, CP and
+Infrastructure unchanged from the table above. Other open PRs concern dependency
+updates, apart from the IAM preparation below.
+
+Shared #354 is Accepted, but the owner's explicit no-registry-activation hold
+remains binding. Proposed implementation [Shared #356](https://github.com/baobab-platform/shared/pull/356)
+was closed **unmerged**: neither named development identity is activated in
+canonical main. Its clean checks cannot authorize consuming its proposed ACTIVE
+rows. No consumer pin may advance to that closed proposal.
+
+[IAM #129](https://github.com/baobab-platform/baobab-iam/pull/129) prepares private
+least-privilege client documents and strict issuer read-back checks, without a
+Shared pin change, ordinary client allocation or runtime provisioning. It
+requires the committed IAM lock and immutable Shared registry blob; the current
+pin refuses preparation and creates no handoff files. Nine new tests and two
+existing INT-02 tests pass locally, as do 15 existing publication tests against
+the exact Shared pin. Mandatory final-head CI/review remain the merge gates;
+this paragraph is source status, not an acceptance receipt.
+
+The IAM image scan also discovered CVE-2026-111943 in existing Go 1.27.2.
+That PR updates the module minimum and digest-pinned builder to 1.27.3 without
+a vulnerability exception. The official image index body was downloaded and
+independently hashed against the registry digest. This is unrelated to the
+earlier identity-run artifact, which remains **GitHub-reported only**.
+
+Next executable acceptance still requires an authorized canonical registry,
+IAM-owned real issuer provisioning, service-account role read-back, absolute
+issuance/shutdown lifecycle and unconditional teardown before actual
+CMS/PostgreSQL provider qualification. The full INT-03 and protected IAM↔CP
+matrices, executive authority, staging, production and R0–R3 remain OPEN.
