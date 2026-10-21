@@ -54,6 +54,7 @@ export function createCapabilityContentGatewayFromEnv(
     capabilities,
     contentTokens: workload?.tokens("baobab-cms") ?? providers.content ?? unavailableTokenProvider,
     currentContextId: workload ? () => workload.currentContextId() : undefined,
+    requireExactScope: required,
   });
 
   return new CapabilityContentGateway(resolver, transitional, (key, outcome) => {

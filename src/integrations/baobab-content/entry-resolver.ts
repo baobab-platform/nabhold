@@ -37,6 +37,10 @@ const recordSchema = z
     tenant_id: z.string().min(1),
     content_key: z.string().min(1),
     publication_state: z.string(),
+    digital_estate_id: z.string().nullable().optional(),
+    market_id: z.string().nullable().optional(),
+    legal_entity_id: z.string().nullable().optional(),
+    locale: z.string().nullable().optional(),
     data: z.record(z.string(), z.unknown()),
   })
   .passthrough();
@@ -62,6 +66,8 @@ export interface EntryResolverOptions {
   now?: () => Date;
   /** Current context belongs to the same workload as both token providers. */
   currentContextId?: () => Promise<string>;
+  /** Qualification requires exact scope, not provider fallback/inheritance. */
+  requireExactScope?: boolean;
 }
 
 export class ContentEntryResolver {
@@ -72,6 +78,7 @@ export class ContentEntryResolver {
   private readonly now: () => Date;
   private cached: CachedInvocation | null = null;
   private readonly currentContextId?: () => Promise<string>;
+  private readonly requireExactScope: boolean;
 
   constructor(options: EntryResolverOptions) {
     this.config = options.config;
@@ -80,6 +87,7 @@ export class ContentEntryResolver {
     this.fetchImpl = options.fetch ?? fetch;
     this.now = options.now ?? (() => new Date());
     this.currentContextId = options.currentContextId;
+    this.requireExactScope = options.requireExactScope ?? false;
   }
 
   async resolveEntry(contentKey: string): Promise<EntryOutcome> {
@@ -145,6 +153,12 @@ export class ContentEntryResolver {
 
     const { record, matched_scope } = parsed.data;
     if (!record || matched_scope === "NONE") return { status: "none" };
+    if (this.requireExactScope && (matched_scope !== "EXACT" ||
+        record.digital_estate_id !== this.config.digitalEstateId || record.locale !== this.config.locale ||
+        this.config.marketId !== undefined && record.market_id !== this.config.marketId ||
+        this.config.legalEntityId !== undefined && record.legal_entity_id !== this.config.legalEntityId)) {
+      return { status: "unavailable", reason: "PROVIDER_SCOPE_REJECTED" };
+    }
 
     // Defence in depth: the provider already filters, but this estate trusts only its own tenant and key.
     if (

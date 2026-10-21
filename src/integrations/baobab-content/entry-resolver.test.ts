@@ -92,6 +92,30 @@ function build(opts: {
 afterEach(() => vi.restoreAllMocks());
 
 describe("ContentEntryResolver", () => {
+  it.each([
+    { matched_scope: "FALLBACK" },
+    { digital_estate_id: "neighbour-estate" }, { locale: "en-UG" }, { market_id: "ug" },
+    { legal_entity_id: "another-legal-entity" }, { digital_estate_id: undefined },
+  ])("rejects provider fallback and same-tenant wrong-scope content in proof mode: %j", async changed => {
+    const resolver = new ContentEntryResolver({ config: { ...config, marketId: "za" }, now, requireExactScope: true,
+      capabilities: { resolve: async () => resolution() } as unknown as CapabilityClient,
+      contentTokens: { getToken: async () => "content-token" },
+      fetch: async () => Response.json({ matched_scope: "EXACT", ...changed,
+        record: { ...record().record, digital_estate_id: config.digitalEstateId, legal_entity_id: config.legalEntityId,
+          locale: config.locale, market_id: "za", ...changed } }),
+    });
+    expect(await resolver.resolveEntry("navigation")).toEqual({ status: "unavailable", reason: "PROVIDER_SCOPE_REJECTED" });
+  });
+
+  it("accepts exact published content matching every selected scope in proof mode", async () => {
+    const resolver = new ContentEntryResolver({ config, now, requireExactScope: true,
+      capabilities: { resolve: async () => resolution() } as unknown as CapabilityClient,
+      contentTokens: { getToken: async () => "content-token" },
+      fetch: async () => Response.json({ matched_scope: "EXACT", record: { ...record().record,
+        digital_estate_id: config.digitalEstateId, legal_entity_id: config.legalEntityId, locale: config.locale } }),
+    });
+    expect((await resolver.resolveEntry("navigation")).status).toBe("ok");
+  });
   it("never reuses a provider invocation across renewed contexts", async () => {
     const next = "11111111-2222-4333-8444-555555555556";
     const currentContextId = vi.fn().mockResolvedValueOnce(CTX).mockResolvedValueOnce(next);

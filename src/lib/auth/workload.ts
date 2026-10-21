@@ -124,7 +124,8 @@ export class DevelopmentContentWorkload {
         body: JSON.stringify({ tenant_id: this.settings.tenantId, organisation_id: this.settings.organisationId, country_code: this.settings.countryCode }),
       }, this.fetcher));
       const resolved = Date.parse(context.resolved_at), expires = Date.parse(context.expires_at);
-      if (resolved < started - 30_000 || resolved > Date.now() + 30_000 || expires <= Date.now() || expires <= resolved) throw new Error();
+      if (resolved < started - 30_000 || resolved > Date.now() + 30_000 || expires <= Date.now() ||
+          expires <= resolved || expires > this.settings.deadline || expires - resolved > 15 * 60_000) throw new Error();
       this.open();
       return context.context_id;
     } catch { throw new AuthenticationDenied(); }

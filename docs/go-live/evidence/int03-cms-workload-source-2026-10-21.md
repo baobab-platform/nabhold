@@ -25,12 +25,20 @@ CMS's pre-existing approved dependency-audit exception was not added or widened.
 The affected-repository open-PR inventory found Shared #354 plus dependency
 updates; no additional Nabhold, CP or Infrastructure engineering PR is pending.
 Shared #354 owner acceptance is explicit in its PR and this implementation
-session. The amended decision defines both named development pre-proof ACTIVE
+session. The decision merged as [Shared #354](https://github.com/baobab-platform/shared/pull/354)
+at `409d780d05f7825ab1228649541032d42a7b0b13` after 30 checks and a zero-finding
+exact-head review. It defines both named development pre-proof ACTIVE
 exceptions, independent credentials, absolute token deadlines, early-close
 revocation/trust destruction and mandatory teardown. It does not itself add
 registry rows, credentials, grants or bindings. Its separate prerequisite #355
 patches the Vite/launch-editor high advisory; no dependency waiver is introduced.
 Other dependency major upgrades remain separate compatibility reviews.
+The same newly reported Vite advisory affected Nabhold's existing locked 7.3.6.
+Its lock now selects patched 7.3.7 using the integrity from reviewed Shared #355,
+without changing any private-package version/integrity or bypassing supply-chain
+policy. Local authenticated lock regeneration was unavailable (private registry
+401); Actions must verify the frozen lock and public/private integrity. Local
+`pnpm audit --audit-level=high` passes with only the pre-existing ignored advisory.
 
 ## Source increment
 
@@ -87,13 +95,12 @@ Protocol tests exercise real maintained OAuth code with synthetic HTTPS peers,
 current introspection, audience/subject/lifecycle/expiry denials, wrong
 Organisation/tenant/country, renewal and dependency outage/restoration. They do
 not run IAM, CP, Payload, PostgreSQL or TLS Redis together. Local focused
-TypeScript validation and 76 workload/content tests pass using previously
+TypeScript validation and 85 workload/content tests pass using previously
 installed dependencies; mandatory full clean-install CI remains the merge gate.
 
 ## Next acceptance dependencies
 
-1. Merge the reviewed Shared decision and dependency prerequisite with current
-   mandatory checks. Implement exact-row validation and IAM-owned per-run
+1. The reviewed Shared decision and dependency prerequisite are merged. Implement exact-row validation and IAM-owned per-run
    caller/validator provisioning/read-back against the unmodified approved
    registry, with independent secrets and enforced deadline/teardown.
 2. Replace CMS's fixed validator-token input with maintained current acquisition

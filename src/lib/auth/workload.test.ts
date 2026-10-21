@@ -86,6 +86,8 @@ describe("development content workload", () => {
   it.each([
     { tenant_id: "tn_neighbour" }, { organisation_id: "11111111-2222-4333-8444-555555555556" }, { country_code: "UG" },
     { expires_at: undefined }, { expires_at: "2020-01-01T00:00:00Z" }, { resolved_at: "2020-01-01T00:00:00Z" }, { context_id: "invented" },
+    { expires_at: new Date(settings.deadline + 60_000).toISOString() },
+    { expires_at: new Date(Date.now() + 30 * 60_000).toISOString() },
   ])("does not use a malformed/foreign CP context %j", async context => {
     const { workload, state } = peer(); state.context = context;
     await expect(workload.currentContextId()).rejects.toThrow();
