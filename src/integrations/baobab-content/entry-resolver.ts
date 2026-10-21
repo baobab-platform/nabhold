@@ -51,6 +51,7 @@ const responseSchema = z
 interface CachedInvocation {
   url: string;
   expiresAt: number;
+  contextId: string;
 }
 
 export interface EntryResolverOptions {
@@ -59,6 +60,8 @@ export interface EntryResolverOptions {
   contentTokens: WorkloadTokenProvider;
   fetch?: typeof fetch;
   now?: () => Date;
+  /** Current context belongs to the same workload as both token providers. */
+  currentContextId?: () => Promise<string>;
 }
 
 export class ContentEntryResolver {
@@ -68,6 +71,7 @@ export class ContentEntryResolver {
   private readonly fetchImpl: typeof fetch;
   private readonly now: () => Date;
   private cached: CachedInvocation | null = null;
+  private readonly currentContextId?: () => Promise<string>;
 
   constructor(options: EntryResolverOptions) {
     this.config = options.config;
@@ -75,12 +79,16 @@ export class ContentEntryResolver {
     this.tokens = options.contentTokens;
     this.fetchImpl = options.fetch ?? fetch;
     this.now = options.now ?? (() => new Date());
+    this.currentContextId = options.currentContextId;
   }
 
   async resolveEntry(contentKey: string): Promise<EntryOutcome> {
     let target: string;
     try {
-      target = await this.target();
+      const contextId = this.currentContextId
+        ? await this.currentContextId()
+        : this.config.platformContextId;
+      target = await this.target(contextId);
     } catch {
       return { status: "unavailable", reason: "CAPABILITY_NOT_RESOLVED" };
     }
@@ -160,14 +168,14 @@ export class ContentEntryResolver {
   }
 
   /** The provider URL from a fresh RESOLVED decision; reused only until the Control Plane's expiry. */
-  private async target(): Promise<string> {
+  private async target(contextId: string): Promise<string> {
     const nowMs = this.now().getTime();
-    if (this.cached && this.cached.expiresAt > nowMs) return this.cached.url;
+    if (this.cached && this.cached.contextId === contextId && this.cached.expiresAt > nowMs) return this.cached.url;
 
     const resolved = await this.capabilities.resolve({
       capability_key: CAPABILITY_KEY,
       required_contract_version: CONTRACT_VERSION,
-      context_id: this.config.platformContextId,
+      context_id: contextId,
       correlation_id: randomUUID(),
     });
 
@@ -192,12 +200,12 @@ export class ContentEntryResolver {
     // The route is relative to the provider origin; it may not move the call to another origin.
     const url = new URL(resolved.invocation.route_reference ?? "", origin);
     if (url.origin !== new URL(origin).origin) throw new Error("origin changed");
-    url.searchParams.set("context_id", this.config.platformContextId);
+    url.searchParams.set("context_id", contextId);
 
     const expiresAt = resolved.expires_at
       ? Date.parse(resolved.expires_at)
       : nowMs;
-    this.cached = { url: url.toString(), expiresAt };
+    this.cached = { url: url.toString(), expiresAt, contextId };
     return url.toString();
   }
 }

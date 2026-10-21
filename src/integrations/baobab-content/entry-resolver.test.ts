@@ -92,6 +92,31 @@ function build(opts: {
 afterEach(() => vi.restoreAllMocks());
 
 describe("ContentEntryResolver", () => {
+  it("never reuses a provider invocation across renewed contexts", async () => {
+    const next = "11111111-2222-4333-8444-555555555556";
+    const currentContextId = vi.fn().mockResolvedValueOnce(CTX).mockResolvedValueOnce(next);
+    const resolve = vi.fn(async (request: { context_id: string }) => resolution({ context_id: request.context_id }));
+    const seen: string[] = [];
+    const resolver = new ContentEntryResolver({ config, now, currentContextId,
+      capabilities: { resolve } as unknown as CapabilityClient,
+      contentTokens: { getToken: async () => "content-token" },
+      fetch: async input => { seen.push(String(input)); return Response.json({ record: null, matched_scope: "NONE" }); },
+    });
+    await resolver.resolveEntry("navigation"); await resolver.resolveEntry("footer");
+    expect(resolve).toHaveBeenCalledTimes(2);
+    expect(seen.map(u => new URL(u).searchParams.get("context_id"))).toEqual([CTX, next]);
+  });
+
+  it("does not call provider or use a previous invocation when current context renewal fails", async () => {
+    const resolve = vi.fn(); const fetcher = vi.fn();
+    const resolver = new ContentEntryResolver({ config, now,
+      currentContextId: async () => { throw new Error("revoked"); },
+      capabilities: { resolve } as unknown as CapabilityClient,
+      contentTokens: { getToken: async () => "content-token" }, fetch: fetcher,
+    });
+    expect(await resolver.resolveEntry("home")).toEqual({ status: "unavailable", reason: "CAPABILITY_NOT_RESOLVED" });
+    expect(resolve).not.toHaveBeenCalled(); expect(fetcher).not.toHaveBeenCalled();
+  });
   it("resolves the capability, then calls the mapped provider route with the content token", async () => {
     const { resolver, cmsCalls } = build({});
     const out = await resolver.resolveEntry("navigation");

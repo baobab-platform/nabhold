@@ -23,6 +23,7 @@ import {
 import type { PageDto } from "@/integrations/payload/dto/page.dto";
 
 import type { ContentEntryResolver } from "./entry-resolver";
+import { extractPlainTextBlocks } from "@/integrations/payload/mappers/rich-text";
 
 /**
  * Content port backed by the canonical `content.entry.resolve` capability for
@@ -40,6 +41,7 @@ export class CapabilityContentGateway implements CorporateContentGateway {
     private readonly resolver: ContentEntryResolver,
     private readonly transitional: CorporateContentGateway,
     private readonly onOutcome: (key: string, outcome: string) => void = () => {},
+    private readonly requirePublishedContent = false,
   ) {}
 
   private async entry(contentKey: string): Promise<PageDto | null> {
@@ -48,6 +50,21 @@ export class CapabilityContentGateway implements CorporateContentGateway {
       contentKey,
       outcome.status === "unavailable" ? `unavailable:${outcome.reason}` : outcome.status,
     );
+    // Qualification must observe real published content. Defaults must never
+    // disguise a denial, outage, withdrawal or missing record as a provider pass.
+    if (this.requirePublishedContent && outcome.status !== "ok") {
+      throw new Error("Required published content unavailable");
+    }
+    if (this.requirePublishedContent && outcome.status === "ok") {
+      const dto = outcome.dto;
+      const complete = contentKey === "navigation" ? !!dto.navigationItems?.length
+        : contentKey === "footer" ? dto.statement !== undefined && dto.tagline !== undefined && dto.footerLinks !== undefined
+        : contentKey === "home" ? [dto.eyebrow, dto.headline, dto.introduction, dto.primaryCta, dto.secondaryCta, dto.institutionalStatement].every(v => v !== undefined)
+        : contentKey === "site-settings" ? dto.siteName !== undefined && dto.seo !== undefined
+        : contentKey === "group-profile" ? dto.title !== undefined && extractPlainTextBlocks(dto.content).length > 0 && dto.seo !== undefined
+        : false;
+      if (!complete) throw new Error("Required published content incomplete");
+    }
     return outcome.status === "ok" ? outcome.dto : null;
   }
 
@@ -69,7 +86,9 @@ export class CapabilityContentGateway implements CorporateContentGateway {
 
   async getHomePage(): Promise<HomePageContent> {
     const dto = await this.entry("home");
-    const companies = await this.transitional.listPortfolioCompanies();
+    // The bounded home/nav/footer proof has no qualified portfolio capability.
+    // Do not quietly add defaults or direct-Payload records to its result.
+    const companies = this.requirePublishedContent ? [] : await this.transitional.listPortfolioCompanies();
 
     if (!dto) {
       return {

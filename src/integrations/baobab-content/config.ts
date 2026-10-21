@@ -9,8 +9,8 @@
  *
  * The identifiers are supplied, not invented:
  * - tenantId: the Control Plane tenant id (tn_...) issued for Nabhold;
- * - platformContextId: a RUNTIME platform context the Control Plane issued for
- *   this workload (how it is issued and refreshed is not yet decided);
+ * - platformContextId: legacy supplied RUNTIME context; the named development
+ *   proof instead obtains a fresh CP context for every read, never this value;
  * - digitalEstateId / marketId: the canonical ids the CMS records are scoped to.
  * - legalEntityId: an optional content filter, never Tenant identity or proof of
  *   a legal-actor mandate (ADR-NAB-0014). PRIMARY Organisation authority comes
@@ -63,7 +63,8 @@ export function getBaobabContentConfig(): BaobabContentConfig | null {
   if (!isCapabilityContentRequested()) return null;
 
   const tenantId = process.env.NABHOLD_CONTENT_TENANT_ID;
-  const platformContextId = process.env.NABHOLD_CONTENT_CONTEXT_ID;
+  const currentContext = process.env.NABHOLD_CMS_PROOF_ENABLED === "true";
+  const platformContextId = currentContext ? "" : process.env.NABHOLD_CONTENT_CONTEXT_ID;
   const legalEntityId = process.env.NABHOLD_CONTENT_LEGAL_ENTITY_ID || undefined;
   const digitalEstateId = process.env.NABHOLD_CONTENT_DIGITAL_ESTATE_ID;
   const locale = process.env.NABHOLD_CONTENT_LOCALE ?? "en-ZA";
@@ -72,8 +73,7 @@ export function getBaobabContentConfig(): BaobabContentConfig | null {
   if (
     !tenantId ||
     !TENANT_ID.test(tenantId) ||
-    !platformContextId ||
-    !UUID.test(platformContextId) ||
+    (!currentContext && (!platformContextId || !UUID.test(platformContextId))) ||
     !digitalEstateId ||
     !LOCALE.test(locale) ||
     !serviceOrigins
@@ -85,7 +85,7 @@ export function getBaobabContentConfig(): BaobabContentConfig | null {
 
   return {
     tenantId,
-    platformContextId,
+    platformContextId: platformContextId ?? "",
     legalEntityId,
     digitalEstateId,
     marketId: process.env.NABHOLD_CONTENT_MARKET_ID || undefined,

@@ -1,4 +1,5 @@
 import { afterEach, describe, expect, it, vi } from "vitest";
+vi.mock("server-only", () => ({}));
 
 import { ESTATE_DEFAULT_NAVIGATION } from "@/integrations/payload/defaults";
 import type { CorporateContentGateway } from "@/lib/content/gateway";
@@ -30,6 +31,22 @@ afterEach(() => {
 });
 
 describe("CapabilityContentGateway", () => {
+  it("refuses a published record whose missing fields would use defaults", async () => {
+    const gw = new CapabilityContentGateway(resolverOf({ status: "ok", dto: { id: "record", contentKey: "navigation" } }), transitional, undefined, true);
+    await expect(gw.getNavigation()).rejects.toThrow("Required published content incomplete");
+  });
+
+  it("maps actual complete published content in qualification without defaults", async () => {
+    const dto = { id: "record", contentKey: "navigation", navigationItems: [{ label: "Synthetic live CMS marker", href: "/about" }] };
+    const gw = new CapabilityContentGateway(resolverOf({ status: "ok", dto }), transitional, undefined, true);
+    expect(await gw.getNavigation()).toEqual({ primary: dto.navigationItems });
+  });
+  it.each([{ status: "none" }, { status: "unavailable", reason: "DENIED" }] as EntryOutcome[])(
+    "never serves defaults for a missing/denied record in qualification", async outcome => {
+      const gw = new CapabilityContentGateway(resolverOf(outcome), transitional, undefined, true);
+      await expect(gw.getNavigation()).rejects.toThrow("Required published content unavailable");
+      expect(transitional.getNavigation).not.toHaveBeenCalled();
+    });
   it("serves estate defaults, not Payload, when the capability cannot answer", async () => {
     const gw = new CapabilityContentGateway(resolverOf({ status: "unavailable", reason: "X" }), transitional);
     expect(await gw.getNavigation()).toEqual(ESTATE_DEFAULT_NAVIGATION);
@@ -74,6 +91,11 @@ describe("capability gateway composition", () => {
     vi.stubEnv("NABHOLD_CONTENT_SOURCE", "true");
     expect(getBaobabContentConfig()).toBeNull();
     expect(createCapabilityContentGatewayFromEnv(transitional)).toBeNull();
+  });
+
+  it("does not silently choose Payload when required capability configuration is missing", () => {
+    vi.stubEnv("NABHOLD_CONTENT_FALLBACK", "disabled");
+    expect(() => createCapabilityContentGatewayFromEnv(transitional)).toThrow("Required capability content");
   });
 
   it("is on only when everything is configured", () => {
