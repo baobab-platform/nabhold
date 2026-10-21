@@ -8,7 +8,7 @@ import type { CapabilityClient } from "../../control-plane/capability-client";
 
 const principal = "019a0915-a8c0-7000-8000-000000000001";
 const org = "019a0915-a8c0-7000-8000-000000000002";
-const tenant = "019a0915-a8c0-7000-8000-000000000003";
+const tenant = "tn_nabholdfixture";
 const settings: AuthSettings = { origin: "https://estate.example.test", issuer: "https://iam.example.test/",
  cpOrigin: "https://cp.example.test", introspectionEndpoint: "https://iam.example.test/introspect",
  clientId: "synthetic-client", clientSecret: "synthetic-only-long-secret", algorithm: "RS256",
@@ -49,6 +49,22 @@ describe("G04B-04 current executive capability boundary", () => {
    expect(f.resolve).toHaveBeenCalledWith(expect.objectContaining({
      context_id:"current-context", capability_key:request.capabilityKey, required_contract_version:1 }));
  });
+ it("rejects UUID-shaped and malformed tenant selectors before consulting authority", async () => {
+   for (const expectedTenantId of [org, "tn_", "tn_NABHOLD", "nabhold", "tn_nabhold/other", " tn_nabhold"]) {
+     const f=setup();
+     await expect(requireExecutiveCapability(session,{...request,expectedTenantId},f.deps)).rejects.toBeInstanceOf(AuthenticationDenied);
+     expect(f.context).not.toHaveBeenCalled();
+     expect(f.resolve).not.toHaveBeenCalled();
+   }
+ });
+ it("rejects a UUID-shaped context tenant even when other evidence matches", async () => {
+   const f=setup();
+   f.context.mockImplementationOnce(async () => ({ principal_id:principal, organisation_id:org,
+     tenant_id:org, context_id:"current-context", evaluated_at:new Date().toISOString(),
+     expires_at:new Date(Date.now()+60000).toISOString(), authorised:true }));
+   await expect(requireExecutiveCapability(session,request,f.deps)).rejects.toBeInstanceOf(AuthenticationDenied);
+   expect(f.resolve).not.toHaveBeenCalled();
+ });
  it("denies revocation before consulting context", async () => {
    const f=setup(); f.revoke();
    await expect(requireExecutiveCapability(session,request,f.deps)).rejects.toBeInstanceOf(AuthenticationDenied);
@@ -56,7 +72,7 @@ describe("G04B-04 current executive capability boundary", () => {
  });
  it("denies wrong tenant and never resolves capability", async () => {
    const f=setup(); f.context.mockImplementationOnce(async () => ({ principal_id:principal, organisation_id:org,
-     tenant_id:"019a0915-a8c0-7000-8000-000000000004", context_id:"current-context",
+     tenant_id:"tn_unrelatedfixture", context_id:"current-context",
      evaluated_at:new Date().toISOString(), expires_at:new Date(Date.now()+60000).toISOString(), authorised:true }));
    await expect(requireExecutiveCapability(session,request,f.deps)).rejects.toBeInstanceOf(AuthenticationDenied);
    expect(f.resolve).not.toHaveBeenCalled();

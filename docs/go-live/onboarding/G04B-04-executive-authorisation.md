@@ -26,3 +26,9 @@ CP commit `babae209` binds a stored context to the principal that resolved it. C
 The new `withExecutiveCapability` helper requires current-authority checks before a protected operation callback, and keeps the provider's own execution-point controls independent. No dashboard route is activated by the helper; callers must use server-registered mappings. This is implementation progress, not INT-02/INT-03 success.
 
 **Required CP/Shared convergence decision:** document the exact protocol for an authorised human principal acting through Nabhold's confidential BFF, with current grants, capability resolution, context owner, token audience and resource-server verification. Add real-component positive and cross-tenant/revoked/wrong-audience negatives to Infrastructure's L4 harness before enabling an R1 endpoint.
+
+## Canonical tenant selector convergence (21 October 2026)
+
+The source guard now accepts CP-issued `tn_[a-z0-9]+` Tenant IDs, while Principal and Organisation retain UUID validation. The former UUID-only Tenant schema rejected valid canonical contexts. Regression tests require canonical Tenant IDs and reject UUID, uppercase, empty-suffix, malformed and mismatched selectors before capability use. No identifier is derived from a company or IAM subject, and no context, mandate or grant is issued by this validation.
+
+EA v2.3 retains v2.2's normative L4 matrix. Same-principal human context redemption, live native IAM↔CP proof, executive mandate/grant acceptance, registry activation, actual staging, production and R0–R3 remain independently open. This change enables no route or release flag.
