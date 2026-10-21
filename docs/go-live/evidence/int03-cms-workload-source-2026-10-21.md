@@ -61,7 +61,8 @@ The opt-in profile is only `baobab-int03-cms-consumer` in `development`:
   valid UUID, fresh resolution time and bounded future expiry. CP still decides
   membership, PRIMARY Organisation and market; CMS still redeems the context
   using a separate validator and the actual caller token.
-- Never reuse an invocation for another context. Denial or renewal failure
+- Never reuse an invocation in the proof profile, even if CP returns an
+  idempotent current context ID. Denial or renewal failure
   cannot use a previous context or silently refresh someone else's identity.
 - Require actual complete published singleton records in proof mode. Missing,
   denied, withdrawn, malformed or unavailable content raises a bounded error;
@@ -97,7 +98,7 @@ Protocol tests exercise real maintained OAuth code with synthetic HTTPS peers,
 current introspection, audience/subject/lifecycle/expiry denials, wrong
 Organisation/tenant/country, renewal and dependency outage/restoration. They do
 not run IAM, CP, Payload, PostgreSQL or TLS Redis together. Local focused
-TypeScript validation and 89 workload/content tests pass using previously
+TypeScript validation and 90 workload/content tests pass using previously
 installed dependencies; mandatory full clean-install CI remains the merge gate.
 
 ## Next acceptance dependencies

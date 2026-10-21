@@ -107,7 +107,7 @@ export class DevelopmentContentWorkload {
     } catch { throw new AuthenticationDenied(); }
   }
 
-  /** Obtain a new CP-owned RUNTIME context for every content read. Selectors
+  /** Obtain a current CP-owned RUNTIME context for every content read. Selectors
    * are not authority. CP attests membership, PRIMARY Organisation and market;
    * its provider validator later redeems the context against the CMS token.
    * No subject/principal/authority-purpose assertion is sent by the estate.

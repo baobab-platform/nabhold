@@ -200,7 +200,10 @@ export class ContentEntryResolver {
   /** The provider URL from a fresh RESOLVED decision; reused only until the Control Plane's expiry. */
   private async target(contextId: string): Promise<string> {
     const nowMs = this.now().getTime();
-    if (this.cached && this.cached.contextId === contextId && this.cached.expiresAt > nowMs) return this.cached.url;
+    // A proof always re-evaluates capability authority, even if CP returns an
+    // idempotent current context ID. Only the legacy static-context path caches.
+    if (!this.currentContextId && !this.requireExactScope && this.cached &&
+        this.cached.contextId === contextId && this.cached.expiresAt > nowMs) return this.cached.url;
 
     const resolved = await this.capabilities.resolve({
       capability_key: CAPABILITY_KEY,

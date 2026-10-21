@@ -93,6 +93,18 @@ function build(opts: {
 afterEach(() => vi.restoreAllMocks());
 
 describe("ContentEntryResolver", () => {
+  it("rechecks capability authority even when CP returns the same current context", async () => {
+    const resolve = vi.fn(async () => resolution());
+    const currentContextId = vi.fn(async () => CTX);
+    const resolver = new ContentEntryResolver({ config, now, currentContextId, requireExactScope: true,
+      capabilities: { resolve } as unknown as CapabilityClient,
+      contentTokens: { getToken: async () => "content-token" },
+      fetch: async () => Response.json({ record: null, matched_scope: "NONE" }),
+    });
+    await resolver.resolveEntry("navigation"); await resolver.resolveEntry("footer");
+    expect(currentContextId).toHaveBeenCalledTimes(2);
+    expect(resolve).toHaveBeenCalledTimes(2);
+  });
   it("returns unavailable for an invalid injected timeout without contacting CMS", async () => {
     const fetcher = vi.fn();
     const resolver = new ContentEntryResolver({ config: { ...config, timeoutMs: 4294967296 }, now,
