@@ -6,6 +6,7 @@ import {
   type WorkloadTokenProvider,
 } from "@/lib/control-plane/capability-client";
 import { pageDtoSchema, type PageDto } from "@/integrations/payload/dto/page.dto";
+import { limitedBody } from "@/lib/auth/oidc/transport";
 
 import type { BaobabContentConfig } from "./config";
 
@@ -37,6 +38,10 @@ const recordSchema = z
     tenant_id: z.string().min(1),
     content_key: z.string().min(1),
     publication_state: z.string(),
+    digital_estate_id: z.string().nullable().optional(),
+    market_id: z.string().nullable().optional(),
+    legal_entity_id: z.string().nullable().optional(),
+    locale: z.string().nullable().optional(),
     data: z.record(z.string(), z.unknown()),
   })
   .passthrough();
@@ -51,6 +56,7 @@ const responseSchema = z
 interface CachedInvocation {
   url: string;
   expiresAt: number;
+  contextId: string;
 }
 
 export interface EntryResolverOptions {
@@ -59,6 +65,12 @@ export interface EntryResolverOptions {
   contentTokens: WorkloadTokenProvider;
   fetch?: typeof fetch;
   now?: () => Date;
+  /** Current context belongs to the same workload as both token providers. */
+  currentContextId?: () => Promise<string>;
+  /** Qualification requires exact scope, not provider fallback/inheritance. */
+  requireExactScope?: boolean;
+  /** Absolute, immutable end of the disposable evidence run. */
+  proofDeadline?: number;
 }
 
 export class ContentEntryResolver {
@@ -68,6 +80,9 @@ export class ContentEntryResolver {
   private readonly fetchImpl: typeof fetch;
   private readonly now: () => Date;
   private cached: CachedInvocation | null = null;
+  private readonly currentContextId?: () => Promise<string>;
+  private readonly requireExactScope: boolean;
+  private readonly proofDeadline?: number;
 
   constructor(options: EntryResolverOptions) {
     this.config = options.config;
@@ -75,12 +90,18 @@ export class ContentEntryResolver {
     this.tokens = options.contentTokens;
     this.fetchImpl = options.fetch ?? fetch;
     this.now = options.now ?? (() => new Date());
+    this.currentContextId = options.currentContextId;
+    this.requireExactScope = options.requireExactScope ?? false;
+    this.proofDeadline = options.proofDeadline;
   }
 
   async resolveEntry(contentKey: string): Promise<EntryOutcome> {
     let target: string;
     try {
-      target = await this.target();
+      const contextId = this.currentContextId
+        ? await this.currentContextId()
+        : this.config.platformContextId;
+      target = await this.target(contextId);
     } catch {
       return { status: "unavailable", reason: "CAPABILITY_NOT_RESOLVED" };
     }
@@ -93,8 +114,14 @@ export class ContentEntryResolver {
     }
 
     const correlationId = randomUUID();
+    const remaining = this.proofDeadline === undefined ? this.config.timeoutMs : this.proofDeadline - this.now().getTime();
+    if (remaining <= 0) return { status: "unavailable", reason: "PROOF_WINDOW_CLOSED" };
+    let signal: AbortSignal;
     let response: Response;
     try {
+      // Injected ports can also supply malformed timing configuration. Keep
+      // signal construction inside the same bounded unavailable outcome.
+      signal = AbortSignal.timeout(Math.max(1, Math.floor(Math.min(this.config.timeoutMs, remaining))));
       response = await this.fetchImpl(target, {
         method: "POST",
         headers: {
@@ -115,7 +142,7 @@ export class ContentEntryResolver {
         }),
         cache: "no-store",
         redirect: "error",
-        signal: AbortSignal.timeout(this.config.timeoutMs),
+        signal,
       });
     } catch {
       return { status: "unavailable", reason: "PROVIDER_UNREACHABLE" };
@@ -127,16 +154,27 @@ export class ContentEntryResolver {
 
     let parsed;
     try {
-      parsed = responseSchema.safeParse(await response.json());
+      parsed = responseSchema.safeParse(JSON.parse(Buffer.from(await limitedBody(response.body, signal, 256 * 1024)).toString("utf8")));
     } catch {
       return { status: "unavailable", reason: "PROVIDER_RESPONSE_NOT_JSON" };
     }
     if (!parsed.success) {
       return { status: "unavailable", reason: "PROVIDER_RESPONSE_INVALID" };
     }
+    // Headers arriving within the window do not make a delayed body current
+    // evidence. Keep the same deadline through body completion and validation.
+    if (this.proofDeadline !== undefined && this.now().getTime() >= this.proofDeadline) {
+      return { status: "unavailable", reason: "PROOF_WINDOW_CLOSED" };
+    }
 
     const { record, matched_scope } = parsed.data;
     if (!record || matched_scope === "NONE") return { status: "none" };
+    if (this.requireExactScope && (matched_scope !== "EXACT" ||
+        record.digital_estate_id !== this.config.digitalEstateId || record.locale !== this.config.locale ||
+        this.config.marketId !== undefined && record.market_id !== this.config.marketId ||
+        this.config.legalEntityId !== undefined && record.legal_entity_id !== this.config.legalEntityId)) {
+      return { status: "unavailable", reason: "PROVIDER_SCOPE_REJECTED" };
+    }
 
     // Defence in depth: the provider already filters, but this estate trusts only its own tenant and key.
     if (
@@ -160,14 +198,17 @@ export class ContentEntryResolver {
   }
 
   /** The provider URL from a fresh RESOLVED decision; reused only until the Control Plane's expiry. */
-  private async target(): Promise<string> {
+  private async target(contextId: string): Promise<string> {
     const nowMs = this.now().getTime();
-    if (this.cached && this.cached.expiresAt > nowMs) return this.cached.url;
+    // A proof always re-evaluates capability authority, even if CP returns an
+    // idempotent current context ID. Only the legacy static-context path caches.
+    if (!this.currentContextId && !this.requireExactScope && this.cached &&
+        this.cached.contextId === contextId && this.cached.expiresAt > nowMs) return this.cached.url;
 
     const resolved = await this.capabilities.resolve({
       capability_key: CAPABILITY_KEY,
       required_contract_version: CONTRACT_VERSION,
-      context_id: this.config.platformContextId,
+      context_id: contextId,
       correlation_id: randomUUID(),
     });
 
@@ -192,12 +233,12 @@ export class ContentEntryResolver {
     // The route is relative to the provider origin; it may not move the call to another origin.
     const url = new URL(resolved.invocation.route_reference ?? "", origin);
     if (url.origin !== new URL(origin).origin) throw new Error("origin changed");
-    url.searchParams.set("context_id", this.config.platformContextId);
+    url.searchParams.set("context_id", contextId);
 
     const expiresAt = resolved.expires_at
       ? Date.parse(resolved.expires_at)
       : nowMs;
-    this.cached = { url: url.toString(), expiresAt };
+    this.cached = { url: url.toString(), expiresAt, contextId };
     return url.toString();
   }
 }

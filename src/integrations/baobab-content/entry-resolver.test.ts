@@ -1,4 +1,5 @@
 import { afterEach, describe, expect, it, vi } from "vitest";
+vi.mock("server-only", () => ({}));
 
 import { CapabilityClient } from "@/lib/control-plane/capability-client";
 
@@ -92,6 +93,100 @@ function build(opts: {
 afterEach(() => vi.restoreAllMocks());
 
 describe("ContentEntryResolver", () => {
+  it("rechecks capability authority even when CP returns the same current context", async () => {
+    const resolve = vi.fn(async () => resolution());
+    const currentContextId = vi.fn(async () => CTX);
+    const resolver = new ContentEntryResolver({ config, now, currentContextId, requireExactScope: true,
+      capabilities: { resolve } as unknown as CapabilityClient,
+      contentTokens: { getToken: async () => "content-token" },
+      fetch: async () => Response.json({ record: null, matched_scope: "NONE" }),
+    });
+    await resolver.resolveEntry("navigation"); await resolver.resolveEntry("footer");
+    expect(currentContextId).toHaveBeenCalledTimes(2);
+    expect(resolve).toHaveBeenCalledTimes(2);
+  });
+  it("returns unavailable for an invalid injected timeout without contacting CMS", async () => {
+    const fetcher = vi.fn();
+    const resolver = new ContentEntryResolver({ config: { ...config, timeoutMs: 4294967296 }, now,
+      capabilities: { resolve: async () => resolution() } as unknown as CapabilityClient,
+      contentTokens: { getToken: async () => "content-token" }, fetch: fetcher,
+    });
+    expect(await resolver.resolveEntry("home")).toEqual({ status: "unavailable", reason: "PROVIDER_UNREACHABLE" });
+    expect(fetcher).not.toHaveBeenCalled();
+  });
+  it("rejects a CMS response completed after the fixed proof deadline", async () => {
+    const deadline = now().getTime() + 60_000;
+    let time = now().getTime();
+    const resolver = new ContentEntryResolver({ config, now: () => new Date(time), proofDeadline: deadline,
+      capabilities: { resolve: async () => resolution() } as unknown as CapabilityClient,
+      contentTokens: { getToken: async () => "content-token" },
+      fetch: async (_input, init) => {
+        expect(init?.signal).toBeDefined();
+        time = deadline;
+        return Response.json(record());
+      },
+    });
+    expect(await resolver.resolveEntry("navigation")).toEqual({ status: "unavailable", reason: "PROOF_WINDOW_CLOSED" });
+  });
+
+  it("does not contact CMS when the proof window has already closed", async () => {
+    const fetcher = vi.fn();
+    const resolver = new ContentEntryResolver({ config, now, proofDeadline: now().getTime(),
+      capabilities: { resolve: async () => resolution() } as unknown as CapabilityClient,
+      contentTokens: { getToken: async () => "content-token" }, fetch: fetcher,
+    });
+    expect((await resolver.resolveEntry("home")).status).toBe("unavailable");
+    expect(fetcher).not.toHaveBeenCalled();
+  });
+  it.each([
+    { matched_scope: "FALLBACK" },
+    { digital_estate_id: "neighbour-estate" }, { locale: "en-UG" }, { market_id: "ug" },
+    { legal_entity_id: "another-legal-entity" }, { digital_estate_id: undefined },
+  ])("rejects provider fallback and same-tenant wrong-scope content in proof mode: %j", async changed => {
+    const resolver = new ContentEntryResolver({ config: { ...config, marketId: "za" }, now, requireExactScope: true,
+      capabilities: { resolve: async () => resolution() } as unknown as CapabilityClient,
+      contentTokens: { getToken: async () => "content-token" },
+      fetch: async () => Response.json({ matched_scope: "EXACT", ...changed,
+        record: { ...record().record, digital_estate_id: config.digitalEstateId, legal_entity_id: config.legalEntityId,
+          locale: config.locale, market_id: "za", ...changed } }),
+    });
+    expect(await resolver.resolveEntry("navigation")).toEqual({ status: "unavailable", reason: "PROVIDER_SCOPE_REJECTED" });
+  });
+
+  it("accepts exact published content matching every selected scope in proof mode", async () => {
+    const resolver = new ContentEntryResolver({ config, now, requireExactScope: true,
+      capabilities: { resolve: async () => resolution() } as unknown as CapabilityClient,
+      contentTokens: { getToken: async () => "content-token" },
+      fetch: async () => Response.json({ matched_scope: "EXACT", record: { ...record().record,
+        digital_estate_id: config.digitalEstateId, legal_entity_id: config.legalEntityId, locale: config.locale } }),
+    });
+    expect((await resolver.resolveEntry("navigation")).status).toBe("ok");
+  });
+  it("never reuses a provider invocation across renewed contexts", async () => {
+    const next = "11111111-2222-4333-8444-555555555556";
+    const currentContextId = vi.fn().mockResolvedValueOnce(CTX).mockResolvedValueOnce(next);
+    const resolve = vi.fn(async (request: { context_id: string }) => resolution({ context_id: request.context_id }));
+    const seen: string[] = [];
+    const resolver = new ContentEntryResolver({ config, now, currentContextId,
+      capabilities: { resolve } as unknown as CapabilityClient,
+      contentTokens: { getToken: async () => "content-token" },
+      fetch: async input => { seen.push(String(input)); return Response.json({ record: null, matched_scope: "NONE" }); },
+    });
+    await resolver.resolveEntry("navigation"); await resolver.resolveEntry("footer");
+    expect(resolve).toHaveBeenCalledTimes(2);
+    expect(seen.map(u => new URL(u).searchParams.get("context_id"))).toEqual([CTX, next]);
+  });
+
+  it("does not call provider or use a previous invocation when current context renewal fails", async () => {
+    const resolve = vi.fn(); const fetcher = vi.fn();
+    const resolver = new ContentEntryResolver({ config, now,
+      currentContextId: async () => { throw new Error("revoked"); },
+      capabilities: { resolve } as unknown as CapabilityClient,
+      contentTokens: { getToken: async () => "content-token" }, fetch: fetcher,
+    });
+    expect(await resolver.resolveEntry("home")).toEqual({ status: "unavailable", reason: "CAPABILITY_NOT_RESOLVED" });
+    expect(resolve).not.toHaveBeenCalled(); expect(fetcher).not.toHaveBeenCalled();
+  });
   it("resolves the capability, then calls the mapped provider route with the content token", async () => {
     const { resolver, cmsCalls } = build({});
     const out = await resolver.resolveEntry("navigation");

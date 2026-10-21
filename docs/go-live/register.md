@@ -695,3 +695,46 @@ PROVISIONED; the accepted Pulse-only bootstrap cannot be reused. [Shared draft
 #354](https://github.com/baobab-platform/shared/pull/354) makes the bounded CMS
 evidence-producer decision reviewable without changing authority. CMS Node 24
 convergence remains an independent eligible engineering task.
+
+## 31. CMS token/context source increment — 21 October 2026
+
+[Fresh source audit and configuration](evidence/int03-cms-workload-source-2026-10-21.md)
+records the inspected mains and the boundary between identity-smoke evidence,
+source preparation and actual CMS acceptance. This section's Nabhold source
+status becomes SOURCE_MERGED only when [#83](https://github.com/baobab-platform/nabhold/pull/83)
+merges after all mandatory checks and exact-head review; it grants no runtime
+or go-live acceptance.
+
+[Shared #354](https://github.com/baobab-platform/shared/pull/354) is now Accepted
+and merged at `409d780d05f7825ab1228649541032d42a7b0b13`. Both named development
+identities have a bounded pre-proof lifecycle decision, independent secrets,
+absolute token deadline, early-close revocation/trust destruction and teardown.
+The decision itself changes no registry row, credential, grant or binding;
+`nabhold-backend` remains PROVISIONED. Shared #355 separately patched the newly
+reported Vite/launch-editor advisory, with no added audit exemption.
+
+CMS [#40](https://github.com/baobab-platform/baobab-cms/pull/40) merged at
+`f03b3b4db348cfee1ddf72dad7b3cbfbe76e0bab`, converging CI, image and Node selection
+on Node 24. All 30 checks and final-head review passed. Existing CMS provider
+support remains PARTIAL and non-production.
+
+Nabhold #83 reuses existing content and CP ports with opt-in development-only
+maintained OAuth client-credentials/introspection, independently audience-scoped
+CP/CMS tokens, same verified subject and fresh CP-issued context per read.
+Proof requires exact published scope/fields, context lifetime bounded by the
+run deadline and 15 minutes, and provider request/body completion before the
+run deadline. No fallback, subject impersonation or product activation is used.
+Local focused TypeScript and 90 workload/content tests pass; complete clean
+Actions results and exact review are retained on the PR. CMS #41 independently merged at `7122b220d4dde83cb87884ea7a40c0535f8feff5`,
+implementing the named development validator's current token source with 298
+tests, all 29 checks and zero-finding exact-head review. It does not activate
+a registry row or qualify an actual provider.
+
+Next: canonical exact-row/fixture implementation with IAM-owned provisioning
+and exact read-back, followed by actual CMS/PostgreSQL provider qualification
+through owning APIs, independent maker/checker, current health/binding,
+complete NAB/L4 positives/negatives, provenance and teardown. Do not activate
+a registry snapshot locally, borrow production credentials/Pulse exception,
+change PARTIAL semantics to force routing, or call the identity smoke full INT-03.
+Native protected Kratos/Hydra IAM–CP, executive authority, legal onboarding,
+staging, production and R0–R3 remain OPEN. Nabhold remains non-trading.
