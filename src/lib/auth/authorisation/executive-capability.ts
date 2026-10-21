@@ -18,10 +18,13 @@ import { capabilityKeySchema } from "../../control-plane/resolution";
  * its production implementation cannot be activated until the CP owner pins
  * the exact contract. Injecting a test adapter produces SOURCE evidence only.
  */
+/** Tenant identifiers are CP-issued tn_ values, not Organisation UUIDs. */
+const tenantIdSchema = z.string().regex(/^tn_[a-z0-9]+$/);
+
 const contextSchema = z.object({
   principal_id: z.string().uuid(),
   organisation_id: z.string().uuid(),
-  tenant_id: z.string().uuid(),
+  tenant_id: tenantIdSchema,
   context_id: z.string().min(1).max(512),
   evaluated_at: z.string().datetime({ offset: true }),
   expires_at: z.string().datetime({ offset: true }),
@@ -62,7 +65,7 @@ export async function requireExecutiveCapability(
   try {
     const expected = z.object({
       expectedOrganisationId: z.string().uuid(),
-      expectedTenantId: z.string().uuid(),
+      expectedTenantId: tenantIdSchema,
       capabilityKey: capabilityKeySchema,
       contractVersion: z.number().int().positive(),
     }).strict().parse(request);
