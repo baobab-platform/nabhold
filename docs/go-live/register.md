@@ -11,7 +11,7 @@ at its frozen pins. CP #427, IAM #137 and Infrastructure #48 are merged source
 safeguards. Infrastructure #50 separates INT-03C source preparation from the
 held CMS lock; its own final CI/review/merge remains required. Infrastructure #49
 is an independent approval request, not approval. Seven-case execution and
-independent teardown remain unexecuted. Shared #354 remains HELD and all 14
+independent teardown remain unexecuted. CMS registry activation under Accepted Shared #354 remains HELD and all 14
 NAB-03 cases remain BLOCKED. See section 33 for current dependencies.
 
 This register records source/runtime evidence known from the repositories. It is not live production telemetry.
@@ -781,10 +781,10 @@ readiness dimension is promoted by this reconciliation.
 | CP #427 | MERGED `bcea71bd9909be3672dfcb7ce78d04d6feb0e748`; immutable two-human provenance and PG regression source | Actual governed workload linkage, live Principal deactivation and current denial in approved runtime |
 | IAM #137 | MERGED `ca5eb723c7845ed9a60e19fd0ef1a1e900d7b97a`; native bridge and independent watchdog safeguards | Actual supervised issue/introspection/revoke/destroy, deadline crash recovery and accepting-runtime shutdown |
 | Infrastructure #48 | MERGED `9ba30c410ffcc6a46f5d912bf03853532f7adf0c`; reviewed exact head, applicable checks green, 185 local source tests pass | No live qualification implied |
-| Infrastructure #50 | SOURCE CANDIDATE; separate exact INT-03C source lock, clean-checkout/baseline ancestry verification; 190 local source tests pass | Final-head mandatory CI, review and merge; no change to CMS lock/activation |
+| Infrastructure #50 | SOURCE CANDIDATE; separate exact INT-03C source lock, clean-checkout/baseline ancestry verification; 190 local source tests pass at `bbd29e34b9263337f0be05782619073a41f7d4f6`; docs-only head `8ada9777bd0dddf8b2e121aa17a3c9468331b148` | Final-head mandatory CI, review and merge; no change to CMS lock/activation |
 | Infrastructure #49 | APPROVAL REQUIRED / RUNTIME HELD | Independent approved topology and run window, two CP admins, CP-owned admission/IDs, private secrets, external supervisor and immutable evidence custody |
 | INT-03C seven cases | NOT EXECUTED / NOT ACCEPTED | Same bounded real IAM/CP run, all positive/negative originals, independently witnessed teardown and human acceptance |
-| Shared #354 / NAB-03 | HELD / 14 of 14 BLOCKED | Separate CMS activation governance and full connected provider matrix; INT-03C alone cannot open this gate |
+| CMS activation under #354 / NAB-03 | HELD / 14 of 14 BLOCKED | Separate CMS activation governance and full connected provider matrix; INT-03C alone cannot open this gate |
 | Protected C4 / G17 / R0–R3 | OPEN / NOT RELEASED | Protected identity, official legal/onboarding evidence, browser/provider/ops acceptance and release-specific signoff |
 
 Immediate permitted engineering is finalising #50 and independent contract/

@@ -64,7 +64,7 @@ v2.0 is aligned to accepted ADR-BCP-026, ADR-BCP-027, Baobab EA Implementation P
 
 See [register.md](register.md) for the current blockers and implementation queue.
 Infrastructure #49 is an independent approval request, not permission to create
-a disposable runtime. Shared #354 remains HELD; all 14 NAB-03 cases are BLOCKED.
+a disposable runtime. CMS registry activation under Accepted Shared #354 remains HELD; all 14 NAB-03 cases are BLOCKED.
 CP #427, IAM #137 and Infrastructure #48 are merged source safeguards, not live
 qualification. The separate INT-03C source-lock increment is tracked in #50.
 

@@ -7,6 +7,9 @@ implementer; not independent security, legal, provider or operations acceptance.
 v2.2 remains the normative L4 scenario identifier registry, not the current
 execution roadmap. This audit supplements the frozen component evidence and
 supersedes historical statements that CP #427 or IAM #137 remain open.
+Shared #354 itself is Accepted and merged at
+`409d780d05f7825ab1228649541032d42a7b0b13`; its CMS registry activation is
+HELD. Approval of that decision and activation are different facts.
 
 ## Method and immutable observations
 
@@ -26,6 +29,8 @@ line-by-line certification of every file in every engine.
 | Shared | `6938b16d63805d3cf07e492aa574ac076bbee423`; INT-03C decision/registry baseline `74dd98d47e678fc479bb4bfc4138d601fb53319e` |
 | Infrastructure before review | `2ede1b1747383296d70f8af493c84a7dd48821b7` |
 | Infrastructure after #48 merge | `9ba30c410ffcc6a46f5d912bf03853532f7adf0c` |
+| Infrastructure #50 local-tested source | `bbd29e34b9263337f0be05782619073a41f7d4f6`; 190 source tests, no live acceptance |
+| Infrastructure #50 head after operator-guide review | `8ada9777bd0dddf8b2e121aa17a3c9468331b148`; documentation-only follow-up |
 | CP | `bcea71bd9909be3672dfcb7ce78d04d6feb0e748` (#427 merged) |
 | IAM | `ca5eb723c7845ed9a60e19fd0ef1a1e900d7b97a` (#137 merged) |
 | CMS | `a712797177924c875e50ed63a9c01ec34bd632c8` |
@@ -66,7 +71,7 @@ rows describe remaining evidence, not a new certification of engine internals.
 | G02 | Organisation-first planning and CP progressive onboarding source | Actual independent admission, CP-generated Organisation/Tenant, PRIMARY mapping and capability-specific grants; controlled onboarding |
 | G03 | Canonical capability demand/census and versioned resolution source | Contract/provider/entitlement/binding qualification per capability; EA-01/02 |
 | G04 | Confidential OIDC/session custody, current identity and development workload source; merged CP/IAM proof safeguards | #49 topology approval, seven actual INT-03C cases, native protected C4 and real executive principals/context |
-| G05 | Real CMS/PG17 component at frozen pins, reusable estate profiles, published-content proof mode | Shared #354 HELD; full connected 14-case NAB-03, owner-approved provider lifecycle/binding; INT-03 / L4-02 |
+| G05 | Real CMS/PG17 component at frozen pins, reusable estate profiles, published-content proof mode | CMS registry activation under Accepted CMS activation under Shared #354 HELD; full connected 14-case NAB-03, owner-approved provider lifecycle/binding; INT-03 / L4-02 |
 | G06 | Finance baseline input and F1 source preparation | Semantic contract acceptance, accountant-approved baseline and certified native ledger/journal/balance evidence; Finance F1 / EA-R03 |
 | G07/G08 | ERP #110 People direction/PG17 repair merged | Workforce/provider contracts, country-specific statutory qualification, privacy and practitioner signoff; BP-00..07. Keep provider-first payroll fallback. |
 | G09 | Requirements identified | Canonical procurement/assets/projects contracts, provider operations and execution vetoes |
@@ -121,7 +126,10 @@ snapshot; existing CI remains the source for those checks.
 - All 185 INT-03 source tests passed locally with the fetched immutable source
   dependencies. Merged #48 and independently re-read its merged state and SHA
   `9ba30c410ffcc6a46f5d912bf03853532f7adf0c` before dependent work.
-- Implemented Infrastructure #50. All 190 source tests pass, including real
+- Implemented Infrastructure #50. All 190 source tests pass against source
+  `bbd29e34b9263337f0be05782619073a41f7d4f6`; the later
+  `8ada9777bd0dddf8b2e121aa17a3c9468331b148` changes only operator guides.
+  No separate immutable local test receipt is claimed. Coverage includes real
   temporary Git histories: exact refs, missing/extra/old CMS pins, dirty source,
   nonexistent/unrelated baseline and duplicate/authority-widening lock fields.
   Tests use synthetic plans and do not contact approved runtime services.
@@ -139,7 +147,7 @@ snapshot; existing CI remains the source for those checks.
    before expiry, current CP provenance/deactivation, independently witnessed
    teardown and independently retrieved/rehashed originals. Report only
    OBSERVED_UNATTESTED until the authorised independent reviewer accepts them.
-4. Keep Shared #354 HELD and all 14 NAB-03 cases BLOCKED. CMS identity activation
+4. Keep CMS registry activation under Accepted Shared #354 HELD and all 14 NAB-03 cases BLOCKED. CMS identity activation
    requires its own reviewed governance; only then run the complete connected
    matrix, followed by separately authorised protected staging and R0 acceptance.
 5. Continue independently scoped executive-context contract convergence,
@@ -150,4 +158,4 @@ snapshot; existing CI remains the source for those checks.
 Rollback source-lock work by reverting its PR. Never compensate for missing
 history by relaxing source checks, rewriting the held CMS lock or fabricating
 approval/evidence. Infrastructure #49 remains APPROVAL REQUIRED / RUNTIME HELD;
-Shared #354 HELD; NAB-03 14/14 BLOCKED; production NOT AUTHORISED.
+CMS registry activation under Accepted Shared #354 HELD; NAB-03 14/14 BLOCKED; production NOT AUTHORISED.

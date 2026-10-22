@@ -18,7 +18,7 @@
 execution plan; the accepted v2.2 L4 matrix retains normative scenario identifiers.
 The 14 October v2.0 acceptance date and historical snapshots remain unchanged.
 See the [current source audit](evidence/ea-v2.3-progress-audit-2026-10-22.md).
-Infrastructure #49 remains an independent approval request, Shared #354 remains
+Infrastructure #49 remains an independent approval request, CMS registry activation under Accepted Shared #354 remains
 HELD and all 14 connected NAB-03 cases remain BLOCKED.
 
 > **Master rule:** architecture acceptance, contract convergence, source implementation, database migration, synthetic testing, protected staging, independent legal/provider evidence, Control Plane activation and production authorisation are different facts. No one of them implies the others.
