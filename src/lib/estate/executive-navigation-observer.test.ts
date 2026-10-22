@@ -38,7 +38,8 @@ function fixture() {
     evaluatedAt: new Date(started).toISOString(), expiresAt: started + 9000, executionAuthority: false };
   const hooks = { before: (_path: string) => {}, ownerGrants: (_n: number): unknown => grants, deniedGrants: (_n: number): unknown => [],
     context: (): unknown => context, negativeStatus: 401, negativeBody: { code: "AUTHENTICATION_UNAVAILABLE_OR_DENIED" },
-    csrf: "c".repeat(43), peerActive: true, contextHeaders: { "cache-control": "private, no-store", vary: "Cookie" } as Record<string, string> };
+    csrf: "c".repeat(43), peerActive: true, contextHeaders: { "cache-control": "private, no-store", vary: "Cookie" } as Record<string, string>,
+    sessionHeaders: { "cache-control": "private, no-store" } as Record<string, string> };
   let ownCalls = 0, peerCalls = 0;
   const send = vi.fn<typeof fetch>(async (input, init) => {
     const url = new URL(String(input)), headers = new Headers(init?.headers);
@@ -52,7 +53,7 @@ function fixture() {
       : headers.get("cookie") === `__Host-nabhold-session=${credentials.denied_session}`;
     const id = denied ? plan.expected.denied_principal_id : plan.expected.owner_principal_id;
     if (url.pathname === "/api/auth/session") return Response.json({ principalId: id, expiresAt: started + 120_000, csrfToken: hooks.csrf },
-      { status: denied && !hooks.peerActive ? 401 : 200 });
+      { status: denied && !hooks.peerActive ? 401 : 200, headers: hooks.sessionHeaders });
     if (url.pathname === "/v1/admin/effective-authority") return Response.json({ principal_id: id, evaluated_at: new Date(started).toISOString(),
       grants: denied ? hooks.deniedGrants(++peerCalls) : hooks.ownerGrants(++ownCalls) });
     if (url.pathname.includes("/v1/organisations/")) return Response.json(org);
@@ -118,6 +119,37 @@ describe("executive navigation independent read observations", () => {
       else f.hooks.ownerGrants = n => n === 1 ? f.grants : [];
       const result = await f.run();
       expect(result.status).toBe("BLOCKED"); expect(result.checks.find(c => c.name === "CURRENT_FINAL_GRANTS")?.passed).toBe(false);
+    }
+  });
+
+  it("requires stable grant facts even when permissions or missing-permission outcomes are unchanged", async () => {
+    for (const actor of ["owner", "denied"] as const) {
+      const f = fixture();
+      if (actor === "owner") f.hooks.ownerGrants = n => n === 1 ? f.grants : f.grants.map(g => ({ ...g, grant_id: g.grant_id + "replacement" }));
+      else f.hooks.deniedGrants = n => n === 1 ? [f.grants[0]] : [{ ...f.grants[0], grant_id: "agr_replacement" }];
+      const result = await f.run(); expect(result.status).toBe("BLOCKED");
+      expect(result.checks.find(c => c.name === "CURRENT_FINAL_GRANTS")?.passed).toBe(false);
+    }
+  });
+
+  it("normalises harmless grant ordering and omitted EXACT mode when comparing snapshots", async () => {
+    const f = fixture();
+    f.hooks.ownerGrants = n => n === 1 ? f.grants : [...f.grants].reverse().map(g => ({ ...g, scope: { ...g.scope, mode: "EXACT" } }));
+    expect((await f.run()).status).toBe("OBSERVED_NOT_ACCEPTED");
+  });
+
+  it("refuses unsafe secret-bearing session cache/CORS headers before and after denial observations", async () => {
+    for (const after of [false, true]) for (const variant of ["cache", "cors-origin", "cors-credentials"]) {
+      const f = fixture();
+      const unsafe = () => {
+        if (variant === "cache") f.hooks.sessionHeaders["cache-control"] = "public";
+        if (variant === "cors-origin") f.hooks.sessionHeaders["access-control-allow-origin"] = "*";
+        if (variant === "cors-credentials") f.hooks.sessionHeaders["access-control-allow-credentials"] = "true";
+      };
+      if (after) f.hooks.before = path => { if (path === "/api/auth/context") unsafe(); };
+      else unsafe();
+      const result = await f.run(); expect(result.status).toBe("BLOCKED");
+      expect(result.checks.find(c => c.name === (after ? "POST_DENIAL_IDENTITIES" : "CURRENT_SESSIONS_AND_GRANTS"))?.passed).not.toBe(true);
     }
   });
 

@@ -38,7 +38,7 @@ const scope = z.object({ level: z.string(), mode: z.string().optional(), environ
 const authority = z.object({ principal_id: uuid, evaluated_at: time, grants: z.array(z.object({
   grant_id: reference, permission: z.string(), scope, grant_type: z.enum(["STANDING", "TIME_BOUND", "JUST_IN_TIME"]),
   valid_until: time.optional(), source: z.enum(["DIRECT", "PROFILE", "DELEGATION", "BOOTSTRAP"]),
-  risk_class: z.enum(["LOW", "MODERATE", "HIGH", "CRITICAL"]),
+  risk_class: z.enum(["LOW", "MODERATE", "HIGH", "CRITICAL"]), profile_key: reference.optional(), elevated: z.boolean().optional(),
 })).max(500) });
 const tenant = z.object({ tenant_id: z.string(), display_name: z.string().min(1).max(256), desired_state: z.string(), observed_state: z.string() });
 const overview = z.object({ organisation_id: uuid, evaluated_at: time,
@@ -87,6 +87,7 @@ export async function observeExecutiveNavigation(input: unknown, credentials: Ex
     tokens.some(t => typeof t !== "string" || t.length < 16 || t.length > 16384 || !/^[A-Za-z0-9\-._~+/]+=*$(?![\s\S])/.test(t)) ||
     new Set([...handles, ...tokens]).size !== 4) return report();
   const send = dependencies.fetch ?? fetch;
+  const initialGrantFacts: Partial<Record<"owner" | "denied", string>> = {};
   const deadline = AbortSignal.timeout(Math.min(30_000, end - started));
   const mark = (name: typeof CHECKS[number]) => { checks.find(c => c.name === name)!.passed = true; };
   const fresh = (value: string) => {
@@ -94,6 +95,8 @@ export async function observeExecutiveNavigation(input: unknown, credentials: Ex
     if (at > now() + 5000 || at + 30_000 <= now()) throw new Error();
     validUntil = Math.min(validUntil, at + 30_000);
   };
+  const privateHeaders = (headers: Headers) => headers.get("cache-control") === "private, no-store" &&
+    !headers.has("access-control-allow-origin") && !headers.has("access-control-allow-credentials");
   async function read(label: string, path: string, actor: "owner" | "denied" | "anonymous", cp = false,
     extra: Record<string, string> = {}, secretBody = false) {
     deadline.throwIfAborted();
@@ -117,7 +120,7 @@ export async function observeExecutiveNavigation(input: unknown, credentials: Ex
     const result = await read(`${phase}_${actor}_session`, "/api/auth/session", actor, false, {}, true);
     const value = session.parse(result.body);
     const expected = actor === "owner" ? plan.expected.owner_principal_id : plan.expected.denied_principal_id;
-    if (result.status !== 200 || value.principalId !== expected || value.expiresAt <= now()) throw new Error();
+    if (result.status !== 200 || value.principalId !== expected || value.expiresAt <= now() || !privateHeaders(result.headers)) throw new Error();
     validUntil = Math.min(validUntil, value.expiresAt);
   }
   async function grants(actor: "owner" | "denied", phase: string) {
@@ -137,6 +140,18 @@ export async function observeExecutiveNavigation(input: unknown, credentials: Ex
       (g.grant_type === "STANDING" || g.valid_until !== undefined) && (!g.valid_until || Date.parse(g.valid_until) > now())));
     if (actor === "owner" ? matched.some(g => !g) : matched.every(Boolean)) throw new Error();
     if (actor === "owner") for (const g of matched) if (g?.valid_until) validUntil = Math.min(validUntil, Date.parse(g.valid_until));
+    // A controlled qualification window must not straddle grant replacement,
+    // even if both sets happen to confer the same permissions. Compare the
+    // complete consumed EffectiveGrant facts, excluding observation time and
+    // normalising row/object ordering and the contract's default EXACT mode.
+    // This fingerprint stays process-private; it is not an attestation.
+    const facts = [...value.grants].sort((a, b) => a.grant_id.localeCompare(b.grant_id))
+      .map(g => ({ ...g, scope: { ...g.scope, mode: g.scope.mode ?? "EXACT" } }));
+    const fingerprint = digest(JSON.stringify(facts, (_key, value: unknown) => value !== null &&
+      typeof value === "object" && !Array.isArray(value)
+      ? Object.fromEntries(Object.entries(value).sort(([a], [b]) => a.localeCompare(b))) : value));
+    if (phase === "before") initialGrantFacts[actor] = fingerprint;
+    else if (initialGrantFacts[actor] !== fingerprint) throw new Error();
   }
   async function refused(name: typeof CHECKS[number], path: string, actor: "owner" | "denied" | "anonymous", headers = {}) {
     const value = await read(name, path, actor, false, headers);
@@ -174,8 +189,7 @@ export async function observeExecutiveNavigation(input: unknown, credentials: Ex
       value.organisationName !== org.profile.display_name || value.tenantName !== t.display_name ||
       value.market.countryCode !== plan.expected.country_code || value.market.marketId !== plan.expected.market_id ||
       value.market.currencyCode !== plan.expected.currency_code || value.expiresAt <= now() || value.expiresAt > now() + 10_000 ||
-      result.headers.get("cache-control") !== "private, no-store" || result.headers.get("vary")?.toLowerCase() !== "cookie" ||
-      result.headers.has("access-control-allow-origin")) throw new Error();
+      !privateHeaders(result.headers) || result.headers.get("vary")?.toLowerCase() !== "cookie") throw new Error();
     fresh(value.evaluatedAt); validUntil = Math.min(validUntil, value.expiresAt); mark("CONTEXT_MATCHES_CP");
     await grants("owner", "after"); await grants("denied", "after"); mark("CURRENT_FINAL_GRANTS");
     deadline.throwIfAborted(); if (now() >= started && now() < validUntil) mark("OBSERVATION_FRESHNESS");
