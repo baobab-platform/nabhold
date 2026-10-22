@@ -1,9 +1,11 @@
 # Nabhold Go-Live Register — v2.0
 
 **Masterplan:** [NAB-GOLIVE-MP-001 v2.0](NAB-GOLIVE-MP-001.md)  
-**Baseline:** 14 October 2026; latest source/component reconciliation 22 October 2026
+**Baseline:** 14 October 2026; latest source reconciliation 23 October 2026; component evidence remains frozen at its recorded pins
 **Current platform authority:** Accepted Shared EA v2.3; v2.2 retains normative L4 scenario identifiers.
 **Status model:** architecture, contract, code, migration, synthetic test, protected staging, external evidence and operational certification are tracked separately.
+
+**Latest source preparation:** [23 October executive navigation observation tooling](evidence/executive-observer-source-2026-10-23.md), section 35. This supplies no runtime approval or live acceptance.
 
 **Current reconciliation:** [22 October EA v2.3 progress audit](evidence/ea-v2.3-progress-audit-2026-10-22.md)
 updates source and PR status while preserving the [CMS component receipt](evidence/int03-cms-component-2026-10-22.md)
@@ -826,3 +828,35 @@ execution enforcement. Current human navigation grants do not supply those
 rights. G17 and R0–R3 are unaccepted/unreleased. Infrastructure #49 remains an
 independent approval request; the seven real INT-03C cases are unexecuted;
 CMS activation under Accepted Shared #354 remains HELD and NAB-03 14/14 BLOCKED.
+
+
+## 35. Next dependency — read-only navigation qualification tooling — 23 October 2026
+
+[Source receipt](evidence/executive-observer-source-2026-10-23.md) and
+[private handoff guide](onboarding/executive-navigation-observations.md).
+
+Nabhold #89 is merged at `f851da8c6e181a66fa17759ff785dee57ce91281` after
+applicable final-head CI and review. Infrastructure #50 is merged at
+`cbdb6e8bebe6ca485d1b78faf05f658cffd9ed08`. Those source merges do not supply
+#49 topology approval or executive human-fixture approval. The source next step
+is preparing actual observation, rather than enabling privileged commands.
+
+The new CLI can inspect a private handoff offline and, only in an independently
+authorised runtime, observe read-only BFF context against direct CP own-human
+grants/mapping/market. It verifies a distinct currently authenticated ungranted
+peer and structured denial, then rechecks identities and grants. Fixed-route
+GETs, isolated cookie/bearer destinations, bounded streaming/deadlines and
+redacted reports preserve all authority gates. No identity/CP/runtime mutation
+or acceptance signing occurs. Session responses are neither retained nor hashed.
+
+Local source `405989b4f34060abb46f0d797b181c0c7cad10c3`: 149 focused tests and
+strict TypeScript passed. This is SOURCE PREPARATION; its PR's final-head CI,
+review and actual merge record must be checked before use. No live fixture was
+provisioned or qualified. All real execution remains conditional on independently
+approved topology and separately scoped human credentials/grants, external
+evidence custody and witnessed cleanup.
+
+G04/G15/G17 remain PARTIAL/unaccepted. Privileged human capability execution
+still needs its owning CP/Shared protocol. Infrastructure #49 remains APPROVAL
+REQUIRED / RUNTIME HELD; CMS activation under Accepted Shared #354 HELD; all
+14 NAB-03 cases BLOCKED; R0–R3 NOT RELEASED.
