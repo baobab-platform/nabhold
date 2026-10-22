@@ -5,7 +5,7 @@ runtime handoff or live executive-context qualification was executed.
 
 | Source | Immutable revision |
 |---|---|
-| Local-tested observer implementation | 405989b4f34060abb46f0d797b181c0c7cad10c3 |
+| Local-tested observer implementation | 20cf5580b096b165a771f869f242614715ef65dd |
 | Starting Nabhold / merged #89 | f851da8c6e181a66fa17759ff785dee57ce91281 |
 | Inspected CP human read contract | bcea71bd9909be3672dfcb7ce78d04d6feb0e748 |
 | Inspected Shared main / EA authority | 742295e2b4f67a3de6d985e7da6bd89ed0be39cb |
@@ -41,7 +41,7 @@ outstanding browser/revocation, custody, disposal and protected-signoff work.
 
 ## Validation
 
-149 focused tests passed locally across the observer, existing protected G17,
+152 focused tests passed locally across the observer, existing protected G17,
 OIDC, executive navigation, capability and protected-operation suites. Strict
 TypeScript checking passed for the new observer/tests and imported code.
 The tested source revision above precedes documentation-only publication.
@@ -49,7 +49,9 @@ The tested source revision above precedes documentation-only publication.
 Coverage includes exact/missing/group/mixed/environment/expired/duplicate grants,
 active denial identity and actual missing authority, grant changes during reads,
 PRIMARY/market/state mismatches, strict denial problems and non-execution shape,
-privacy/cache/CORS headers, unsafe credentials/destinations/debug/TLS settings,
+privacy/cache/CORS on context and secret-bearing session responses, identical
+normalised before/after effective-grant facts (including same-permission
+replacement), unsafe credentials/destinations/debug/TLS settings,
 stalled/oversized/malformed/redirected responses, clock rollback and elapsed
 windows. Actual CLI subprocess tests cover offline shape inspection, missing
 credential BLOCKED output and private file/symlink/hard-link restrictions.

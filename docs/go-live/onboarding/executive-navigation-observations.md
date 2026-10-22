@@ -94,6 +94,9 @@ CP data nor logs out/revokes a session or deletes a runtime.
    direct CP effective-authority reads. The own human must have all three exact
    grants; the denial peer must demonstrably lack at least one. An expired,
    unauthenticated or actually authorised peer cannot stand in for this negative.
+   Both before/after session responses must also be private/no-store with no
+   CORS-origin or CORS-credentials allowance; CSRF-bearing data is not safe
+   merely because identity and expiry match.
 2. Read the actual CP Organisation overview and Tenant. Verify ACTIVE unique
    PRIMARY mapping, names, explicit country/market/currency and current sources.
 3. Require structured denial of anonymous access, caller query selectors,
@@ -102,6 +105,10 @@ CP data nor logs out/revokes a session or deletes a runtime.
 4. Recheck both session identities; compare the own BFF context to the direct
    CP facts, strict non-execution response shape, expiry and private/no-store,
    Cookie-varying, non-CORS headers. Recheck CP grants after the context read.
+   For both humans, the full consumed EffectiveGrant facts must match their
+   initial snapshot: IDs, permission, scope, type, source/profile, risk/elevation
+   and expiry. Same-permission replacement still blocks collection. Row/object
+   ordering and an omitted default EXACT mode are normalised.
 5. Refuse stale/future/mismatched sources, grant changes, duplicate references,
    unsafe transport, oversized/malformed/stalled bodies, redirects, elapsed
    deadlines and clock rollback. Preserve incomplete checks as BLOCKED.
@@ -118,6 +125,8 @@ remain BLOCKED. Injected transports are labelled SYNTHETIC. Successful technical
 observations cannot prove real browser login, issuer/session revocation,
 independent evidence custody, disposal or protected staging/production signoff.
 These remain explicit outstanding acceptance obligations in every report.
+Matching grant snapshots do not prove there was no transient change between
+reads; independent CP audit and real revocation evidence remain necessary.
 
 ## Remaining sequence and rollback
 

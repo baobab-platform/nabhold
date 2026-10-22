@@ -849,7 +849,7 @@ GETs, isolated cookie/bearer destinations, bounded streaming/deadlines and
 redacted reports preserve all authority gates. No identity/CP/runtime mutation
 or acceptance signing occurs. Session responses are neither retained nor hashed.
 
-Local source `405989b4f34060abb46f0d797b181c0c7cad10c3`: 149 focused tests and
+Local source `20cf5580b096b165a771f869f242614715ef65dd`: 152 focused tests and
 strict TypeScript passed. This is SOURCE PREPARATION; its PR's final-head CI,
 review and actual merge record must be checked before use. No live fixture was
 provisioned or qualified. All real execution remains conditional on independently
