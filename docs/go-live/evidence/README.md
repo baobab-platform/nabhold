@@ -58,3 +58,4 @@ Recorded and awaiting reviewer sign-off (not accepted):
 | Connected INT-03 audit | [int03-connected-audit-2026-10-20.md](int03-connected-audit-2026-10-20.md) | Current merged source, unmerged lifecycle, failed real-component attempts and exact-head acceptance gates; full INT-03 OPEN |
 
 | Connected identity-smoke qualification | [int03-identity-qualified-2026-10-20.md](int03-identity-qualified-2026-10-20.md) | #37/#80/#81 merged; bounded Actions NAB-ID-01–04 PASS; full INT-03/CMS/protected/release acceptance OPEN; independent archive verification not claimed |
+| INT-03 CMS component (real provider) | [`int03-cms-component-2026-10-22.md`](int03-cms-component-2026-10-22.md) | Verified engineering artifact digests for actual CMS/PG17 component PASS and separate bounded identity smoke; 14 connected CMS cases BLOCKED; independent gate-review sign-off PENDING; activation HELD |
