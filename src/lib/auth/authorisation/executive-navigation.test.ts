@@ -131,6 +131,23 @@ describe("G04B-05 concrete read-only human executive navigation", () => {
     await expect(g.resolve()).rejects.toBeInstanceOf(AuthenticationDenied);
   });
 
+  it("honours an optional future standing-grant bound and refuses an expired bound", async () => {
+    const f = fixture();
+    Object.assign(f.authority.grants[0], { valid_until: new Date(f.start + 1000).toISOString() });
+    expect((await f.resolve()).expiresAt).toBe(f.start + 1000);
+    Object.assign(f.authority.grants[0], { valid_until: new Date(f.start - 1).toISOString() });
+    await expect(f.resolve()).rejects.toBeInstanceOf(AuthenticationDenied);
+  });
+
+  for (const grantType of ["TIME_BOUND", "JUST_IN_TIME"]) {
+    it(`requires an explicit expiry for ${grantType} grants`, async () => {
+      const f = fixture();
+      f.authority.grants[0].grant_type = grantType;
+      await expect(f.resolve()).rejects.toBeInstanceOf(AuthenticationDenied);
+      expect(f.fetcher.mock.calls.some(call => String(call[0]).includes("/v1/organisations/"))).toBe(false);
+    });
+  }
+
   it("bounds bodies and refuses redirects, malformed source and dependency failures without disclosing them", async () => {
     for (const kind of ["oversized", "redirect", "malformed", "unavailable"]) {
       const f = fixture(), original = f.fetcher.getMockImplementation()!;

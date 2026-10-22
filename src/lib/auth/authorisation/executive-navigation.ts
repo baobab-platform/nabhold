@@ -80,9 +80,11 @@ function exactAuthority(input: unknown, principal: string, selected: ExecutiveNa
       (g.scope.mode === undefined || g.scope.mode === "EXACT") && g.scope[key] === id &&
       (g.scope.environment === undefined || g.scope.environment === selected.environment) &&
       Object.keys(g.scope).every(field => ["level", "mode", "environment", key].includes(field)) &&
-      (g.grant_type === "STANDING" ? g.valid_until === undefined : g.valid_until !== undefined) &&
+      (g.grant_type === "STANDING" || g.valid_until !== undefined) &&
       (g.valid_until === undefined || Date.parse(g.valid_until) > now));
     if (!grant) throw new AuthenticationDenied();
+    // Effective-authority observations may bound a standing grant too; honour
+    // any current expiry without treating that bound as a new grant lifetime.
     if (grant.valid_until) expiry = Math.min(expiry, Date.parse(grant.valid_until));
   }
   return expiry;
