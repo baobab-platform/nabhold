@@ -2,14 +2,17 @@
 
 **Masterplan:** [NAB-GOLIVE-MP-001 v2.0](NAB-GOLIVE-MP-001.md)  
 **Baseline:** 14 October 2026; latest source/component reconciliation 22 October 2026
+**Current platform authority:** Accepted Shared EA v2.3; v2.2 retains normative L4 scenario identifiers.
 **Status model:** architecture, contract, code, migration, synthetic test, protected staging, external evidence and operational certification are tracked separately.
 
-**Current reconciliation:** [22 October CMS component and pre-gate engineering audit](evidence/int03-cms-component-2026-10-22.md)
-supersedes older source/PR-status and CMS-component-pending claims while retaining
-their dated history. Actual CMS/PG component execution and the selected identity
-smoke pass for their frozen sources. All 14 connected CMS cases remain BLOCKED;
-C4 protected Kratos/Hydra→CP, full INT-03 and protected releases remain unaccepted.
-Registry activation is held. See section 32 for remaining engineering and gates.
+**Current reconciliation:** [22 October EA v2.3 progress audit](evidence/ea-v2.3-progress-audit-2026-10-22.md)
+updates source and PR status while preserving the [CMS component receipt](evidence/int03-cms-component-2026-10-22.md)
+at its frozen pins. CP #427, IAM #137 and Infrastructure #48 are merged source
+safeguards. Infrastructure #50 separates INT-03C source preparation from the
+held CMS lock; its own final CI/review/merge remains required. Infrastructure #49
+is an independent approval request, not approval. Seven-case execution and
+independent teardown remain unexecuted. Shared #354 remains HELD and all 14
+NAB-03 cases remain BLOCKED. See section 33 for current dependencies.
 
 This register records source/runtime evidence known from the repositories. It is not live production telemetry.
 The [16 October Finance F1 source evidence](evidence/finance-f1-source-2026-10-16.md) and section 18 supersede older Finance source/PR-status claims while preserving their dated history.
@@ -38,7 +41,7 @@ The [16 October Finance F1 source evidence](evidence/finance-f1-source-2026-10-1
 | G15 Digital Estate | IN PROGRESS | Release guards, capability client and content adapter merged; executive session preview-only | Real auth/context/capability journeys |
 | G16 Infrastructure/EA-09 | PARTIAL / EXTERNAL | af-south-1 staging architecture exists; protected staging/external account evidence incomplete | Real account/roles/KMS/DNS + qualification |
 | G17 Acceptance | TECHNICAL TOOLING IMPLEMENTED / PROTECTED EXECUTION BLOCKED | Ordered identity/PRIMARY-Tenant/CP→CMS observations and dispatch-only protected workflow implemented; no real acceptance pack signed | Per-release UAT/security/ops GO |
-| G18 Production | NOT AUTHORISED | EA v2.1 production activation remains not authorised | Signed release-specific activation |
+| G18 Production | NOT AUTHORISED | EA v2.3 production activation remains not authorised | Signed release-specific activation |
 
 ## 2. Platform EA gates
 
@@ -764,3 +767,33 @@ ERP #110's Accepted People direction and PG17 Gate D repair are merged. G07/G08
 remain BLOCKED pending canonical workforce/provider and statutory acceptance.
 Native protected IAM–CP, executive authority, legal/onboarding, staging,
 production and R0–R3 remain OPEN. Nabhold remains non-trading.
+
+
+## 33. EA v2.3 audit and independent INT-03C source lock — 22 October 2026
+
+[The source audit](evidence/ea-v2.3-progress-audit-2026-10-22.md) records exact
+observed revisions, gate-by-gate mapping, source quality and remaining evidence.
+The masterplan remains Accepted v2.0; EA v2.3 governs current execution. No
+readiness dimension is promoted by this reconciliation.
+
+| Work | Current state | Next decisive evidence |
+|---|---|---|
+| CP #427 | MERGED `bcea71bd9909be3672dfcb7ce78d04d6feb0e748`; immutable two-human provenance and PG regression source | Actual governed workload linkage, live Principal deactivation and current denial in approved runtime |
+| IAM #137 | MERGED `ca5eb723c7845ed9a60e19fd0ef1a1e900d7b97a`; native bridge and independent watchdog safeguards | Actual supervised issue/introspection/revoke/destroy, deadline crash recovery and accepting-runtime shutdown |
+| Infrastructure #48 | MERGED `9ba30c410ffcc6a46f5d912bf03853532f7adf0c`; reviewed exact head, applicable checks green, 185 local source tests pass | No live qualification implied |
+| Infrastructure #50 | SOURCE CANDIDATE; separate exact INT-03C source lock, clean-checkout/baseline ancestry verification; 190 local source tests pass | Final-head mandatory CI, review and merge; no change to CMS lock/activation |
+| Infrastructure #49 | APPROVAL REQUIRED / RUNTIME HELD | Independent approved topology and run window, two CP admins, CP-owned admission/IDs, private secrets, external supervisor and immutable evidence custody |
+| INT-03C seven cases | NOT EXECUTED / NOT ACCEPTED | Same bounded real IAM/CP run, all positive/negative originals, independently witnessed teardown and human acceptance |
+| Shared #354 / NAB-03 | HELD / 14 of 14 BLOCKED | Separate CMS activation governance and full connected provider matrix; INT-03C alone cannot open this gate |
+| Protected C4 / G17 / R0–R3 | OPEN / NOT RELEASED | Protected identity, official legal/onboarding evidence, browser/provider/ops acceptance and release-specific signoff |
+
+Immediate permitted engineering is finalising #50 and independent contract/
+adapter work. Runtime mutation remains conditional on actual independent #49
+approval and provisioning. Executive context protocol, canonical content
+coverage, Finance F1, legal verification preparation and ENG/BXS adoption are
+parallel source lanes; do not invent provider authority or INT-03D scope.
+
+This section supersedes section 32's pending CP/IAM engineering descriptions,
+not its frozen component evidence or the unchanged CMS hold. Nabhold stays a
+non-trading holding-company consumer with autonomous subsidiaries and no
+implicit cross-tenant reporting rights.
