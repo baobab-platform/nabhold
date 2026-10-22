@@ -5,9 +5,11 @@ receipt. EA v2.3 retains v2.2's normative L4 matrix. Evidence classes remain
 separate: source tests, actual component execution, connected qualification,
 protected acceptance and production certification.
 
-**Record class:** source/unit implementation evidence plus actual live-dependency
-component interoperability on disposable synthetic Actions data; no simulated
-CMS, IAM or CP provider is used for the reported connected/component runs.
+**Record class:** source/unit implementation evidence plus actual CMS/PG17
+component interoperability on disposable synthetic Actions data, and a separate
+bounded real IAM/CP identity smoke. The CMS component uses no simulated CMS
+provider; the reported identity smoke uses real IAM/CP dependencies. No full
+connected IAM/CP/CMS NAB-03 qualification has run, and all 14 cases remain BLOCKED.
 **Verifier/reviewer role and date:** Codex automated engineering implementer,
 22 October 2026 UTC. This same implementation agent downloaded the archives and
 recomputed their hashes independently of GitHub's reported digest values. It is
