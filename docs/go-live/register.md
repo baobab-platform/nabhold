@@ -8,7 +8,9 @@
 **Current reconciliation:** [22 October EA v2.3 progress audit](evidence/ea-v2.3-progress-audit-2026-10-22.md)
 updates source and PR status while preserving the [CMS component receipt](evidence/int03-cms-component-2026-10-22.md)
 at its frozen pins. CP #427, IAM #137 and Infrastructure #48 are merged source
-safeguards. Infrastructure #50 separates INT-03C source preparation from the
+safeguards. G04B-05 now adds disabled-by-default read-only executive navigation
+against existing CP human contracts; see section 34. This does not implement
+privileged human capability execution. Infrastructure #50 separates INT-03C source preparation from the
 held CMS lock. Its tested source and [current CI/merge record](https://github.com/baobab-platform/infrastructure/pull/50)
 are separate from runtime acceptance. Infrastructure #49
 is an independent approval request, not approval. Seven-case execution and
@@ -39,7 +41,7 @@ The [16 October Finance F1 source evidence](evidence/finance-f1-source-2026-10-1
 | G12 Group reporting | BLOCKED | Option B and CP group model accepted; real reporting grants/consolidation absent | Portfolio projection + grants + finance model |
 | G13 Governance/documents/risk | BLOCKED | Nabhold ADR boundaries exist; canonical owner/provider not selected | Shared domain/provider decision |
 | G14 Pulse/Regulations | PARTIAL | Pulse canonical evidence/research IMPLEMENTED source; Regulations canonical capabilities PARTIAL | Nabhold bindings; verified regulatory coverage |
-| G15 Digital Estate | IN PROGRESS | Release guards, capability client and content adapter merged; executive session preview-only | Real auth/context/capability journeys |
+| G15 Digital Estate | IN PROGRESS | Release guards, capability client and content adapter merged; dashboard preview-only, opt-in human CP navigation source implemented | Real auth/context/capability journeys |
 | G16 Infrastructure/EA-09 | PARTIAL / EXTERNAL | af-south-1 staging architecture exists; protected staging/external account evidence incomplete | Real account/roles/KMS/DNS + qualification |
 | G17 Acceptance | TECHNICAL TOOLING IMPLEMENTED / PROTECTED EXECUTION BLOCKED | Ordered identity/PRIMARY-Tenant/CP→CMS observations and dispatch-only protected workflow implemented; no real acceptance pack signed | Per-release UAT/security/ops GO |
 | G18 Production | NOT AUTHORISED | EA v2.3 production activation remains not authorised | Signed release-specific activation |
@@ -798,3 +800,29 @@ This section supersedes section 32's pending CP/IAM engineering descriptions,
 not its frozen component evidence or the unchanged CMS hold. Nabhold stays a
 non-trading holding-company consumer with autonomous subsidiaries and no
 implicit cross-tenant reporting rights.
+
+
+## 34. G04B-05 — concrete human executive navigation — 22 October 2026
+
+**Source implementation only; live acceptance pending; default OFF.**
+[Exact source/validation receipt](evidence/executive-navigation-source-2026-10-22.md)
+and [operator/boundary guide](onboarding/G04B-04-executive-authorisation.md#g04b-05--concrete-read-only-executive-navigation-22-october-2026).
+
+The confidential BFF now has a concrete read-only CP adapter and opt-in
+`GET /api/auth/context`. It checks the same human's current IAM/CP identity,
+independent exact organisation.view / tenant.view / market.view grants,
+CP-owned PRIMARY mapping and selected current market, then rechecks identity,
+grants and local custody. The result contains no redeemable PlatformContext,
+command permit, raw grants or credentials. It does not enable the dashboard.
+
+Local verification at source `b7040c9a23ee3222488992bb1c87d543de0e172f`:
+94 focused auth/OIDC tests and strict TypeScript checks passed. Repository-wide
+mandatory CI and final-head review remain required before merge. Synthetic
+protocol tests are not deployed IAM/CP or protected staging acceptance.
+
+G04/G15 remain PARTIAL. Privileged executive capability execution still needs
+its own CP/Shared same-principal/delegation contract, mandate and provider
+execution enforcement. Current human navigation grants do not supply those
+rights. G17 and R0–R3 are unaccepted/unreleased. Infrastructure #49 remains an
+independent approval request; the seven real INT-03C cases are unexecuted;
+CMS activation under Accepted Shared #354 remains HELD and NAB-03 14/14 BLOCKED.
