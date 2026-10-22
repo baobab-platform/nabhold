@@ -8,7 +8,7 @@ capability execution remains a separate unresolved protocol/acceptance gate.
 
 | Source | Immutable revision |
 |---|---|
-| Implementation tested locally | `b7040c9a23ee3222488992bb1c87d543de0e172f` |
+| Implementation tested locally | `dca2fe8861a176b9ba50e6ededb451e32a4fc4b3` |
 | Nabhold merged starting source | `bc263486c635120b2ceea7f25a155fa9e32234a6` |
 | CP human read-contract source | `bcea71bd9909be3672dfcb7ce78d04d6feb0e748` |
 | Shared inspected contract/EA source | `6938b16d63805d3cf07e492aa574ac076bbee423` |
@@ -38,7 +38,7 @@ this consumer creates no new scope, canonical identity or CP API.
 
 ## Local validation
 
-94 focused tests pass across the new executive-navigation suite and existing
+97 focused tests pass across the new executive-navigation suite and existing
 executive capability, protected-operation and OIDC suites. Strict TypeScript
 checking passes for the changed auth module/tests/handler and their imports.
 Public test dependencies were installed in a disposable separate test runtime;
@@ -47,7 +47,8 @@ quality/build/browser/security checks remain mandatory on the PR's exact final
 head; no local full-application CI result is claimed here.
 
 Coverage includes missing/broad/group/foreign/environment-mismatched grants,
-mixed scope anchors, duplicate grant IDs, expired/time-bound permissions,
+mixed scope anchors, duplicate grant IDs, expired/time-bound permissions, optional standing-grant expiry bounds, missing
+TIME_BOUND/JUST_IN_TIME expiries,
 stale/future/mismatched identities and CP sources, missing/secondary/duplicate
 PRIMARY mappings, inactive states, wrong Tenant, invisible/missing/duplicate
 markets, mid-read IAM revocation/identity replacement/grant withdrawal, source

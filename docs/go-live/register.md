@@ -815,8 +815,8 @@ CP-owned PRIMARY mapping and selected current market, then rechecks identity,
 grants and local custody. The result contains no redeemable PlatformContext,
 command permit, raw grants or credentials. It does not enable the dashboard.
 
-Local verification at source `b7040c9a23ee3222488992bb1c87d543de0e172f`:
-94 focused auth/OIDC tests and strict TypeScript checks passed. Repository-wide
+Local verification at source `dca2fe8861a176b9ba50e6ededb451e32a4fc4b3`:
+97 focused auth/OIDC tests and strict TypeScript checks passed. Repository-wide
 mandatory CI and final-head review remain required before merge. Synthetic
 protocol tests are not deployed IAM/CP or protected staging acceptance.
 
