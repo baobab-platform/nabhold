@@ -63,7 +63,10 @@ function trustedOrigin(raw: string, environment: string): string {
  * Only a digest leaves this boundary: response bodies and transport errors are
  * never copied to reports, logs, artifacts or exception causes.
  */
-async function boundedJSON(response: Response, signal: AbortSignal) {
+// Shared by the read-only executive observer. Credential-bearing session
+// bodies suppress digest calculation; existing protected observations keep
+// their original default hashing behaviour. Callers never retain raw bodies.
+export async function boundedJSON(response: Response, signal: AbortSignal, includeDigest = true) {
   if (!response.body || !/^application\/(?:json|problem\+json)(?:\s*;|$)/i.test(response.headers.get("content-type") ?? "")) {
     void response.body?.cancel().catch(() => undefined);
     throw new Error("Invalid media type");
@@ -86,7 +89,8 @@ async function boundedJSON(response: Response, signal: AbortSignal) {
     const bytes = new Uint8Array(size);
     let at = 0;
     for (const chunk of chunks) { bytes.set(chunk, at); at += chunk.byteLength; }
-    return { body: JSON.parse(new TextDecoder("utf-8", { fatal: true }).decode(bytes)) as unknown, sha: digest(bytes) };
+    return { body: JSON.parse(new TextDecoder("utf-8", { fatal: true }).decode(bytes)) as unknown,
+      sha: includeDigest ? digest(bytes) : undefined };
   } finally { signal.removeEventListener("abort", cancel); cancel(); reader.releaseLock(); }
 }
 

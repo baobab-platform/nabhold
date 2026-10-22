@@ -20,7 +20,8 @@
     "test:auth-store": "vitest run --config vitest.auth-store.config.ts",
     "integration:check": "node --experimental-strip-types scripts/integration/run.mjs check",
     "dev:integration": "node --experimental-strip-types scripts/integration/run.mjs dev",
-    "test:e2e:integration": "node --experimental-strip-types scripts/integration/run.mjs test"
+    "test:e2e:integration": "node --experimental-strip-types scripts/integration/run.mjs test",
+    "observe:executive-context": "node --experimental-strip-types scripts/observe-executive-navigation.mjs"
   },
   "dependencies": {
     "@base-ui/react": "^1.9.0",
