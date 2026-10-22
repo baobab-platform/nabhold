@@ -747,8 +747,9 @@ records merged CMS #42–44/#46–47, Infrastructure #38–39, IAM #130/#132 and
 Nabhold #83/#85–86. Infrastructure #39 is merged at
 `9c1e44314ccc8c58730f164b3b4811625559fa64` after all 37 checks and final-head
 review. Actual source-built CMS/PG17 component and selected identity regressions
-pass. The final run's component and identity artifacts were independently
-downloaded/rehashed; this does not rehash the older `39481595139` artifact.
+pass. The final run's component and identity artifacts were downloaded/rehashed by the automated engineering implementer;
+independent gate-review sign-off remains pending. This does not rehash the older
+`39481595139` artifact.
 
 All 14 connected CMS results remain BLOCKED and `qualified=false`. CMS-owned
 fixture publication does not represent human approval. No CP identifiers,

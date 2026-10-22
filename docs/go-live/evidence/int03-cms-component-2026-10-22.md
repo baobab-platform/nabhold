@@ -5,6 +5,15 @@ receipt. EA v2.3 retains v2.2's normative L4 matrix. Evidence classes remain
 separate: source tests, actual component execution, connected qualification,
 protected acceptance and production certification.
 
+**Record class:** source/unit implementation evidence plus actual live-dependency
+component interoperability on disposable synthetic Actions data; no simulated
+CMS, IAM or CP provider is used for the reported connected/component runs.
+**Verifier/reviewer role and date:** Codex automated engineering implementer,
+22 October 2026 UTC. This same implementation agent downloaded the archives and
+recomputed their hashes independently of GitHub's reported digest values. It is
+not an independent human security/operations reviewer and has not signed a
+release acceptance. Independent gate-review sign-off remains **PENDING**.
+
 ## Immutable source audit
 
 | Repository | Observed main | Relevant merged work |
@@ -52,7 +61,7 @@ All merged increments passed their mandatory checks and final-head review.
 Actual fixture publication is disposable CMS engineering data, not human
 editorial approval or an independently certified provider.
 
-## Independently downloaded component evidence
+## Downloaded-artifact hash verification (engineering)
 
 [Infrastructure Actions run 39667309644](https://github.com/baobab-platform/infrastructure/actions/runs/39667309644)
 passed the final #39 component and selected identity/prerequisite regressions.
@@ -65,10 +74,25 @@ is recorded separately above; these revisions are not interchangeable.
 | Actual CMS/PG component, job `119456423066` | `12377044343` | `cc5d3d581182a42a5751bf43b795600019f6a19f6f739e7feb708cd4af1cb342` | `8110ba3d951821095ace9b6235f70b79408da3219e6f835406023c06e71ae3d1` |
 | Selected identity smoke, job `119456423025` | `12377994259` | `729f86ecb9e4b392da182a4b7fd46ad8449fb993d0b04f631bb322d2c2c35b31` | `5605fb7a559684f9006e75a8c94849f4f82e9e113e687dc0d94efe3728ad00dd` |
 
-Both ZIPs were downloaded and independently hashed; enclosed receipt hashes
-were checked against their retained sidecars. This verification applies only
-to these artifacts. The earlier identity run `39481595139` digest remains
-GitHub-reported, not independently downloaded/rehashed by this reconciliation.
+Retained custody is GitHub Actions in `baobab-platform/infrastructure`, run
+`39667309644`, not this agent's temporary workspace:
+
+| Archive | Retained custody reference | Enclosed receipt path |
+|---|---|---|
+| Component | [artifact 12377044343](https://github.com/baobab-platform/infrastructure/actions/runs/39667309644/artifacts/12377044343) | `cms-component-bfc0544a88aa04c1/completed/receipt.json` |
+| Identity | [artifact 12377994259](https://github.com/baobab-platform/infrastructure/actions/runs/39667309644/artifacts/12377994259) | `l4-19c5654f450e805c-int03-identity/completed/receipt.json` |
+
+The artifact API reported both unexpired on 22 October, with expiry
+`2026-11-05T20:05:44Z`. Beside each enclosed receipt is `receipt.sha256`.
+The automated engineering verifier downloaded both ZIPs, recomputed their
+SHA-256 values and checked each enclosed receipt against its sidecar. The
+committed values above allow another reviewer to repeat that verification
+while retained artifacts remain available. No separate immutable archive
+custodian or independent gate-review sign-off is claimed; longer-term custody
+and such sign-off remain outstanding acceptance work before artifact expiry.
+This verification applies only to these artifacts. The earlier identity run
+`39481595139` digest remains GitHub-reported, not downloaded/rehashed by this
+reconciliation.
 
 The component lock freezes Shared `409d780d05f7825ab1228649541032d42a7b0b13`,
 CMS `8c84676cf6139cffd353a6940a006450f14667a4`, Nabhold
