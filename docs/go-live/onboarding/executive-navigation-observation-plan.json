@@ -1,0 +1,25 @@
+{
+  "version": "1.0",
+  "environment": "integration",
+  "run_id": null,
+  "deadline": null,
+  "approval_reference": null,
+  "bff_origin": null,
+  "cp_origin": null,
+  "expected": {
+    "owner_principal_id": null,
+    "denied_principal_id": null,
+    "organisation_id": null,
+    "tenant_id": null,
+    "country_code": null,
+    "market_id": null,
+    "currency_code": null
+  },
+  "sources": {
+    "nabhold": null,
+    "cp": null,
+    "iam": null,
+    "shared": null,
+    "infrastructure": null
+  }
+}

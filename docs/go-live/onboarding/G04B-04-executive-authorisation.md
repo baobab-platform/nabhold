@@ -119,3 +119,13 @@ result has no `context_id` or `authorised: true` and must never be adapted into
 CMS activation under Accepted Shared #354 remains HELD; all 14 NAB-03 cases
 remain BLOCKED. Roll back by disabling the opt-in and reverting the source PR;
 there is no new persisted state to migrate or reconcile.
+
+
+### Next source dependency — real observation preparation (23 October 2026)
+
+Merged Nabhold #89 supplies the read-only adapter; the next dependency is
+qualification against independently approved real services and human fixtures.
+The [bounded observer and private handoff](executive-navigation-observations.md)
+prepare that work without provisioning or accepting any runtime. Its source
+receipt records exact tested revisions. This does not replace real browser,
+revocation, custody/teardown or protected acceptance, or confer command authority.
