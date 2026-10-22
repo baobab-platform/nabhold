@@ -7,6 +7,7 @@ import { AuthenticationDenied, readAuthSettings, type AuthSettings } from "./set
 import { begin, discover, exchange } from "./protocol";
 import { requireCurrentIdentity } from "./authority";
 import { limitedBody } from "./transport";
+import { readExecutiveNavigationSelection, resolveExecutiveNavigation, type ExecutiveNavigationSelection } from "../authorisation/executive-navigation";
 
 export const ATTEMPT = "__Host-nabhold-login";
 export const BINDING = "__Host-nabhold-browser";
@@ -53,7 +54,8 @@ function denied(status = 401) { return NextResponse.json({ code: "AUTHENTICATION
 /** Dependencies are explicit only for tests; production routes always use the
  * environment factory and verified TLS Redis. There is no process-local fallback.
  */
-export interface AuthDependencies { settings: () => AuthSettings | null; store: () => ConfidentialSessionStore | null; fetcher?: typeof fetch }
+export interface AuthDependencies { settings: () => AuthSettings | null; store: () => ConfidentialSessionStore | null; fetcher?: typeof fetch;
+  navigationSelection?: () => ExecutiveNavigationSelection | null }
 const production: AuthDependencies = { settings: readAuthSettings, store: createConfidentialStoreFromEnv };
 export function authHandlers(deps: AuthDependencies = production) {
   function context(request: NextRequest, mutation = false) {
@@ -130,6 +132,30 @@ export function authHandlers(deps: AuthDependencies = production) {
         const session = await ctx.store.readSession(value); if (!session) throw new AuthenticationDenied();
         const identity = await requireCurrentIdentity(session, ctx.settings, deps.fetcher);
         return NextResponse.json({ ...identity, csrfToken: session.csrfToken }, { headers });
+      } catch { return denied(); }
+    },
+    /** Read-only, server-selected navigation; never a capability/mandate or
+     * workload context. The new surface is unavailable unless explicitly opted
+     * in using existing nonproduction OIDC and confidential session custody.
+     */
+    async navigation(request: NextRequest) {
+      try {
+        const selected = (deps.navigationSelection ?? readExecutiveNavigationSelection)();
+        if (!selected) return denied(404);
+        const ctx = context(request); if (!ctx) return denied(404);
+        if (ctx.url.search || request.headers.get("sec-fetch-site") === "cross-site" ||
+          (request.headers.has("origin") && request.headers.get("origin") !== ctx.settings.origin)) throw new AuthenticationDenied();
+        const value = handle(request, SESSION); if (!value) throw new AuthenticationDenied();
+        const session = await ctx.store.readSession(value); if (!session) throw new AuthenticationDenied();
+        const navigation = await resolveExecutiveNavigation(session, selected, ctx.settings, { fetcher: deps.fetcher });
+        // Logout or local custody expiry during CP reads invalidates this read.
+        // No successful remote observation may resurrect a revoked BFF handle.
+        const current = await ctx.store.readSession(value);
+        if (!current || current.accessToken !== session.accessToken || current.subject !== session.subject ||
+          current.issuer !== session.issuer || current.createdAt !== session.createdAt ||
+          Math.min(current.expiresAt, navigation.expiresAt) <= Date.now()) throw new AuthenticationDenied();
+        return NextResponse.json({ ...navigation, expiresAt: Math.min(current.expiresAt, navigation.expiresAt) },
+          { headers: { ...headers, Vary: "Cookie" } });
       } catch { return denied(); }
     },
     /** Local logout remains possible when IAM or CP is unavailable. It revokes
