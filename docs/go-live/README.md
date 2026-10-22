@@ -4,7 +4,7 @@ The controlling programme baseline is **[NAB-GOLIVE-MP-001 v2.0](NAB-GOLIVE-MP-0
 
 The former [v1.0 masterplan](NAB-GOLIVE-MP-001-masterplan-v1.0.md) is **HISTORICAL / RETIRED** and remains in the repository only for audit traceability.
 
-v2.0 is aligned to accepted ADR-BCP-026, ADR-BCP-027, Baobab EA Implementation Plan v2.1 and ADR-NAB-0014. It adopts Organisation-first progressive onboarding, Option B subsidiary autonomy, separate legal-actor authority and capability-specific activation.
+v2.0 is aligned to accepted ADR-BCP-026, ADR-BCP-027, Baobab EA Implementation Plan v2.3 (with v2.2 retaining the normative L4 scenario matrix) and ADR-NAB-0014. It adopts Organisation-first progressive onboarding, Option B subsidiary autonomy, separate legal-actor authority and capability-specific activation.
 
 | Document | Purpose |
 |---|---|
@@ -12,6 +12,7 @@ v2.0 is aligned to accepted ADR-BCP-026, ADR-BCP-027, Baobab EA Implementation P
 | [evidence/finance-f1-source-2026-10-16.md](evidence/finance-f1-source-2026-10-16.md) | Merged independent F1 DRAFT contracts, exact CI/source pointers and outstanding native acceptance |
 | [evidence/progress-audit-2026-10-19.md](evidence/progress-audit-2026-10-19.md) | Fresh merged-source, PR and acceptance reconciliation; INT-02/C4/INT-03 boundaries |
 | [evidence/int03-connected-audit-2026-10-20.md](evidence/int03-connected-audit-2026-10-20.md) | Connected lifecycle progress, failed attempts and remaining acceptance exits |
+| [evidence/ea-v2.3-progress-audit-2026-10-22.md](evidence/ea-v2.3-progress-audit-2026-10-22.md) | Current v2.3 audit, merged CP/IAM/#48 reconciliation, #50 source-lock work and unchanged #49 execution hold |
 | [register.md](register.md) | Live gate/blocker/decision status; update whenever a gate materially changes |
 | [evidence/README.md](evidence/README.md) | Evidence-index rules and immutable acceptance pointers |
 | [capability-demand-census.md](capability-demand-census.md) | Direct/conditional/indirect capability demand by release |
@@ -62,6 +63,10 @@ v2.0 is aligned to accepted ADR-BCP-026, ADR-BCP-027, Baobab EA Implementation P
 | R3 Group Oversight | NOT RELEASED |
 
 See [register.md](register.md) for the current blockers and implementation queue.
+Infrastructure #49 is an independent approval request, not permission to create
+a disposable runtime. CMS registry activation under Accepted Shared #354 remains HELD; all 14 NAB-03 cases are BLOCKED.
+CP #427, IAM #137 and Infrastructure #48 are merged source safeguards, not live
+qualification. The separate INT-03C source-lock increment is tracked in #50.
 
 ## Local work without staging or AWS
 

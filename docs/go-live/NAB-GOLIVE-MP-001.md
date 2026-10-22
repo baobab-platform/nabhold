@@ -11,8 +11,15 @@
 **Identity authority:** baobab-platform/baobab-iam  
 **Infrastructure authority:** baobab-platform/infrastructure  
 **Supersedes:** NAB-GOLIVE-MP-001 v1.0, baseline 8 October 2026, now HISTORICAL  
-**Governing platform decisions:** ADR-BCP-026, ADR-BCP-027, accepted Baobab EA Implementation Plan v2.1  
+**Governing platform decisions:** ADR-BCP-026, ADR-BCP-027, accepted Baobab EA Implementation Plan v2.3 (successor to the v2.1 adoption baseline)  
 **Governing Nabhold decisions:** ADR-NAB-0003 through ADR-NAB-0014, as amended by ADR-NAB-0014  
+
+**Current platform interpretation (22 October 2026):** EA v2.3 is the governing
+execution plan; the accepted v2.2 L4 matrix retains normative scenario identifiers.
+The 14 October v2.0 acceptance date and historical snapshots remain unchanged.
+See the [current source audit](evidence/ea-v2.3-progress-audit-2026-10-22.md).
+Infrastructure #49 remains an independent approval request, CMS registry activation under Accepted Shared #354 remains
+HELD and all 14 connected NAB-03 cases remain BLOCKED.
 
 > **Master rule:** architecture acceptance, contract convergence, source implementation, database migration, synthetic testing, protected staging, independent legal/provider evidence, Control Plane activation and production authorisation are different facts. No one of them implies the others.
 
@@ -122,7 +129,8 @@ R0 may launch independently. R1 may be internally phased by signed feature flags
 
 # 5. Readiness model
 
-Baobab EA v2.1 governs readiness through separate decisions.
+Baobab EA v2.3 governs current readiness through separate decisions. The v2.1
+references in dated historical snapshots describe the original acceptance baseline.
 
 ## 5.1 Platform gates
 
