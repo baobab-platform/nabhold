@@ -1,14 +1,15 @@
 # Nabhold Go-Live Register — v2.0
 
 **Masterplan:** [NAB-GOLIVE-MP-001 v2.0](NAB-GOLIVE-MP-001.md)  
-**Baseline:** 14 October 2026; latest source reconciliation 19 October 2026
+**Baseline:** 14 October 2026; latest source/component reconciliation 22 October 2026
 **Status model:** architecture, contract, code, migration, synthetic test, protected staging, external evidence and operational certification are tracked separately.
 
-**Current reconciliation:** [19 October fresh implementation audit](evidence/progress-audit-2026-10-19.md)
-supersedes older claims that Infrastructure #35/INT-02 remains open. INT-02 is
-accepted only for its frozen real-component/synthetic Actions source set.
-C4-03 protected Kratos/Hydra→CP, full INT-03 and every protected release remain
-unaccepted. See section 23 for the next dependency-ordered work.
+**Current reconciliation:** [22 October CMS component and pre-gate engineering audit](evidence/int03-cms-component-2026-10-22.md)
+supersedes older source/PR-status and CMS-component-pending claims while retaining
+their dated history. Actual CMS/PG component execution and the selected identity
+smoke pass for their frozen sources. All 14 connected CMS cases remain BLOCKED;
+C4 protected Kratos/Hydra→CP, full INT-03 and protected releases remain unaccepted.
+Registry activation is held. See section 32 for remaining engineering and gates.
 
 This register records source/runtime evidence known from the repositories. It is not live production telemetry.
 The [16 October Finance F1 source evidence](evidence/finance-f1-source-2026-10-16.md) and section 18 supersede older Finance source/PR-status claims while preserving their dated history.
@@ -23,10 +24,10 @@ The [16 October Finance F1 source evidence](evidence/finance-f1-source-2026-10-1
 | G01C group relationships/mandates | BLOCKED | CP relationship/mandate machinery exists; no accepted real control/mandate evidence for programme use | Evidence-backed relationships/mandates |
 | G02 Organisation-first onboarding | IMPLEMENTED-NOT-EXECUTED | CP progressive application, independent review/decision, TenantOnboardingRequest v2 and RegisterProgressiveTenantV2 implemented; synthetic four-business PG17 acceptance exists | Execute real Nabhold controlled staging flow |
 | G03 capability programme | IN PROGRESS | Shared catalogue has 25 keys including three DRAFT/EXPERIMENTAL F1 entries; ADR-SHARED-033 remains Proposed | F1 semantic/provider acceptance + subsequent domains |
-| G04 IAM | PARTIAL | Provider bootstrap, OIDC/TLS Redis custody, current IAM/CP self-identity, executive authorisation seam and repaired dormant human profile implemented; C4 evidence/readiness source exists; nabhold-backend stays PROVISIONED | Actual registered native C4 qualification, real Principals/SoD, governed workload/CMS and connected BFF acceptance remain |
-| G05 CMS / R0 | PARTIAL | Organisation-first consumer/provider source convergence implemented; CMS support PARTIAL and production_permitted=false | P0-04 protected identity + P0-06 live IAM/CP/binding + P0-07 R0 acceptance |
+| G04 IAM | PARTIAL | Provider bootstrap, OIDC/TLS Redis custody, current IAM/CP self-identity and native short-token read-back implemented; named CMS activation held; executive seam and C4 readiness source exist; nabhold-backend stays PROVISIONED | Actual registered native C4 qualification, real Principals/SoD, governed workload/CMS and connected BFF acceptance remain |
+| G05 CMS / R0 | PARTIAL | Estate profiles, Node24/PG17 fixture provider and actual component PASS; connected 14-case qualification BLOCKED; CMS support PARTIAL and production_permitted=false | P0-04 protected identity + P0-06 live IAM/CP/binding + P0-07 R0 acceptance |
 | G06 ERP finance | BLOCKED | Shared #319/#321 merged F1 DRAFT wire contracts; no certified ERP F1 provider | FinanceBaseline + F1 + live iDempiere |
-| G07 Workforce/HR | BLOCKED | No accepted canonical workforce contract/provider surface | Shared/domain decision + implementation |
+| G07 Workforce/HR | BLOCKED | ERP #110 Accepted first-party People direction merged; canonical workforce contract/provider surface still absent | Shared/domain decision + implementation |
 | G08 Payroll | BLOCKED | No accepted production payroll capability/provider | Statutory/provider acceptance |
 | G09 Procurement/assets/projects | BLOCKED | Required corporate contracts incomplete | Contracts + ERP adapters |
 | G10 Subscriptions | BLOCKED FOR R2 | Current provider simulated; production_permitted=false | Production billing provider + certification |
@@ -738,3 +739,27 @@ a registry snapshot locally, borrow production credentials/Pulse exception,
 change PARTIAL semantics to force routing, or call the identity smoke full INT-03.
 Native protected Kratos/Hydra IAM–CP, executive authority, legal onboarding,
 staging, production and R0–R3 remain OPEN. Nabhold remains non-trading.
+
+## 32. Actual CMS component and pre-gate engineering — 22 October 2026
+
+[The source/component reconciliation](evidence/int03-cms-component-2026-10-22.md)
+records merged CMS #42–44/#46–47, Infrastructure #38–39, IAM #130/#132 and
+Nabhold #83/#85–86. Infrastructure #39 is merged at
+`9c1e44314ccc8c58730f164b3b4811625559fa64` after all 37 checks and final-head
+review. Actual source-built CMS/PG17 component and selected identity regressions
+pass. The final run's component and identity artifacts were independently
+downloaded/rehashed; this does not rehash the older `39481595139` artifact.
+
+All 14 connected CMS results remain BLOCKED and `qualified=false`. CMS-owned
+fixture publication does not represent human approval. No CP identifiers,
+independent certification, grants or bindings are fabricated. Native named
+fixture inputs/read-back are under IAM #133 review; supervised immutable-deadline
+and early-close lifecycle, actual CP-owned topology and the complete connected
+executor still require engineering. The canonical registry activation hold stays
+in force. Every remaining safe pre-gate dependency must be progressed without
+borrowing credentials or relaxing lifecycle/provider gates.
+
+ERP #110's Accepted People direction and PG17 Gate D repair are merged. G07/G08
+remain BLOCKED pending canonical workforce/provider and statutory acceptance.
+Native protected IAM–CP, executive authority, legal/onboarding, staging,
+production and R0–R3 remain OPEN. Nabhold remains non-trading.
