@@ -1,7 +1,7 @@
 import { afterEach, describe, expect, it, vi } from "vitest";
 vi.mock("server-only", () => ({}));
 
-import { ESTATE_DEFAULT_NAVIGATION } from "@/integrations/payload/defaults";
+import { ESTATE_DEFAULT_HOME_PAGE, ESTATE_DEFAULT_NAVIGATION } from "@/integrations/payload/defaults";
 import type { CorporateContentGateway } from "@/lib/content/gateway";
 
 import { getBaobabContentConfig } from "./config";
@@ -31,6 +31,44 @@ afterEach(() => {
 });
 
 describe("CapabilityContentGateway", () => {
+  const publishedHome = {
+    id: "synthetic-home",
+    contentKey: "home",
+    eyebrow: "Synthetic CMS heading",
+    headline: "Published headline",
+    introduction: "Published introduction",
+    primaryCta: { label: "About", href: "/about" },
+    secondaryCta: { label: "Portfolio", href: "/portfolio" },
+    institutionalStatement: "Published statement",
+  };
+
+  it.each([false, true])("preserves approved hero copy and mapped media (proof=%s)", async (proof) => {
+    const dto = {
+      ...publishedHome,
+      accentHeadline: "Published accent",
+      heroGallery: [
+        { id: "missing-url", alt: "Unpopulated asset" },
+        { id: "published-photo", url: "/media/approved.jpg", alt: "Approved photo", width: 640, height: 800 },
+      ],
+    };
+    const gw = new CapabilityContentGateway(resolverOf({ status: "ok", dto }), transitional, undefined, proof);
+    const home = await gw.getHomePage();
+    expect(home.accentHeadline).toBe(dto.accentHeadline);
+    expect(home.heroGallery).toEqual([dto.heroGallery[1]]);
+    expect(transitional.getHomePage).not.toHaveBeenCalled();
+    if (proof) {
+      expect(home.featuredPortfolioCompanies).toEqual([]);
+      expect(transitional.listPortfolioCompanies).not.toHaveBeenCalled();
+    }
+  });
+
+  it.each([false, true])("keeps older home records compatible without inventing proof copy (proof=%s)", async (proof) => {
+    const gw = new CapabilityContentGateway(resolverOf({ status: "ok", dto: publishedHome }), transitional, undefined, proof);
+    const home = await gw.getHomePage();
+    expect(home.accentHeadline).toBe(proof ? undefined : ESTATE_DEFAULT_HOME_PAGE.accentHeadline);
+    expect(home.heroGallery).toEqual([]);
+  });
+
   it("refuses a published record whose missing fields would use defaults", async () => {
     const gw = new CapabilityContentGateway(resolverOf({ status: "ok", dto: { id: "record", contentKey: "navigation" } }), transitional, undefined, true);
     await expect(gw.getNavigation()).rejects.toThrow("Required published content incomplete");

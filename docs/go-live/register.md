@@ -860,3 +860,27 @@ G04/G15/G17 remain PARTIAL/unaccepted. Privileged human capability execution
 still needs its owning CP/Shared protocol. Infrastructure #49 remains APPROVAL
 REQUIRED / RUNTIME HELD; CMS activation under Accepted Shared #354 HELD; all
 14 NAB-03 cases BLOCKED; R0–R3 NOT RELEASED.
+
+
+## 36. R0 canonical homepage parity — 23 October 2026
+
+[Source and validation receipt](evidence/r0-canonical-content-parity-2026-10-23.md).
+
+Nabhold #90 is confirmed merged at `58d1a641e227212c7c43c14e7c66b16ab8be62cf`.
+Infrastructure #51 is now merged at `6ef5c19c8f057f3592b71f572714b365efdd6b26`
+after applicable final-head checks, review reconciliation and 205 local INT-03
+tests. It institutes the #49 runbook/preflight only; #49 remains APPROVAL
+REQUIRED / RUNTIME HELD.
+
+The next source increment repairs the R0 canonical CMS gateway dropping the
+existing homepage accent headline and hero gallery. The published DTO's mapped
+fields now reach the content port. Optional absent fields remain absent in
+qualification; no direct provider read or fabricated editorial proof is added.
+56 focused tests, changed-file/import-graph strict TypeScript and ESLint pass.
+The receipt pins the tested code; mandatory final-head repository CI and review
+are required before merge. This does not qualify the CMS provider or advance G17.
+
+Seven-case INT-03C execution, independent legal onboarding, protected runtime,
+Finance/workforce certification and privileged human capability execution remain
+open. Shared #354 is HELD, NAB-03 14/14 BLOCKED, R0–R3 NOT RELEASED. CP #430
+must not be merged under the existing explicit instruction.

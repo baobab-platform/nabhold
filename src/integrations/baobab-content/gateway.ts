@@ -108,6 +108,10 @@ export class CapabilityContentGateway implements CorporateContentGateway {
       ...fields.canonical,
       eyebrow: fields.eyebrow ?? ESTATE_DEFAULT_HOME_PAGE.eyebrow,
       headline: fields.headline ?? ESTATE_DEFAULT_HOME_PAGE.headline,
+      // Keep canonical and transitional presentation in step. Optional
+      // editorial copy must remain absent in proof mode if CMS omits it.
+      accentHeadline: fields.accentHeadline ?? (this.requirePublishedContent
+        ? undefined : ESTATE_DEFAULT_HOME_PAGE.accentHeadline),
       introduction: fields.introduction ?? ESTATE_DEFAULT_HOME_PAGE.introduction,
       primaryCta: fields.primaryCta ?? ESTATE_DEFAULT_HOME_PAGE.primaryCta,
       secondaryCta: fields.secondaryCta ?? ESTATE_DEFAULT_HOME_PAGE.secondaryCta,
@@ -116,6 +120,7 @@ export class CapabilityContentGateway implements CorporateContentGateway {
         fields.institutionalStatement ??
         ESTATE_DEFAULT_HOME_PAGE.institutionalStatement,
       heroMedia: fields.heroMedia,
+      heroGallery: fields.heroGallery,
       seo: fields.seo,
     };
   }
