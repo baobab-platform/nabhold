@@ -13,6 +13,7 @@ v2.0 is aligned to accepted ADR-BCP-026, ADR-BCP-027, Baobab EA Implementation P
 | [evidence/progress-audit-2026-10-19.md](evidence/progress-audit-2026-10-19.md) | Fresh merged-source, PR and acceptance reconciliation; INT-02/C4/INT-03 boundaries |
 | [evidence/int03-connected-audit-2026-10-20.md](evidence/int03-connected-audit-2026-10-20.md) | Connected lifecycle progress, failed attempts and remaining acceptance exits |
 | [evidence/ea-v2.3-progress-audit-2026-10-22.md](evidence/ea-v2.3-progress-audit-2026-10-22.md) | Current v2.3 audit, merged CP/IAM/#48 reconciliation, #50 source-lock work and unchanged #49 execution hold |
+| [evidence/r0-canonical-content-parity-2026-10-23.md](evidence/r0-canonical-content-parity-2026-10-23.md) | Confirmed #90/#51 source merges and R0 canonical homepage mapping correction; live gates unchanged |
 | [register.md](register.md) | Live gate/blocker/decision status; update whenever a gate materially changes |
 | [evidence/README.md](evidence/README.md) | Evidence-index rules and immutable acceptance pointers |
 | [capability-demand-census.md](capability-demand-census.md) | Direct/conditional/indirect capability demand by release |

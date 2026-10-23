@@ -2,9 +2,11 @@ import { afterEach, describe, expect, it, vi } from "vitest";
 vi.mock("server-only", () => ({}));
 
 import { CapabilityClient } from "@/lib/control-plane/capability-client";
+import type { CorporateContentGateway } from "@/lib/content/gateway";
 
 import type { BaobabContentConfig } from "./config";
 import { ContentEntryResolver } from "./entry-resolver";
+import { CapabilityContentGateway } from "./gateway";
 
 const CORR = "7a8b9c0d-1e2f-4a3b-8c5d-6e7f8a9b0c1d";
 const CTX = "11111111-2222-4333-8444-555555555555";
@@ -93,6 +95,24 @@ function build(opts: {
 afterEach(() => vi.restoreAllMocks());
 
 describe("ContentEntryResolver", () => {
+  it("carries canonical provider hero fields through validation into the content port", async () => {
+    // Synthetic protocol regression only: no provider or live binding is qualified.
+    const { resolver, cmsCalls, cpFetch } = build({ cmsResponse: () => new Response(JSON.stringify(record({
+      content_key: "home",
+      data: {
+        headline: "CMS headline", accentHeadline: "CMS accent",
+        heroGallery: [{ id: "asset", url: "/media/cms.jpg", alt: "CMS photo" }],
+      },
+    })), { status: 200 }) });
+    const transitional = { listPortfolioCompanies: vi.fn(async () => []) } as unknown as CorporateContentGateway;
+    const home = await new CapabilityContentGateway(resolver, transitional).getHomePage();
+    expect(home.accentHeadline).toBe("CMS accent");
+    expect(home.heroGallery).toEqual([expect.objectContaining({ id: "asset", url: "/media/cms.jpg", alt: "CMS photo" })]);
+    expect(cpFetch).toHaveBeenCalledOnce();
+    expect(cmsCalls).toHaveLength(1);
+    expect(JSON.parse(String(cmsCalls[0].init.body))).toMatchObject({ content_key: "home" });
+  });
+
   it("rechecks capability authority even when CP returns the same current context", async () => {
     const resolve = vi.fn(async () => resolution());
     const currentContextId = vi.fn(async () => CTX);
