@@ -32,7 +32,12 @@ qualification still performs no transitional provider read.
 
 ## Validation and scope
 
-Tested code: `d3ca8f4c5ee96b65ce9c1634fb332515ad01539d` (documentation added afterwards).
+Published tested source: `2a07cdc59be58c24c75e2ff02f841f0c6870792b`
+([PR #91](https://github.com/baobab-platform/nabhold/pull/91)). Its full Git tree
+`5eb52341c6f6ee1c7e9aa4dcfd5bb2d6b8b96644` was fetched and compared with the
+locally tested checkout; the tree hashes are identical. This published commit
+is reachable from the PR branch. Later receipt-only corrections do not change
+the tested source or test files.
 
 - 56 focused Vitest tests passed across the canonical gateway/resolver and
   transitional Payload client, using the installed matching Vitest 5.0.5/Zod
