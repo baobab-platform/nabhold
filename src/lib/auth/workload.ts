@@ -31,7 +31,8 @@ export function readDevelopmentWorkloadSettings(env: Record<string, string | und
   try {
     if (env.NABHOLD_WORKLOAD_ENVIRONMENT !== "development" || env.NABHOLD_WORKLOAD_CLIENT_ID !== CALLER ||
         env.NODE_TLS_REJECT_UNAUTHORIZED === "0") throw new Error();
-    const issuer = secureUrl(env.NABHOLD_WORKLOAD_ISSUER ?? "").href;
+    const issuer = env.NABHOLD_WORKLOAD_ISSUER ?? "";
+    secureUrl(issuer);
     const tokenEndpoint = secureUrl(env.NABHOLD_WORKLOAD_TOKEN_ENDPOINT ?? "").href;
     const introspectionEndpoint = secureUrl(env.NABHOLD_WORKLOAD_INTROSPECTION_ENDPOINT ?? "").href;
     const cp = secureUrl(env.BAOBAB_CONTROL_PLANE_API_URL ?? "");

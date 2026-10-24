@@ -31,7 +31,7 @@ const secureURL = z.string().url().refine((s) => {
   const u = new URL(s); return u.protocol === "https:" && !u.username && !u.password && !u.search && !u.hash;
 });
 const transactionSchema = z.object({ issuer: secureURL, clientId: z.string().min(1).max(256), redirectUri: secureURL,
-  scopes: z.array(z.enum(["openid", "profile", "email"])).min(1).max(3).refine((v) => v.includes("openid") && new Set(v).size === v.length),
+  scopes: z.array(z.enum(["openid", "profile", "email", "authority:self"])).min(1).max(3).refine((v) => v.includes("openid") && new Set(v).size === v.length),
   state: z.string().regex(HANDLE), nonce: z.string().regex(HANDLE), codeVerifier: z.string().regex(HANDLE),
   createdAt: boundedTime, expiresAt: boundedTime,
 }).strict();

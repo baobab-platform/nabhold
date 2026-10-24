@@ -127,3 +127,11 @@ network/client/fixture handoff, use `pnpm integration:check`,
 Existing public development and fallback browser tests remain separate.
 This is identity/session smoke preparation, not completed INT-03, CMS/ERP
 acceptance, or authority to activate protected releases.
+
+The confidential BFF requests `openid authority:self`: the ID token establishes
+OIDC identity and the access token permits CP's current self-authority read.
+Requesting only `openid` cannot satisfy `/api/auth/session` and must not be
+compensated by a provider granting unrequested administrative scopes. The BFF
+still derives Principal/current grants from CP and stores only encrypted server
+custody behind opaque, secure browser handles. DEV-05 tests this native flow
+separately from the CMS workload and canonical provider qualification.

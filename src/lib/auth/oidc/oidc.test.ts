@@ -74,7 +74,7 @@ function fixture(proxy = false) {
     expect(response.status).toBe(303);
     const url = new URL(response.headers.get("location")!);
     nonce = url.searchParams.get("nonce")!; challenge = url.searchParams.get("code_challenge")!;
-    expect(url.searchParams.get("scope")).toBe("openid"); expect(url.searchParams.get("code_challenge_method")).toBe("S256");
+    expect(url.searchParams.get("scope")).toBe("openid authority:self"); expect(url.searchParams.get("code_challenge_method")).toBe("S256");
     const cookie = response.cookies.getAll().map(c => `${c.name}=${c.value}`).join("; ");
     return { response, cookie, callback: "/api/auth/callback?" + new URLSearchParams({ state: url.searchParams.get("state")!, code: "fixture-one-time-code", iss: settings.issuer }) };
   }
@@ -251,6 +251,7 @@ describe("closed configuration and bounded transport", () => {
       NABHOLD_OIDC_ISSUER: settings.issuer, NABHOLD_OIDC_CP_ORIGIN: settings.cpOrigin, NABHOLD_OIDC_CLIENT_ID: settings.clientId,
       NABHOLD_OIDC_CLIENT_SECRET: settings.clientSecret, NABHOLD_OIDC_INTROSPECTION_ENDPOINT: settings.introspectionEndpoint };
     expect(readAuthSettings(env)).toEqual({ ...settings, trustProxy: false });
+    expect(readAuthSettings({ ...env, NABHOLD_OIDC_ISSUER: "https://iam.example.test" })?.issuer).toBe("https://iam.example.test");
     expect(readAuthSettings({ ...env, NABHOLD_OIDC_TRUST_PROXY: "true" })?.trustProxy).toBe(true);
     expect(() => readAuthSettings({ ...env, NABHOLD_OIDC_TRUST_PROXY: "yes" })).toThrow();
     for (const change of [{ NABHOLD_OIDC_ENVIRONMENT: "production" }, { NABHOLD_OIDC_ORIGIN: "http://localhost" },
