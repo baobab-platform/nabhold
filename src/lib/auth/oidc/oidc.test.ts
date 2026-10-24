@@ -74,7 +74,7 @@ function fixture(proxy = false) {
     expect(response.status).toBe(303);
     const url = new URL(response.headers.get("location")!);
     nonce = url.searchParams.get("nonce")!; challenge = url.searchParams.get("code_challenge")!;
-    expect(url.searchParams.get("scope")).toBe("openid"); expect(url.searchParams.get("code_challenge_method")).toBe("S256");
+    expect(url.searchParams.get("scope")).toBe("openid authority:self"); expect(url.searchParams.get("code_challenge_method")).toBe("S256");
     const cookie = response.cookies.getAll().map(c => `${c.name}=${c.value}`).join("; ");
     return { response, cookie, callback: "/api/auth/callback?" + new URLSearchParams({ state: url.searchParams.get("state")!, code: "fixture-one-time-code", iss: settings.issuer }) };
   }

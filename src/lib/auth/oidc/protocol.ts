@@ -39,7 +39,7 @@ export async function discover(settings: AuthSettings, fetcher: typeof fetch = f
 }
 export function begin(settings: AuthSettings, config: oidc.Configuration, now = Date.now()) {
   const transaction: LoginTransaction = { issuer: settings.issuer, clientId: settings.clientId, redirectUri: settings.redirectUri,
-    scopes: ["openid"], state: newOpaqueHandle(), nonce: newOpaqueHandle(), codeVerifier: newOpaqueHandle(), createdAt: now, expiresAt: now + 300000 };
+    scopes: ["openid", "authority:self"], state: newOpaqueHandle(), nonce: newOpaqueHandle(), codeVerifier: newOpaqueHandle(), createdAt: now, expiresAt: now + 300000 };
   const url = oidc.buildAuthorizationUrl(config, { response_type: "code", redirect_uri: transaction.redirectUri,
     scope: transaction.scopes.join(" "), state: transaction.state, nonce: transaction.nonce,
     code_challenge: createHash("sha256").update(transaction.codeVerifier).digest("base64url"), code_challenge_method: "S256" });
