@@ -132,6 +132,7 @@ describe("development proof opt-in", () => {
   it("is off by default and accepts the exact named development configuration", () => {
     expect(readDevelopmentWorkloadSettings({})).toBeNull();
     expect(readDevelopmentWorkloadSettings(env())).toEqual(settings);
+    expect(readDevelopmentWorkloadSettings({ ...env(), NABHOLD_WORKLOAD_ISSUER: "https://iam.example.test" })?.issuer).toBe("https://iam.example.test");
   });
   it.each([
     ["NABHOLD_WORKLOAD_ENVIRONMENT", "production"], ["NABHOLD_WORKLOAD_CLIENT_ID", "nabhold-backend"],

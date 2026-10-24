@@ -25,7 +25,9 @@ export function readAuthSettings(env: Record<string, string | undefined> = proce
     const origin = secureUrl(env.NABHOLD_OIDC_ORIGIN ?? "");
     const cp = secureUrl(env.NABHOLD_OIDC_CP_ORIGIN ?? "");
     if (origin.pathname !== "/" || cp.pathname !== "/" || origin.origin === cp.origin) throw new Error();
-    const issuer = secureUrl(env.NABHOLD_OIDC_ISSUER ?? "").href;
+    // OIDC issuer equality is exact, including a bare origin without slash.
+    const issuer = env.NABHOLD_OIDC_ISSUER ?? "";
+    secureUrl(issuer);
     const introspection = secureUrl(env.NABHOLD_OIDC_INTROSPECTION_ENDPOINT ?? "");
     if (introspection.origin !== new URL(issuer).origin) throw new Error();
     const clientId = z.string().min(1).max(256).regex(/^\S+$/).parse(env.NABHOLD_OIDC_CLIENT_ID);
