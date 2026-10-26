@@ -59,6 +59,14 @@ function peer() {
 afterEach(() => { vi.unstubAllEnvs(); vi.useRealTimers(); });
 
 describe("development content workload", () => {
+  it("reports only a fixed failure phase without credential or peer error data", async () => {
+    vi.stubEnv("NABHOLD_CMS_PROOF_ENABLED", "true");
+    const { fetcher, state } = peer(); state.failure = settings.tokenEndpoint;
+    const warn = vi.spyOn(console, "warn").mockImplementation(() => {});
+    await expect(new DevelopmentContentWorkload(settings, fetcher).currentContextId()).rejects.toThrow();
+    expect(warn.mock.calls).toEqual([["NABHOLD_DEV05_WORKLOAD=CP_TOKEN_REQUEST"], ["NABHOLD_DEV05_CONTEXT=TOKEN"]]);
+    warn.mockRestore();
+  });
   it("acquires exact CP/CMS resource audiences and resolves a new own context for every read", async () => {
     const { workload, fetcher } = peer();
     const first = await workload.currentContextId();

@@ -3,6 +3,7 @@ import { z } from "zod";
 
 import {
   CapabilityClient,
+  CapabilityNotResolvedError,
   type WorkloadTokenProvider,
 } from "@/lib/control-plane/capability-client";
 import { pageDtoSchema, type PageDto } from "@/integrations/payload/dto/page.dto";
@@ -103,7 +104,23 @@ export class ContentEntryResolver {
         ? await this.currentContextId()
         : this.config.platformContextId;
       target = await this.target(contextId);
-    } catch {
+    } catch (error) {
+      if (process.env.NABHOLD_CMS_PROOF_ENABLED === "true") {
+        const messages: Record<string, string> = {
+          "Control Plane capability resolution is unreachable": "TRANSPORT",
+          "Control Plane returned an unreadable resolution": "BODY",
+          "Control Plane returned a resolution that violates the Shared contract": "CONTRACT",
+          "Control Plane resolution does not match the request": "REQUEST_BINDING",
+          "Control Plane resolution has already expired": "EXPIRY",
+          "Resolved contract version does not match the required version": "VERSION",
+          "unsupported protocol": "PROTOCOL", "unmapped service": "SERVICE_MAPPING",
+          "untrusted origin": "ORIGIN", "unsupported service reference": "SERVICE_REFERENCE",
+          "unsupported content contract route": "ROUTE", "origin changed": "ORIGIN",
+        };
+        const label = error instanceof CapabilityNotResolvedError ? "DECISION_" + error.resolution.decision
+          : error instanceof Error ? messages[error.message] ?? "AUTH_OR_UNAVAILABLE" : "AUTH_OR_UNAVAILABLE";
+        console.warn("NABHOLD_DEV05_CAPABILITY=" + label);
+      }
       return { status: "unavailable", reason: "CAPABILITY_NOT_RESOLVED" };
     }
 

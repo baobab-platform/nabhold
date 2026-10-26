@@ -84,6 +84,7 @@ export class DevelopmentContentWorkload {
   }
 
   private async acquire(audience: Audience): Promise<string> {
+    let phase = "TOKEN_REQUEST";
     try {
       this.open();
       // CMS re-resolves current capability authority with the actual caller.
@@ -92,11 +93,13 @@ export class DevelopmentContentWorkload {
       const expectedAudiences = audiences[audience];
       const parameters = new URLSearchParams([['scope', scopes[audience]], ...expectedAudiences.map(value => ['audience', value])]);
       const result = await oauth.clientCredentialsGrant(this.config, parameters);
+      phase = "TOKEN_RESPONSE";
       const receivedAt = Date.now();
       if (typeof result.access_token !== "string" || !result.access_token || result.access_token.length > 8192 ||
           result.token_type.toLowerCase() !== "bearer" || !Number.isSafeInteger(result.expires_in) ||
           result.expires_in! <= 0 || result.expires_in! > 300 || receivedAt + result.expires_in! * 1000 > this.settings.deadline ||
           result.refresh_token !== undefined || result.id_token !== undefined) throw new Error();
+      phase = "INTROSPECTION_CLAIMS";
       const claims = z.object({ active: z.literal(true), iss: z.literal(this.settings.issuer),
         sub: z.string().min(1).max(255), client_id: z.literal(CALLER), actor_type: z.literal("workload"),
         aud: z.union([z.string(), z.array(z.string())]),
@@ -106,9 +109,11 @@ export class DevelopmentContentWorkload {
         environment: z.literal("development").optional(),
         owner: z.literal("baobab-platform/infrastructure").optional(),
       }).parse(await oauth.tokenIntrospection(this.config, result.access_token));
+      phase = "AUDIENCES";
       const actualAudiences = typeof claims.aud === "string" ? [claims.aud] : claims.aud;
       if (actualAudiences.length !== expectedAudiences.length || new Set(actualAudiences).size !== actualAudiences.length ||
           expectedAudiences.some(value => !actualAudiences.includes(value))) throw new Error();
+      phase = "EXPIRY_SUBJECT";
       if (claims.exp * 1000 <= Date.now() || claims.exp * 1000 > this.settings.deadline ||
           claims.exp * 1000 > receivedAt + result.expires_in! * 1000 || this.subject !== undefined && this.subject !== claims.sub) throw new Error();
       this.open();
@@ -116,7 +121,11 @@ export class DevelopmentContentWorkload {
       // resolves the canonical Principal; this client never invents its UUID.
       this.subject = claims.sub;
       return result.access_token;
-    } catch { throw new AuthenticationDenied(); }
+    } catch {
+      if (process.env.NABHOLD_CMS_PROOF_ENABLED === "true") console.warn("NABHOLD_DEV05_WORKLOAD=" +
+        (audience === "baobab-control-plane" ? "CP_" : "CMS_") + phase);
+      throw new AuthenticationDenied();
+    }
   }
 
   /** Obtain a current CP-owned RUNTIME context for every content read. Selectors
@@ -125,9 +134,11 @@ export class DevelopmentContentWorkload {
    * No subject/principal/authority-purpose assertion is sent by the estate.
    */
   async currentContextId(): Promise<string> {
+    let phase = "TOKEN";
     try {
       const token = await this.acquire("baobab-control-plane");
       const started = Date.now();
+      phase = "RESPONSE_SHAPE";
       const context = z.object({ context_id: z.uuid(), tenant_id: z.literal(this.settings.tenantId),
         organisation_id: z.literal(this.settings.organisationId), country_code: z.literal(this.settings.countryCode),
         resolved_at: z.iso.datetime({ offset: true }), expires_at: z.iso.datetime({ offset: true }),
@@ -135,11 +146,15 @@ export class DevelopmentContentWorkload {
         method: "POST", headers: { Authorization: `Bearer ${token}`, "Content-Type": "application/json", "x-correlation-id": randomUUID() },
         body: JSON.stringify({ tenant_id: this.settings.tenantId, organisation_id: this.settings.organisationId, country_code: this.settings.countryCode }),
       }, this.fetcher));
+      phase = "FRESHNESS";
       const resolved = Date.parse(context.resolved_at), expires = Date.parse(context.expires_at);
       if (resolved < started - 30_000 || resolved > Date.now() + 30_000 || expires <= Date.now() ||
           expires <= resolved || expires > this.settings.deadline || expires - resolved > 15 * 60_000) throw new Error();
       this.open();
       return context.context_id;
-    } catch { throw new AuthenticationDenied(); }
+    } catch {
+      if (process.env.NABHOLD_CMS_PROOF_ENABLED === "true") console.warn("NABHOLD_DEV05_CONTEXT=" + phase);
+      throw new AuthenticationDenied();
+    }
   }
 }
