@@ -27,3 +27,13 @@ consumer CI and Infrastructure's fourteen original NAB-03 cases, including
 normal published page/navigation/footer, missing-grant denial, native audit and
 independent teardown. Synthetic development evidence grants no protected or
 production authority.
+
+The native issuer reports relative `expires_in` and absolute introspection `exp`
+in whole seconds. Their comparison rounds only the received-at timestamp to
+the next whole-second boundary; it allows less than one second of representation
+difference. Absolute expiry must still be future, within the immutable proof
+deadline and no more than 300 seconds from receipt. The response lifetime is
+still a positive integer at most 300 seconds. An extra second beyond that
+representation boundary, subject rotation, extra audience/scope, issuer outage
+and deadline overrun remain denials. This fixes the connected BFF's refusal of
+current native issuer tokens without extending the actual token's expiry.

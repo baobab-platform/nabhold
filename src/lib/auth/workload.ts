@@ -113,9 +113,20 @@ export class DevelopmentContentWorkload {
       const actualAudiences = typeof claims.aud === "string" ? [claims.aud] : claims.aud;
       if (actualAudiences.length !== expectedAudiences.length || new Set(actualAudiences).size !== actualAudiences.length ||
           expectedAudiences.some(value => !actualAudiences.includes(value))) throw new Error();
-      phase = "EXPIRY_SUBJECT";
-      if (claims.exp * 1000 <= Date.now() || claims.exp * 1000 > this.settings.deadline ||
-          claims.exp * 1000 > receivedAt + result.expires_in! * 1000 || this.subject !== undefined && this.subject !== claims.sub) throw new Error();
+      phase = "EXPIRY_CURRENT";
+      if (claims.exp * 1000 <= Date.now()) throw new Error();
+      phase = "EXPIRY_DEADLINE";
+      if (claims.exp * 1000 > this.settings.deadline) throw new Error();
+      phase = "EXPIRY_ISSUANCE";
+      // OAuth expires_in and introspection exp use whole seconds. A relative
+      // lifetime rounded down by the issuer can cross one absolute-second
+      // boundary at receipt. Round that comparison only; the actual expiry,
+      // immutable deadline and hard 300-second lifetime ceiling stay strict.
+      const issuanceBound = Math.min(receivedAt + 300_000,
+        Math.ceil(receivedAt / 1000) * 1000 + result.expires_in! * 1000);
+      if (claims.exp * 1000 > issuanceBound) throw new Error();
+      phase = "SUBJECT";
+      if (this.subject !== undefined && this.subject !== claims.sub) throw new Error();
       this.open();
       // Both audiences must represent the same verified (issuer,subject). CP
       // resolves the canonical Principal; this client never invents its UUID.
