@@ -13,7 +13,7 @@ const settings: DevelopmentWorkloadSettings = {
 };
 const scope = { "baobab-control-plane": "context:resolve", "baobab-control-plane baobab-cms": "context:resolve content:entry:resolve" };
 function peer() {
-  let audience = "", issued = 0, contexts = 0;
+  let audience = "", issued = 0, contexts = 0, issuedExpiry = 0;
   const state = { claims: {} as Record<string, unknown>, token: {} as Record<string, unknown>, context: {} as Record<string, unknown>, failure: "" };
   const fetcher = vi.fn<typeof fetch>(async (input, init) => {
     const url = String(input);
@@ -35,12 +35,15 @@ function peer() {
       audience = requestedAudiences.join(" ");
       expect(requestedAudiences).toEqual(audience === "baobab-control-plane" ? ["baobab-control-plane"] : ["baobab-control-plane", "baobab-cms"]);
       expect(body.get("scope")).toBe(scope[audience as keyof typeof scope]);
+      // Introspection describes the issued token, even across a second boundary.
+      // Minting a later expiry during read-back creates impossible token evidence.
+      issuedExpiry = Math.floor(Date.now() / 1000) + 60;
       return Response.json({ access_token: `synthetic-private-token-${++issued}`, token_type: "Bearer", expires_in: 60, ...state.token });
     }
     if (url === settings.introspectionEndpoint) {
       expect(new URLSearchParams(String(init?.body)).get("token")).toMatch(/^synthetic-private-token-/);
       return Response.json({ active: true, iss: settings.issuer, sub: "synthetic-workload-subject", client_id: "baobab-int03-cms-consumer",
-        aud: audience.split(" "), actor_type: "workload", scope: scope[audience as keyof typeof scope], exp: Math.floor(Date.now() / 1000) + 60, ...state.claims });
+        aud: audience.split(" "), actor_type: "workload", scope: scope[audience as keyof typeof scope], exp: issuedExpiry, ...state.claims });
     }
     if (url === settings.cpOrigin + "/v1/platform-context/resolve") {
       expect(JSON.parse(String(init?.body))).toEqual({ tenant_id: settings.tenantId, organisation_id: settings.organisationId, country_code: "ZA" });
