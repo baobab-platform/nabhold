@@ -87,6 +87,26 @@ describe("development content workload", () => {
     await expect(workload.tokens("baobab-cms").getToken()).rejects.toThrow("Authentication unavailable or denied");
   });
 
+  it("accepts only the issuer's single whole-second rounding boundary", async () => {
+    vi.useFakeTimers();
+    const second = Math.floor(Date.now() / 1000);
+    vi.setSystemTime(second * 1000 + 100);
+    const { workload, state } = peer(); state.token = { expires_in: 59 };
+    // Native issuer TTL is 60 seconds; response rounds remaining TTL down.
+    await expect(workload.tokens("baobab-control-plane").getToken()).resolves.toBeTruthy();
+    state.claims = { exp: second + 61 };
+    await expect(workload.tokens("baobab-control-plane").getToken()).rejects.toThrow();
+  });
+
+  it("keeps the hard lifetime ceiling strict across the rounding boundary", async () => {
+    vi.useFakeTimers();
+    const second = Math.floor(Date.now() / 1000);
+    vi.setSystemTime(second * 1000 + 100);
+    const { workload, state } = peer();
+    state.token = { expires_in: 300 }; state.claims = { exp: second + 301 };
+    await expect(workload.tokens("baobab-control-plane").getToken()).rejects.toThrow();
+  });
+
   it("refuses a rotated token belonging to another subject", async () => {
     const { workload, state } = peer();
     await workload.currentContextId();
