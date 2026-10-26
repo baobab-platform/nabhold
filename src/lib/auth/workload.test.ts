@@ -11,9 +11,9 @@ const settings: DevelopmentWorkloadSettings = {
   clientSecret: "synthetic-independent-run-secret-32bytes", tenantId: "tn_nabhold1",
   organisationId: "11111111-2222-4333-8444-555555555555", countryCode: "ZA", deadline: Date.now() + 60 * 60_000,
 };
-const scope = { "baobab-control-plane": "context:resolve", "baobab-cms": "content:entry:resolve" };
+const scope = { "baobab-control-plane": "context:resolve", "baobab-control-plane baobab-cms": "context:resolve content:entry:resolve" };
 function peer() {
-  let audience = "", issued = 0, contexts = 0;
+  let audience = "", issued = 0, contexts = 0, issuedExpiry = 0;
   const state = { claims: {} as Record<string, unknown>, token: {} as Record<string, unknown>, context: {} as Record<string, unknown>, failure: "" };
   const fetcher = vi.fn<typeof fetch>(async (input, init) => {
     const url = String(input);
@@ -31,14 +31,19 @@ function peer() {
       const body = new URLSearchParams(String(init?.body));
       expect(body.get("grant_type")).toBe("client_credentials");
       expect(body.has("subject_token")).toBe(false);
-      audience = body.get("audience")!;
+      const requestedAudiences = body.getAll("audience");
+      audience = requestedAudiences.join(" ");
+      expect(requestedAudiences).toEqual(audience === "baobab-control-plane" ? ["baobab-control-plane"] : ["baobab-control-plane", "baobab-cms"]);
       expect(body.get("scope")).toBe(scope[audience as keyof typeof scope]);
+      // Introspection describes the issued token, even across a second boundary.
+      // Minting a later expiry during read-back creates impossible token evidence.
+      issuedExpiry = Math.floor(Date.now() / 1000) + 60;
       return Response.json({ access_token: `synthetic-private-token-${++issued}`, token_type: "Bearer", expires_in: 60, ...state.token });
     }
     if (url === settings.introspectionEndpoint) {
       expect(new URLSearchParams(String(init?.body)).get("token")).toMatch(/^synthetic-private-token-/);
       return Response.json({ active: true, iss: settings.issuer, sub: "synthetic-workload-subject", client_id: "baobab-int03-cms-consumer",
-        aud: audience, actor_type: "workload", scope: scope[audience as keyof typeof scope], exp: Math.floor(Date.now() / 1000) + 60, ...state.claims });
+        aud: audience.split(" "), actor_type: "workload", scope: scope[audience as keyof typeof scope], exp: issuedExpiry, ...state.claims });
     }
     if (url === settings.cpOrigin + "/v1/platform-context/resolve") {
       expect(JSON.parse(String(init?.body))).toEqual({ tenant_id: settings.tenantId, organisation_id: settings.organisationId, country_code: "ZA" });
@@ -54,7 +59,7 @@ function peer() {
 afterEach(() => { vi.unstubAllEnvs(); vi.useRealTimers(); });
 
 describe("development content workload", () => {
-  it("acquires independent audience/scopes and resolves a new own context for every read", async () => {
+  it("acquires exact CP/CMS resource audiences and resolves a new own context for every read", async () => {
     const { workload, fetcher } = peer();
     const first = await workload.currentContextId();
     await expect(workload.tokens("baobab-cms").getToken()).resolves.toMatch(/^synthetic-private-token-/);
@@ -65,7 +70,8 @@ describe("development content workload", () => {
 
   it.each([
     { active: false }, { iss: "https://foreign.example/" }, { sub: "" }, { client_id: "baobab-cms-workload" },
-    { actor_type: "human" }, { aud: "baobab-control-plane" }, { aud: ["baobab-cms", "baobab-control-plane"] },
+    { actor_type: "human" }, { aud: "baobab-control-plane" }, { aud: "baobab-cms" },
+    { aud: ["baobab-cms", "baobab-control-plane", "foreign"] }, { aud: ["baobab-cms", "baobab-cms"] },
     { scope: "content:entry:resolve content:entry:preview" }, { environment: "production" }, { owner: "baobab-platform/baobab-cms" },
     { exp: 1 }, { exp: Math.floor(settings.deadline / 1000) + 1 },
   ])("refuses invalid/currently denied token evidence %j", async claims => {

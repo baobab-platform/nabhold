@@ -31,6 +31,7 @@ export type EntryOutcome =
 
 const CAPABILITY_KEY = "content.entry.resolve";
 const CONTRACT_VERSION = 1;
+const CONTENT_RESOLVE_PATH = "/v1/content/resolve";
 
 const recordSchema = z
   .object({
@@ -231,7 +232,13 @@ export class ContentEntryResolver {
       throw new Error("unsupported service reference");
     }
     // The route is relative to the provider origin; it may not move the call to another origin.
-    const url = new URL(resolved.invocation.route_reference ?? "", origin);
+    // Shared content/v1 defines this resource path. CP's descriptor may omit
+    // the optional route_reference; that means use the contract endpoint,
+    // never send the content token to the provider's root or an admin route.
+    if (resolved.invocation.route_reference !== undefined && resolved.invocation.route_reference !== CONTENT_RESOLVE_PATH) {
+      throw new Error("unsupported content contract route");
+    }
+    const url = new URL(CONTENT_RESOLVE_PATH, origin);
     if (url.origin !== new URL(origin).origin) throw new Error("origin changed");
     url.searchParams.set("context_id", contextId);
 
