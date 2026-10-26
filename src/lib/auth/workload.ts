@@ -7,7 +7,8 @@ import { AuthenticationDenied, secureUrl } from "./oidc/settings";
 import { credentialFetch, fetchJson } from "./oidc/transport";
 
 const CALLER = "baobab-int03-cms-consumer";
-const scopes = { "baobab-control-plane": "context:resolve", "baobab-cms": "content:entry:resolve" } as const;
+const scopes = { "baobab-control-plane": "context:resolve", "baobab-cms": "context:resolve content:entry:resolve" } as const;
+const audiences = { "baobab-control-plane": ["baobab-control-plane"], "baobab-cms": ["baobab-control-plane", "baobab-cms"] } as const;
 type Audience = keyof typeof scopes;
 
 export interface DevelopmentWorkloadSettings {
@@ -85,7 +86,11 @@ export class DevelopmentContentWorkload {
   private async acquire(audience: Audience): Promise<string> {
     try {
       this.open();
-      const result = await oauth.clientCredentialsGrant(this.config, { scope: scopes[audience], audience });
+      // CMS re-resolves current capability authority with the actual caller.
+      // The exact two audiences/scopes already belong to this registry client;
+      // the independent CMS context validator gains no caller permission.
+      const expectedAudiences = audiences[audience];
+      const result = await oauth.clientCredentialsGrant(this.config, { scope: scopes[audience], audience: expectedAudiences.join(" ") });
       const receivedAt = Date.now();
       if (typeof result.access_token !== "string" || !result.access_token || result.access_token.length > 8192 ||
           result.token_type.toLowerCase() !== "bearer" || !Number.isSafeInteger(result.expires_in) ||
@@ -93,13 +98,16 @@ export class DevelopmentContentWorkload {
           result.refresh_token !== undefined || result.id_token !== undefined) throw new Error();
       const claims = z.object({ active: z.literal(true), iss: z.literal(this.settings.issuer),
         sub: z.string().min(1).max(255), client_id: z.literal(CALLER), actor_type: z.literal("workload"),
-        aud: z.union([z.literal(audience), z.tuple([z.literal(audience)])]),
+        aud: z.union([z.string(), z.array(z.string())]),
         scope: z.literal(scopes[audience]), exp: z.number().int().positive().safe(),
         // When supplied, these must agree; CP additionally enforces the actual
         // canonical registry environment/owner regardless of token extensions.
         environment: z.literal("development").optional(),
         owner: z.literal("baobab-platform/infrastructure").optional(),
       }).parse(await oauth.tokenIntrospection(this.config, result.access_token));
+      const actualAudiences = typeof claims.aud === "string" ? [claims.aud] : claims.aud;
+      if (actualAudiences.length !== expectedAudiences.length || new Set(actualAudiences).size !== actualAudiences.length ||
+          expectedAudiences.some(value => !actualAudiences.includes(value))) throw new Error();
       if (claims.exp * 1000 <= Date.now() || claims.exp * 1000 > this.settings.deadline ||
           claims.exp * 1000 > receivedAt + result.expires_in! * 1000 || this.subject !== undefined && this.subject !== claims.sub) throw new Error();
       this.open();

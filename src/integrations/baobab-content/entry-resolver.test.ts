@@ -243,6 +243,15 @@ describe("ContentEntryResolver", () => {
     expect(cpFetch).toHaveBeenCalledTimes(1);
   });
 
+  it("uses the content/v1 endpoint when the CP descriptor omits its optional route", async () => {
+    const { resolver, cmsCalls } = build({
+      cpResponse: request => new Response(JSON.stringify(resolution({ correlation_id: JSON.parse(String((request as RequestInit).body)).correlation_id },
+        { route_reference: undefined })), { status: 200, headers: { "content-type": "application/json" } }),
+    });
+    expect((await resolver.resolveEntry("navigation")).status).toBe("ok");
+    expect(new URL(cmsCalls[0].url).pathname).toBe("/v1/content/resolve");
+  });
+
   it("fails closed when the capability is not resolved", async () => {
     const { resolver, cmsFetch } = build({
       cpResponse: () =>
@@ -274,9 +283,10 @@ describe("ContentEntryResolver", () => {
       { service_reference: "service://other/content" },
       { service_reference: "https://evil.example/content" },
       { route_reference: "https://evil.example/v1/content/resolve" },
+      { route_reference: "/api/users" },
     ]) {
       const { resolver, cmsFetch } = build({
-        cpResponse: () => new Response(JSON.stringify(resolution({}, invocation)), { status: 200, headers: { "content-type": "application/json" } }),
+        cpResponse: request => new Response(JSON.stringify(resolution({ correlation_id: JSON.parse(String((request as RequestInit).body)).correlation_id }, invocation)), { status: 200, headers: { "content-type": "application/json" } }),
       });
       const out = await resolver.resolveEntry("home");
       expect(out.status).toBe("unavailable");
