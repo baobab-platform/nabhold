@@ -31,7 +31,9 @@ function peer() {
       const body = new URLSearchParams(String(init?.body));
       expect(body.get("grant_type")).toBe("client_credentials");
       expect(body.has("subject_token")).toBe(false);
-      audience = body.get("audience")!;
+      const requestedAudiences = body.getAll("audience");
+      audience = requestedAudiences.join(" ");
+      expect(requestedAudiences).toEqual(audience === "baobab-control-plane" ? ["baobab-control-plane"] : ["baobab-control-plane", "baobab-cms"]);
       expect(body.get("scope")).toBe(scope[audience as keyof typeof scope]);
       return Response.json({ access_token: `synthetic-private-token-${++issued}`, token_type: "Bearer", expires_in: 60, ...state.token });
     }

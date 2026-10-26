@@ -90,7 +90,8 @@ export class DevelopmentContentWorkload {
       // The exact two audiences/scopes already belong to this registry client;
       // the independent CMS context validator gains no caller permission.
       const expectedAudiences = audiences[audience];
-      const result = await oauth.clientCredentialsGrant(this.config, { scope: scopes[audience], audience: expectedAudiences.join(" ") });
+      const parameters = new URLSearchParams([['scope', scopes[audience]], ...expectedAudiences.map(value => ['audience', value])]);
+      const result = await oauth.clientCredentialsGrant(this.config, parameters);
       const receivedAt = Date.now();
       if (typeof result.access_token !== "string" || !result.access_token || result.access_token.length > 8192 ||
           result.token_type.toLowerCase() !== "bearer" || !Number.isSafeInteger(result.expires_in) ||
