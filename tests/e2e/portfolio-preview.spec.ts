@@ -10,6 +10,8 @@ test("development-only portfolio fixture is visibly labelled", async ({ page }) 
   await page.getByRole("link", { name: /Zuribeans/ }).click();
   await expect(page).toHaveURL(/\/portfolio\/zuribeans$/);
   await expect(page.getByRole("heading", { level: 1, name: "Zuribeans", exact: true })).toBeVisible();
+  // The fixture-only detail route also requires valid, hydrated breadcrumbs.
+  await expect(page.locator("nav[aria-label=breadcrumb] li li")).toHaveCount(0);
 });
 
 test("development fixture carries portfolio company metadata", async ({ page }) => {
