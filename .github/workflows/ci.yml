@@ -94,6 +94,11 @@ jobs:
       - name: Install synchronized Playwright browsers
         run: pnpm exec playwright install --with-deps chromium firefox webkit
 
+      # The governed container runs as root; GitHub mounts /github/home with
+      # runner ownership. Firefox refuses startup if HOME is not owned by root.
+      - name: Prepare Firefox home ownership
+        run: chown 0:0 /github/home
+
       - name: Qualify all three real browser engines
         run: node scripts/verify-playwright-browsers.mjs
 
