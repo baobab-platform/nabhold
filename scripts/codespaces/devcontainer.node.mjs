@@ -46,7 +46,7 @@ test("repository token asks only for explicitly approved organization package so
 });
 
 test("prebuild stays offline and does not require private npm user secrets", () => {
-  assert.equal(devcontainer.waitFor, "updateContentCommand");
+  assert.equal(devcontainer.waitFor, "postCreateCommand");
   assert.match(devcontainer.updateContentCommand, /^node --test scripts\/codespaces\/\*\.node\.mjs$/);
   assert.doesNotMatch(devcontainer.updateContentCommand, /pnpm install|npm ci|configure-private-npm\.mjs/);
   assert.match(devcontainer.postCreateCommand, /node scripts\/codespaces\/bootstrap\.mjs/);
