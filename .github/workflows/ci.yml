@@ -137,7 +137,11 @@ jobs:
           NABHOLD_CONTENT_DEV_FALLBACK: "false"
         run: pnpm build
 
-      - name: Enforce frontend static-asset budgets
+      - name: Measure frontend static-asset budgets
+        id: static_budget
+        # Continue collecting the other independent browser evidence, but the
+        # final gate below makes any limit breach a hard CI failure.
+        continue-on-error: true
         run: pnpm perf:budget
 
       - name: Public functional end-to-end journeys (five browser profiles)
@@ -176,6 +180,16 @@ jobs:
           NEXT_PUBLIC_SITE_URL: http://127.0.0.1:3000
         run: pnpm test:e2e:preview
 
+      - name: Enforce approved static budgets after all browser diagnostics
+        if: always()
+        env:
+          BUDGET_OUTCOME: ${{ steps.static_budget.outcome }}
+        run: |
+          if [ "$BUDGET_OUTCOME" != "success" ]; then
+            echo "Static asset budget remains a mandatory merge-blocking failure"
+            exit 1
+          fi
+
       - name: Preserve Playwright, map baselines, visual, accessibility and Lighthouse receipts
         if: always()
         uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
@@ -186,6 +200,7 @@ jobs:
             tests/e2e/africa-footprint.spec.ts-snapshots/
             test-results/
             playwright-report/
+            reports/static-budget.json
 
   action-pinning:
     name: Enforce action pinning
