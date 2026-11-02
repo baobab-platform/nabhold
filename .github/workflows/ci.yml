@@ -133,8 +133,8 @@ jobs:
         env:
           NEXT_PUBLIC_SITE_URL: http://127.0.0.1:3000
           NABHOLD_DASHBOARD_PREVIEW: "false"
-          # Public CI fixture only; never deploy the preview build as a release.
-          NABHOLD_CONTENT_DEV_FALLBACK: "true"
+          # Build genuine public production mode with CMS fallback firmly OFF.
+          NABHOLD_CONTENT_DEV_FALLBACK: "false"
         run: pnpm build
 
       - name: Enforce frontend static-asset budgets
@@ -167,6 +167,14 @@ jobs:
           CI: "true"
           NEXT_PUBLIC_SITE_URL: http://127.0.0.1:3000
         run: pnpm test:e2e:visual
+
+      # Public preview-only journey is a separate, disposable development lab.
+      # No fixture data is ever accepted as published CMS content.
+      - name: Explicit dev-fixture portfolio journey (non-production evidence)
+        env:
+          CI: "true"
+          NEXT_PUBLIC_SITE_URL: http://127.0.0.1:3000
+        run: pnpm test:e2e:preview
 
       - name: Preserve Playwright, map baselines, visual, accessibility and Lighthouse receipts
         if: always()

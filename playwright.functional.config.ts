@@ -8,5 +8,6 @@ export default defineConfig(publicConfig, {
     "**/*.visual.spec.ts",
     "**/*.accessibility.spec.ts",
     "**/performance-budget.spec.ts",
+    "**/portfolio-preview.spec.ts",
   ],
 });
