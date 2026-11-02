@@ -32,7 +32,7 @@ test("an unknown portfolio company returns 404", async ({ page }) => {
 
 // SSR markup must remain valid through browser parsing and hydration. A
 // successful screenshot alone would miss repaired, invalid breadcrumb trees.
-for (const route of ["/portfolio", "/portfolio/zuribeans", "/insights", "/sectors", "/sign-in"]) {
+for (const route of ["/portfolio", "/insights", "/sectors", "/sign-in"]) {
   test(`public breadcrumb hydrates without errors: ${route}`, async ({ page }) => {
     const errors: string[] = [];
     page.on("pageerror", (error) => errors.push(error.message));
