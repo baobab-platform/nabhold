@@ -1,5 +1,10 @@
 import { defineConfig, devices } from "@playwright/test";
 
+const allowedEvidence = new Set(["functional", "accessibility", "visual", "lighthouse"]);
+const evidenceGate = process.env.CI && allowedEvidence.has(process.env.DEV11_EVIDENCE_GATE ?? "")
+  ? process.env.DEV11_EVIDENCE_GATE
+  : undefined;
+
 /**
  * Public, fixture-labelled experience tests only. Never use this configuration
  * for IAM/CP credentialed acceptance; that stays in playwright.integration.config.
@@ -14,7 +19,14 @@ export default defineConfig({
   retries: process.env.CI ? 1 : 0,
   workers: process.env.CI ? 2 : undefined,
   timeout: 60_000,
-  reporter: process.env.CI ? [["list"], ["html", { open: "never" }]] : "list",
+  reporter: evidenceGate
+    ? [
+        ["list"],
+        ["html", { open: "never", outputFolder: `playwright-report/dev11-${evidenceGate}` }],
+        ["json", { outputFile: `reports/dev11-${evidenceGate}-playwright.json` }],
+      ]
+    : process.env.CI ? [["list"], ["html", { open: "never" }]] : "list",
+  ...(evidenceGate ? { outputDir: `test-results/dev11-${evidenceGate}` } : {}),
   use: {
     baseURL: "http://127.0.0.1:3000",
     trace: "on-first-retry",
