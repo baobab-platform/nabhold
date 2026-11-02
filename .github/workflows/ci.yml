@@ -91,6 +91,12 @@ jobs:
           NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: pnpm install --frozen-lockfile
 
+      - name: Install synchronized Playwright browsers
+        run: pnpm exec playwright install --with-deps chromium firefox webkit
+
+      - name: Qualify all three real browser engines
+        run: node scripts/verify-playwright-browsers.mjs
+
       - name: Lint
         run: pnpm lint
 
@@ -120,31 +126,48 @@ jobs:
 
       - name: Build
         env:
-          NEXT_PUBLIC_SITE_URL: http://localhost:3000
+          NEXT_PUBLIC_SITE_URL: http://127.0.0.1:3000
           NABHOLD_DASHBOARD_PREVIEW: "false"
-          NABHOLD_CONTENT_DEV_FALLBACK: "false"
+          # Public CI fixture only; never deploy the preview build as a release.
+          NABHOLD_CONTENT_DEV_FALLBACK: "true"
         run: pnpm build
 
-      - name: Resolve baobab-dev Chromium
-        shell: bash
-        run: |
-          set -euo pipefail
-          browser="$(find /root/.cache/ms-playwright -type f \
-            \( -name headless_shell -o -name chrome \) -print -quit)"
-          test -n "$browser"
-          echo "PLAYWRIGHT_CHROMIUM_EXECUTABLE_PATH=$browser" >> "$GITHUB_ENV"
+      - name: Enforce frontend static-asset budgets
+        run: pnpm perf:budget
 
-      - name: End-to-end tests
+      - name: Public functional end-to-end journeys (five browser profiles)
+        id: experience_browser
         env:
           CI: "true"
           NEXT_PUBLIC_SITE_URL: http://127.0.0.1:3000
         run: pnpm test:e2e
 
-      - name: Preserve reviewed map visual and browser evidence
+      # Lighthouse is CPU-sensitive. Do not run it alongside Playwright workers;
+      # the independent gate preserves its own evidence and numerical thresholds.
+      - name: Isolated production-build Lighthouse lab
+        env:
+          CI: "true"
+          NEXT_PUBLIC_SITE_URL: http://127.0.0.1:3000
+        run: pnpm test:e2e:lighthouse
+
+      - name: WCAG 2.2 AA public accessibility gate
+        env:
+          CI: "true"
+          NEXT_PUBLIC_SITE_URL: http://127.0.0.1:3000
+        run: pnpm test:e2e:a11y
+
+      - name: Landing-page visual and layout gate
+        id: experience_visual
+        env:
+          CI: "true"
+          NEXT_PUBLIC_SITE_URL: http://127.0.0.1:3000
+        run: pnpm test:e2e:visual
+
+      - name: Preserve Playwright, map baselines, visual, accessibility and Lighthouse receipts
         if: always()
         uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
         with:
-          name: nabhold-map-browser-evidence
+          name: nabhold-experience-browser-evidence
           if-no-files-found: error
           path: |
             tests/e2e/africa-footprint.spec.ts-snapshots/
