@@ -14,7 +14,10 @@ for (const width of [390, 1440]) {
     const search = page.getByRole("searchbox", { name: "Find a mapped country or territory" });
     await page.emulateMedia({ reducedMotion: "reduce" });
     await page.addStyleTag({ content: "nextjs-portal { display: none !important; }" });
-    // Only Chromium owns the existing reviewed pixel baseline. Other engines\n    // still run every semantic, keyboard and accessibility assertion.\n    if (testInfo.project.name === "chromium")\n      await expect(page).toHaveScreenshot(`africa-footprint-${width}.png`, { fullPage: true, animations: "disabled", maxDiffPixelRatio: 0.001 });
+    // Only Chromium owns the existing reviewed pixel baseline. Other engines
+    // still run every semantic, keyboard and accessibility assertion.
+    if (testInfo.project.name === "chromium")
+      await expect(page).toHaveScreenshot(`africa-footprint-${width}.png`, { fullPage: true, animations: "disabled", maxDiffPixelRatio: 0.001 });
     await page.addScriptTag({ path: require.resolve("axe-core/axe.min.js") });
     const report = await page.evaluate(async () => {
       const axe = (window as unknown as { axe: { run: (node: Element, options: unknown) => Promise<AxeResults> } }).axe;
