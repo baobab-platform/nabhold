@@ -148,6 +148,7 @@ jobs:
         id: experience_browser
         env:
           CI: "true"
+          DEV11_EVIDENCE_GATE: functional
           NEXT_PUBLIC_SITE_URL: http://127.0.0.1:3000
         run: pnpm test:e2e
 
@@ -156,12 +157,14 @@ jobs:
       - name: Isolated production-build Lighthouse lab
         env:
           CI: "true"
+          DEV11_EVIDENCE_GATE: lighthouse
           NEXT_PUBLIC_SITE_URL: http://127.0.0.1:3000
         run: pnpm test:e2e:lighthouse
 
       - name: WCAG 2.2 AA public accessibility gate
         env:
           CI: "true"
+          DEV11_EVIDENCE_GATE: accessibility
           NEXT_PUBLIC_SITE_URL: http://127.0.0.1:3000
         run: pnpm test:e2e:a11y
 
@@ -169,6 +172,7 @@ jobs:
         id: experience_visual
         env:
           CI: "true"
+          DEV11_EVIDENCE_GATE: visual
           NEXT_PUBLIC_SITE_URL: http://127.0.0.1:3000
         run: pnpm test:e2e:visual
 
@@ -201,6 +205,7 @@ jobs:
             test-results/
             playwright-report/
             reports/static-budget.json
+            reports/dev11-*-playwright.json
 
   action-pinning:
     name: Enforce action pinning
