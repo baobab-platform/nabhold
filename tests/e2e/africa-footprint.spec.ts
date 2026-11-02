@@ -5,7 +5,7 @@ const require = createRequire(resolve(process.cwd(), "package.json"));
 import { test, expect } from "@playwright/test";
 
 for (const width of [390, 1440]) {
-  test(`map selection has an equivalent country-list control at ${width}px`, async ({ page }) => {
+  test(`map selection has an equivalent country-list control at ${width}px`, async ({ page }, testInfo) => {
     await page.setViewportSize({ width, height: 900 });
     await page.goto("/markets/map");
     if (width >= 1024) await expect(page.getByRole("banner").getByRole("link", { name: "Executive login", exact: true })).toHaveCSS("color", "rgb(255, 255, 255)");
@@ -14,7 +14,7 @@ for (const width of [390, 1440]) {
     const search = page.getByRole("searchbox", { name: "Find a mapped country or territory" });
     await page.emulateMedia({ reducedMotion: "reduce" });
     await page.addStyleTag({ content: "nextjs-portal { display: none !important; }" });
-    await expect(page).toHaveScreenshot(`africa-footprint-${width}.png`, { fullPage: true, animations: "disabled", maxDiffPixelRatio: 0.001 });
+    // Only Chromium owns the existing reviewed pixel baseline. Other engines\n    // still run every semantic, keyboard and accessibility assertion.\n    if (testInfo.project.name === "chromium")\n      await expect(page).toHaveScreenshot(`africa-footprint-${width}.png`, { fullPage: true, animations: "disabled", maxDiffPixelRatio: 0.001 });
     await page.addScriptTag({ path: require.resolve("axe-core/axe.min.js") });
     const report = await page.evaluate(async () => {
       const axe = (window as unknown as { axe: { run: (node: Element, options: unknown) => Promise<AxeResults> } }).axe;
