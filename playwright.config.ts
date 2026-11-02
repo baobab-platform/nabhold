@@ -31,8 +31,9 @@ export default defineConfig({
       ...process.env,
       NEXT_PUBLIC_SITE_URL: "http://127.0.0.1:3000",
       NABHOLD_DASHBOARD_PREVIEW: "false",
-      // Read-only editorial fixture, visibly labelled, never CMS acceptance.
-      NABHOLD_CONTENT_DEV_FALLBACK: "true",
+      // Production public gates refuse previews; only the explicit separate
+      // preview configuration enables the labelled development fixture.
+      NABHOLD_CONTENT_DEV_FALLBACK: "false",
     },
   },
   projects: [
