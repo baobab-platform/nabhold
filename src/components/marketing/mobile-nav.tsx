@@ -23,7 +23,7 @@ export function MobileNav({
   const [open, setOpen] = React.useState(false)
 
   return (
-    <Sheet open={open} onOpenChange={setOpen}>
+    <Sheet open={open} onOpenChange={setOpen} swipeDirection="right">
       <SheetTrigger
         className="inline-flex size-9 items-center justify-center rounded-xl border border-border lg:hidden"
         aria-label="Open menu"
