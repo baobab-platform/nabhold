@@ -23,6 +23,13 @@ test("enterprise navigation remains usable on desktop and mobile", async ({ page
       await expect(navigation).toBeVisible();
       await expect(navigation.getByRole("link", { name: "Our Group", exact: true })).toBeVisible();
       await expect(navigation.getByRole("link", { name: "Executive portal" })).toBeVisible();
+      // BXS-M03: the browser must light-dismiss the native popover with Escape
+      // and restore focus to its invoker before another navigation.
+      await page.keyboard.press("Escape");
+      await expect(navigation).toBeHidden();
+      await expect(page.getByRole("button", { name: "Open menu" })).toBeFocused();
+      await page.getByRole("button", { name: "Open menu" }).click();
+      await expect(navigation).toBeVisible();
       await navigation.getByRole("link", { name: "Our Group", exact: true }).click();
       await expect(page).toHaveURL(/\/about\/group$/);
     } else {
