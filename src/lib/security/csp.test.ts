@@ -42,6 +42,19 @@ describe("content security policy", () => {
     expect(policy).toContain("upgrade-insecure-requests");
   });
 
+  it("disables subresource scheme upgrades only for actual HTTP production lab requests", () => {
+    const httpPolicy = buildCsp({ surface: "public", secureTransport: false });
+    const httpsPolicy = buildCsp({ surface: "public", secureTransport: true });
+    const protectedHttp = buildCsp({ surface: "protected", nonce: "n", secureTransport: false });
+    const protectedHttps = buildCsp({ surface: "protected", nonce: "n", secureTransport: true });
+    expect(httpPolicy).not.toContain("upgrade-insecure-requests");
+    expect(protectedHttp).not.toContain("upgrade-insecure-requests");
+    expect(httpsPolicy).toContain("upgrade-insecure-requests");
+    expect(protectedHttps).toContain("upgrade-insecure-requests");
+    expect(directive(httpPolicy, "script-src")).toEqual(directive(httpsPolicy, "script-src"));
+    expect(directive(protectedHttp, "script-src")).toEqual(directive(protectedHttps, "script-src"));
+  });
+
   it("never allows a wildcard or remote script host", () => {
     for (const surface of ["public", "protected"] as const) {
       const policy = buildCsp({ surface, nonce: "n" });
