@@ -1,4 +1,6 @@
-@import "tailwindcss";
+/* Scan authored estate source only, not browser tests, docs or tooling.
+   The BXS packages ship their own explicitly imported stylesheets. */
+@import "tailwindcss" source("../");
 @import "tw-animate-css";
 /* Base UI state variants are estate-owned styling. The shadcn generator
    is not required to render these checked-in components at runtime. */
