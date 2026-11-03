@@ -9,7 +9,7 @@ export default function PublicLayout({
   return (
     <>
       <SiteHeader />
-      <main id="main">{children}</main>
+      <main id="main" tabIndex={-1}>{children}</main>
       <SiteFooter />
     </>
   )
