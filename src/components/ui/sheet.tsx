@@ -39,10 +39,12 @@ function SheetContent({
   return (
     <SheetPortal>
       <SheetOverlay />
+      {/* Base UI requires a Viewport for accessible swipe/focus behaviour. */}
+      <DrawerPrimitive.Viewport className="pointer-events-none fixed inset-0 z-50">
       <DrawerPrimitive.Popup
         data-slot="sheet-content"
         className={cn(
-          "bg-background fixed z-50 flex flex-col gap-4 border border-border p-6 shadow-lg transition ease-in-out",
+          "pointer-events-auto bg-background fixed z-50 flex flex-col gap-4 border border-border p-6 shadow-lg transition ease-in-out",
           side === "right" && "inset-y-0 right-0 h-full w-3/4 max-w-sm border-l",
           side === "left" && "inset-y-0 left-0 h-full w-3/4 max-w-sm border-r",
           side === "top" && "inset-x-0 top-0 border-b",
@@ -57,6 +59,7 @@ function SheetContent({
           <span className="sr-only">Close</span>
         </DrawerPrimitive.Close>
       </DrawerPrimitive.Popup>
+      </DrawerPrimitive.Viewport>
     </SheetPortal>
   )
 }
