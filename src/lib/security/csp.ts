@@ -26,6 +26,8 @@ export interface CspOptions {
   nonce?: string;
   /** Development needs eval for React refresh; never set in production. */
   development?: boolean;
+  /** Only issue upgrade-insecure-requests to actual HTTPS recipients. */
+  secureTransport?: boolean;
   /** Server-validated HTTPS IAM origin; sign-in navigation only, never an API/script source. */
   formActionOrigin?: string;
 }
@@ -79,7 +81,7 @@ export function buildCsp(options: CspOptions): string {
     ["manifest-src", "'self'"],
   ];
 
-  if (!development) directives.push(["upgrade-insecure-requests"]);
+  if (!development && options.secureTransport !== false) directives.push(["upgrade-insecure-requests"]);
 
   return directives.map((parts) => parts.join(" ")).join("; ");
 }
