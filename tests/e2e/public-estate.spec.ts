@@ -1,17 +1,12 @@
 import { expect, test } from "@playwright/test";
 
-test("visitor reaches a portfolio company", async ({ page }) => {
-  await page.goto("/");
-  await page.getByRole("link", { name: "View portfolio" }).click();
-  await expect(page).toHaveURL(/\/portfolio$/);
-  await page.getByRole("link", { name: /Zuribeans/ }).click();
-  await expect(page).toHaveURL(/\/portfolio\/zuribeans$/);
-  await expect(page.getByRole("heading", { level: 1, name: "Zuribeans", exact: true })).toBeVisible();
-});
-
-test("portfolio company page exposes basic SEO metadata", async ({ page }) => {
-  await page.goto("/portfolio/zuribeans");
-  await expect(page).toHaveTitle(/Zuribeans/);
+test("production public portfolio fails closed without published CMS content", async ({ page }) => {
+  test.skip(!process.env.CI, "Local dev may deliberately opt into separately labelled preview fixtures");
+  await page.goto("/portfolio");
+  await expect(page.getByText("Portfolio content is not yet available")).toBeVisible();
+  await expect(page.getByRole("link", { name: /Zuribeans/i })).toHaveCount(0);
+  const response = await page.goto("/portfolio/zuribeans");
+  expect(response?.status()).toBe(404);
 });
 
 test("insights listing renders a graceful empty state without a CMS", async ({
@@ -37,7 +32,7 @@ test("an unknown portfolio company returns 404", async ({ page }) => {
 
 // SSR markup must remain valid through browser parsing and hydration. A
 // successful screenshot alone would miss repaired, invalid breadcrumb trees.
-for (const route of ["/portfolio", "/portfolio/zuribeans", "/insights", "/sectors", "/sign-in"]) {
+for (const route of ["/portfolio", "/insights", "/sectors", "/sign-in"]) {
   test(`public breadcrumb hydrates without errors: ${route}`, async ({ page }) => {
     const errors: string[] = [];
     page.on("pageerror", (error) => errors.push(error.message));

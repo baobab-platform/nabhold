@@ -10,10 +10,10 @@
     "dev": "next dev --turbopack",
     "build": "next build",
     "start": "next start",
-    "lint": "eslint .",
+    "lint": "eslint . --max-warnings=0",
     "typecheck": "tsc --noEmit",
     "test": "vitest run",
-    "test:e2e": "playwright test",
+    "test:e2e": "playwright test --config=playwright.functional.config.ts",
     "verification:prepare": "node --experimental-strip-types scripts/prepare-legal-verification.mjs",
     "onboarding:operators:check": "node --experimental-strip-types scripts/check-onboarding-operators.mjs",
     "acceptance:protected": "node --experimental-strip-types scripts/run-protected-acceptance.mjs",
@@ -21,7 +21,12 @@
     "integration:check": "node --experimental-strip-types scripts/integration/run.mjs check",
     "dev:integration": "node --experimental-strip-types scripts/integration/run.mjs dev",
     "test:e2e:integration": "node --experimental-strip-types scripts/integration/run.mjs test",
-    "observe:executive-context": "node --experimental-strip-types scripts/observe-executive-navigation.mjs"
+    "observe:executive-context": "node --experimental-strip-types scripts/observe-executive-navigation.mjs",
+    "perf:budget": "node scripts/check-performance-budget.mjs",
+    "test:e2e:lighthouse": "playwright test tests/e2e/performance-budget.spec.ts --project=chromium --workers=1",
+    "test:e2e:a11y": "playwright test tests/e2e/landing-page.accessibility.spec.ts --project=chromium --workers=1",
+    "test:e2e:visual": "playwright test tests/e2e/landing-page.visual.spec.ts --project=chromium --workers=1",
+    "test:e2e:preview": "playwright test --config=playwright.preview.config.ts"
   },
   "dependencies": {
     "@base-ui/react": "^1.9.0",

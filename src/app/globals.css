@@ -1,5 +1,25 @@
-@import "tailwindcss";
-@import "tw-animate-css";
+/* Scan authored estate source only, not browser tests, docs or tooling.
+   The BXS packages ship their own explicitly imported stylesheets. */
+/* Tailwind v4 automatic scanning included 17 unused generated UI primitives
+   plus their animation/state variants. Explicitly inventory runtime source
+   and the seven UI modules actually imported by the estate. This preserves
+   public, executive, CMS and IAM markup, but omits unused components. */
+@import "tailwindcss" source(none);
+@source "../app";
+@source "../features";
+@source "../lib";
+@source "../components/layout";
+@source "../components/marketing";
+@source "../components/dashboard";
+@source "../components/navigation";
+@source "../components/ui/alert.tsx";
+@source "../components/ui/avatar.tsx";
+@source "../components/ui/badge.tsx";
+@source "../components/ui/breadcrumb.tsx";
+@source "../components/ui/button.tsx";
+@source "../components/ui/card.tsx";
+@source "../components/ui/table.tsx";
+/* Native CSS transitions replace the unbounded animation utility stylesheet. */
 /* Base UI state variants are estate-owned styling. The shadcn generator
    is not required to render these checked-in components at runtime. */
 @custom-variant data-open (&:where([data-state="open"], [data-open]:not([data-open="false"])));

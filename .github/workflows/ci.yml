@@ -91,6 +91,17 @@ jobs:
           NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: pnpm install --frozen-lockfile
 
+      - name: Install synchronized Playwright browsers
+        run: pnpm exec playwright install --with-deps chromium firefox webkit
+
+      # The governed container runs as root; GitHub mounts /github/home with
+      # runner ownership. Firefox refuses startup if HOME is not owned by root.
+      - name: Prepare Firefox home ownership
+        run: chown 0:0 /github/home
+
+      - name: Qualify all three real browser engines
+        run: node scripts/verify-playwright-browsers.mjs
+
       - name: Lint
         run: pnpm lint
 
@@ -119,37 +130,91 @@ jobs:
         run: pnpm test
 
       - name: Build
+        id: production_build
         env:
-          NEXT_PUBLIC_SITE_URL: http://localhost:3000
+          NEXT_PUBLIC_SITE_URL: http://127.0.0.1:3000
           NABHOLD_DASHBOARD_PREVIEW: "false"
+          # Build genuine public production mode with CMS fallback firmly OFF.
           NABHOLD_CONTENT_DEV_FALLBACK: "false"
         run: pnpm build
 
-      - name: Resolve baobab-dev Chromium
-        shell: bash
-        run: |
-          set -euo pipefail
-          browser="$(find /root/.cache/ms-playwright -type f \
-            \( -name headless_shell -o -name chrome \) -print -quit)"
-          test -n "$browser"
-          echo "PLAYWRIGHT_CHROMIUM_EXECUTABLE_PATH=$browser" >> "$GITHUB_ENV"
+      - name: Measure frontend static-asset budgets
+        id: static_budget
+        # Continue collecting the other independent browser evidence, but the
+        # final gate below makes any limit breach a hard CI failure.
+        continue-on-error: true
+        run: pnpm perf:budget
 
-      - name: End-to-end tests
+      - name: Public functional end-to-end journeys (five browser profiles)
+        if: ${{ !cancelled() && steps.production_build.outcome == 'success' }}
+        id: experience_browser
         env:
           CI: "true"
+          DEV11_EVIDENCE_GATE: functional
           NEXT_PUBLIC_SITE_URL: http://127.0.0.1:3000
         run: pnpm test:e2e
 
-      - name: Preserve reviewed map visual and browser evidence
+      # Each experience gate continues after another suite fails, provided the
+      # production build succeeded; earlier failures remain mandatory and no
+      # suite or negative case is skipped merely because a sibling failed.
+      # Lighthouse is CPU-sensitive. Do not run it alongside Playwright workers;
+      # the independent gate preserves its own evidence and numerical thresholds.
+      - name: Isolated production-build Lighthouse lab
+        if: ${{ !cancelled() && steps.production_build.outcome == 'success' }}
+        env:
+          CI: "true"
+          DEV11_EVIDENCE_GATE: lighthouse
+          NEXT_PUBLIC_SITE_URL: http://127.0.0.1:3000
+        run: pnpm test:e2e:lighthouse
+
+      - name: WCAG 2.2 AA public accessibility gate
+        if: ${{ !cancelled() && steps.production_build.outcome == 'success' }}
+        env:
+          CI: "true"
+          DEV11_EVIDENCE_GATE: accessibility
+          NEXT_PUBLIC_SITE_URL: http://127.0.0.1:3000
+        run: pnpm test:e2e:a11y
+
+      - name: Landing-page visual and layout gate
+        if: ${{ !cancelled() && steps.production_build.outcome == 'success' }}
+        id: experience_visual
+        env:
+          CI: "true"
+          DEV11_EVIDENCE_GATE: visual
+          NEXT_PUBLIC_SITE_URL: http://127.0.0.1:3000
+        run: pnpm test:e2e:visual
+
+      # Public preview-only journey is a separate, disposable development lab.
+      # No fixture data is ever accepted as published CMS content.
+      - name: Explicit dev-fixture portfolio journey (non-production evidence)
+        if: ${{ !cancelled() && steps.production_build.outcome == 'success' }}
+        env:
+          CI: "true"
+          NEXT_PUBLIC_SITE_URL: http://127.0.0.1:3000
+        run: pnpm test:e2e:preview
+
+      - name: Enforce approved static budgets after all browser diagnostics
+        if: always()
+        env:
+          BUDGET_OUTCOME: ${{ steps.static_budget.outcome }}
+        run: |
+          if [ "$BUDGET_OUTCOME" != "success" ]; then
+            echo "Static asset budget remains a mandatory merge-blocking failure"
+            exit 1
+          fi
+
+      - name: Preserve Playwright, map baselines, visual, accessibility and Lighthouse receipts
         if: always()
         uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
         with:
-          name: nabhold-map-browser-evidence
+          name: nabhold-experience-browser-evidence
           if-no-files-found: error
           path: |
             tests/e2e/africa-footprint.spec.ts-snapshots/
             test-results/
             playwright-report/
+            reports/static-budget.json
+            reports/dev11-*-playwright.json
 
   action-pinning:
     name: Enforce action pinning

@@ -36,6 +36,10 @@ export function proxy(request: NextRequest) {
     surface,
     nonce,
     development: process.env.NODE_ENV !== "production",
+    // HTTP production-build tests and local previews must not upgrade their
+    // own HTTP-only _next assets to unavailable HTTPS (notably WebKit).
+    // HTTPS deployments keep upgrade-insecure-requests intact.
+    secureTransport: request.nextUrl.protocol === "https:",
     formActionOrigin,
   });
   const headerName = cspHeaderName(process.env.NABHOLD_CSP_MODE);

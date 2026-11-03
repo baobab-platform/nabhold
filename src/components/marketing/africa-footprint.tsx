@@ -4,7 +4,6 @@ import Link from "next/link";
 import {ArrowUpRight,MapPinned} from "lucide-react";
 import geo from "@/data/africa-geometry.json";
 import provenance from "@/data/africa-geometry-provenance.json";
-import {Button as BaseButton} from "@base-ui/react/button";
 import {MARKET_STATEMENTS,type MarketStatement} from "@/data/market-status";
 import {projectAfricaPoint} from "@/lib/experience/geo-presentation";
 type Point=number[];
@@ -42,7 +41,7 @@ export function AfricaFootprint({compact=false,statements=MARKET_STATEMENTS,titl
    <label htmlFor={searchId} className="block text-sm font-semibold">Find a mapped country or territory</label>
    <input id={searchId} type="search" value={query} onChange={event=>setQuery(event.target.value)} className="mt-2 min-h-11 w-full border border-border bg-[var(--surface)] px-3" />
    <ul aria-label="Mapped countries and territories" className="mt-3 grid max-h-72 gap-2 overflow-y-auto p-1">
-    {countries.map(country=><li key={country.name}><BaseButton type="button" onClick={()=>setSelected(country.name)} aria-pressed={selected===country.name} className={`min-h-11 w-full border px-4 py-2 text-left text-sm font-semibold ${selected===country.name?"border-[var(--gold-deep)] bg-[var(--gold)] text-black":"border-border bg-[var(--surface)]"}`}>{country.name}</BaseButton></li>)}
+    {countries.map(country=><li key={country.name}><button type="button" onClick={()=>setSelected(country.name)} aria-pressed={selected===country.name} className={`min-h-11 w-full border px-4 py-2 text-left text-sm font-semibold ${selected===country.name?"border-[var(--gold-deep)] bg-[var(--gold)] text-black":"border-border bg-[var(--surface)]"}`}>{country.name}</button></li>)}
    </ul>
    {!countries.length&&<p role="status">No mapped country or territory matches this search.</p>}
   </div>
