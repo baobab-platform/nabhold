@@ -130,6 +130,7 @@ jobs:
         run: pnpm test
 
       - name: Build
+        id: production_build
         env:
           NEXT_PUBLIC_SITE_URL: http://127.0.0.1:3000
           NABHOLD_DASHBOARD_PREVIEW: "false"
@@ -145,6 +146,7 @@ jobs:
         run: pnpm perf:budget
 
       - name: Public functional end-to-end journeys (five browser profiles)
+        if: ${{ !cancelled() && steps.production_build.outcome == 'success' }}
         id: experience_browser
         env:
           CI: "true"
@@ -152,9 +154,13 @@ jobs:
           NEXT_PUBLIC_SITE_URL: http://127.0.0.1:3000
         run: pnpm test:e2e
 
+      # Each experience gate continues after another suite fails, provided the
+      # production build succeeded; earlier failures remain mandatory and no
+      # suite or negative case is skipped merely because a sibling failed.
       # Lighthouse is CPU-sensitive. Do not run it alongside Playwright workers;
       # the independent gate preserves its own evidence and numerical thresholds.
       - name: Isolated production-build Lighthouse lab
+        if: ${{ !cancelled() && steps.production_build.outcome == 'success' }}
         env:
           CI: "true"
           DEV11_EVIDENCE_GATE: lighthouse
@@ -162,6 +168,7 @@ jobs:
         run: pnpm test:e2e:lighthouse
 
       - name: WCAG 2.2 AA public accessibility gate
+        if: ${{ !cancelled() && steps.production_build.outcome == 'success' }}
         env:
           CI: "true"
           DEV11_EVIDENCE_GATE: accessibility
@@ -169,6 +176,7 @@ jobs:
         run: pnpm test:e2e:a11y
 
       - name: Landing-page visual and layout gate
+        if: ${{ !cancelled() && steps.production_build.outcome == 'success' }}
         id: experience_visual
         env:
           CI: "true"
@@ -179,6 +187,7 @@ jobs:
       # Public preview-only journey is a separate, disposable development lab.
       # No fixture data is ever accepted as published CMS content.
       - name: Explicit dev-fixture portfolio journey (non-production evidence)
+        if: ${{ !cancelled() && steps.production_build.outcome == 'success' }}
         env:
           CI: "true"
           NEXT_PUBLIC_SITE_URL: http://127.0.0.1:3000
