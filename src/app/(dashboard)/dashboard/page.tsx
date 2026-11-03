@@ -98,6 +98,8 @@ export default async function Page() {
       <section>
         <ChartCard
           title="Illustrative confidence series"
+          source={preview ? "SYNTHETIC_PREVIEW" : "PULSE_OWNER"}
+          asOf={data.generatedAt}
           data={data.signals.map(
             (s: { market: string; confidence: number }, i: number) => ({
               label: s.market || `S${i + 1}`,
