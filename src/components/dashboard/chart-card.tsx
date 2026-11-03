@@ -17,9 +17,13 @@ export function ChartCard({
   title,
   data,
   className,
+  source,
+  asOf,
 }: {
   title: string
   data: readonly Point[]
+  source: "PULSE_OWNER" | "SYNTHETIC_PREVIEW"
+  asOf: string
   className?: string
 }) {
   const valid =
@@ -99,6 +103,10 @@ export function ChartCard({
             <figcaption className="mt-2 text-xs text-muted-foreground">
               Illustrative signal confidence, from the currently resolved overview.
               Values are not financial, market-approval or legal-authority evidence.
+              <span className="mt-1 block">
+                Source: {source === "SYNTHETIC_PREVIEW" ? "Synthetic development fixture, not Pulse" : "Pulse executive overview API"}.
+                Reported as of: {asOf || "Not supplied"}.
+              </span>
             </figcaption>
             <div className="mt-4 max-h-48 overflow-auto">
               <table className="w-full text-left text-sm">
