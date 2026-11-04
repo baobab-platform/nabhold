@@ -71,3 +71,14 @@ The accepted BXS policy preserves all numerical limits; do not increase them to 
 For functional browsers, the public layout alone owns `main` and `#main`; Contact no longer nests another landmark. The public mobile navigation now uses the native HTML Popover API (Escape, focus return and light-dismiss), avoiding a hydrated drawer on public pages; the retained Base UI Sheet primitive separately uses its required Viewport. WebKit/Firefox/Chromium navigation, focus return, responsive visibility, CSP and independent accessibility and visual regressions remain required. No test is skipped, budget increased or preview data treated as CMS publication. The executive/chart changes neither grant Pulse authority nor expand an activated release class. Hosted Codespaces, protected IAM/CP and production performance field p75 remain separate gates.
 
 An additional targeted stylesheet pass replaced the small dialog/menu entry/exit animations with opacity transitions and removed `tw-animate-css` from the global CSS imports. Existing accordion keyframes retain their locally scoped definition. No semantic, security, keyboard or numerical gate was waived; all outcomes need remeasurement at the current PR SHA.
+
+
+## Exact source binding for original DEV-11 reports
+
+The quality workflow explicitly checks out the current PR head or main/event
+SHA, passes `Verify exact owner source SHA` and retains the actual git readback
+in `reports/dev11-source-sha.txt`. GitHub's default temporary PR merge can
+contain different bytes from API `run.head_sha`; that metadata alone does not
+bind measured results to the candidate. The independent observer requires
+both the successful source guard and matching original readback. Historical
+artifacts lacking this binding need fresh current-source qualification.
