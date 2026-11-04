@@ -27,9 +27,10 @@ export default defineConfig({
         ["json", { outputFile: `reports/dev11-${evidenceGate}-playwright.json` }],
       ]
     : process.env.CI
-      ? [["list"], ["html", { open: "never" }]]
+      // A later preview must never clean the parent of the four originals.
+      ? [["list"], ["html", { open: "never", outputFolder: "playwright-report/unscoped" }]]
       : "list",
-  ...(evidenceGate ? { outputDir: `test-results/dev11-${evidenceGate}` } : {}),
+  outputDir: evidenceGate ? `test-results/dev11-${evidenceGate}` : "test-results/unscoped",
   use: {
     baseURL: "http://127.0.0.1:3000",
     trace: "on-first-retry",

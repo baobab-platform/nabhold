@@ -49,8 +49,36 @@ the source instead of raising budget thresholds simply to clear CI.
 
 ## Browser and asset remediation (3 November 2026)
 
+### Original-report custody correction (4 November 2026)
+
+Original artifact `13202032974` from run `41572409276` was downloaded and its
+SHA-256 verified as `8d2cf185fcba3835600d013270a851b9dece6b0945d9d516d16176fb0ab62d26`.
+The JSON reports survived, but none of the four gate HTML originals remained:
+the later preview invocation cleaned the shared parent output directory.
+The independent Infrastructure verifier correctly rejects that artifact.
+
+Ungrouped runs now write only into `playwright-report/unscoped` and
+`test-results/unscoped`, preserving the four originals in sibling directories.
+`node scripts/dev11-report-custody.node.mjs` runs the actual pinned Playwright
+CLI twice without browsers or services, then compares the first run's HTML,
+JSON and attachment hashes. CI requires this regression before estate tests.
+It proves report retention only. All functional, accessibility, visual and
+Lighthouse executions, approved budgets and screenshot baselines remain
+independently mandatory; fresh current-head quality evidence is required.
+
 The accepted BXS policy preserves all numerical limits; do not increase them to approve an unqualified change. The previous build measured 1193.4 KiB of emitted client JavaScript, a 351.2 KiB largest chunk and 74.8 KiB CSS. This PR removes the preview-only Recharts client graph in favour of a bounded, server-rendered SVG with exact accessible table values. It also scopes Tailwind v4 source detection to authored estate source, rather than CI workflows, tests or markdown. These are *candidate remedies*: actual measured current-head CI must prove the reduction.
 
 For functional browsers, the public layout alone owns `main` and `#main`; Contact no longer nests another landmark. The public mobile navigation now uses the native HTML Popover API (Escape, focus return and light-dismiss), avoiding a hydrated drawer on public pages; the retained Base UI Sheet primitive separately uses its required Viewport. WebKit/Firefox/Chromium navigation, focus return, responsive visibility, CSP and independent accessibility and visual regressions remain required. No test is skipped, budget increased or preview data treated as CMS publication. The executive/chart changes neither grant Pulse authority nor expand an activated release class. Hosted Codespaces, protected IAM/CP and production performance field p75 remain separate gates.
 
 An additional targeted stylesheet pass replaced the small dialog/menu entry/exit animations with opacity transitions and removed `tw-animate-css` from the global CSS imports. Existing accordion keyframes retain their locally scoped definition. No semantic, security, keyboard or numerical gate was waived; all outcomes need remeasurement at the current PR SHA.
+
+
+## Exact source binding for original DEV-11 reports
+
+The quality workflow explicitly checks out the current PR head or main/event
+SHA, passes `Verify exact owner source SHA` and retains the actual git readback
+in `reports/dev11-source-sha.txt`. GitHub's default temporary PR merge can
+contain different bytes from API `run.head_sha`; that metadata alone does not
+bind measured results to the candidate. The independent observer requires
+both the successful source guard and matching original readback. Historical
+artifacts lacking this binding need fresh current-source qualification.
