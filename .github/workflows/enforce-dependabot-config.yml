@@ -1,6 +1,6 @@
-# BA-SEC-DEP-001: migration uses the immutable accepted Shared BASELINE.
-# Do not depend on an unmerged Shared #429 strict workflow or claim full
-# security-alert coverage from this structural check.
+# BA-SEC-DEP-001: consume the reviewed, merged Shared #429 strict validator.
+# Structural acceptance is not proof of Dependabot service alerts or
+# GHCR/private-package runtime qualification.
 name: Enforce Dependabot Policy
 
 on:
@@ -30,9 +30,10 @@ jobs:
   baseline:
     permissions:
       contents: read
-    uses: baobab-platform/shared/.github/workflows/enforce-dependabot-config.yml@31de2bc3dcd56128c019c640dc7e12c10ae9ca69 # accepted Shared baseline
+    uses: baobab-platform/shared/.github/workflows/enforce-dependabot-config.yml@8ddeb8de53980b50e7c0b9d3e43d32f6d27b182c # merged Shared #429 approved strict policy
     with:
       required-ecosystems: "github-actions,npm,docker"
+      policy-level: "strict"
 
   local-regressions:
     name: BA-SEC-DEP-001 local manifest and negative fixtures

@@ -1,8 +1,8 @@
 # BA-SEC-DEP-001 — Digital Estate Dependency and Security Maintenance Adoption
 
-**Authority:** [Approved Baobab Dependency & Security Maintenance Policy v1.0](https://github.com/baobab-platform/shared/pull/429). Shared #429 is **still an unmerged engineering PR**: approval of the policy text is not acceptance of its strict reusable validator.  
+**Authority:** [Approved Baobab Dependency & Security Maintenance Policy v1.0](https://github.com/baobab-platform/shared/pull/429). Shared #429 and its strict reusable validator **merged on 8 November 2026**, immutable commit `8ddeb8de53980b50e7c0b9d3e43d32f6d27b182c`.  
 **Record date:** 7 November 2026.  
-**Status:** **SOURCE_COMMITTED** on the indicated estate PR; **CI_VERIFIED, SECURITY_ALERT_PATH_VERIFIED, CONSUMER_QUALIFIED and protected deployment evidence remain UNVERIFIED** until independently checked.  
+**Status:** **SOURCE_COMMITTED** on the indicated estate PR. At the original 7 November audit, **CI_VERIFIED, SECURITY_ALERT_PATH_VERIFIED, CONSUMER_QUALIFIED and protected deployment evidence were UNVERIFIED**. 8 November changes require new exact-head full Foundation/quality/security verification; no later state is presumed by this document.  
 **Owners:** Estate Engineering, Platform Engineering, Security. No self-certification.
 
 ## 1. Observed dependency surfaces
@@ -17,7 +17,7 @@ All three estates use a **pnpm 11** package-manager declaration, a root `package
 
 **Policy controls:** Existing default branch is implicitly authoritative. Do not set `target-branch: main` (GitHub security updates still target the default branch, but the entry's settings would apply to version updates only). Optional groups are restricted to `applies-to: version-updates` and `update-types: [minor, patch]`; majors must be assessed independently. Routine updates run weekly with Monday SAST schedules and nonzero PR limits. Security patch triage follows advisory urgency, not the weekly schedule.
 
-**Shared control consumption:** The repository's `.github/workflows/enforce-dependabot-config.yml` calls a previously accepted **immutable Shared baseline** and sets `required-ecosystems: "github-actions,npm,docker"`. It also executes a local source/negative suite (17 cases). The strict version of the validator introduced on Shared #429 is **not** assumed released and must not be used as an unaccepted branch SHA. Adopt it only following its independent acceptance, merge and immutable release.
+**Shared control consumption (8 November update):** The dedicated policy gate and root CI now both call the **merged Shared #429 immutable strict validator** at `8ddeb8de53980b50e7c0b9d3e43d32f6d27b182c`, set `policy-level: "strict"`, and require `github-actions,npm,docker`. Local positive/negative regressions are retained and extended to reject a missing Alpine remediation or a divergent policy pin. Strict source conformance never means the actual GitHub Dependabot service and Alerts were independently verified.
 
 ## 2. Vulnerability surveillance and exceptions
 
@@ -55,3 +55,10 @@ This is a policy-adoption/change-safety increment only. Existing business identi
 - **Potential blocker:** Full-lockfile auditing may reveal an existing dev-only advisory previously globally suppressed. Require actual fix, restricted transitive migration or an **expiring independently approved** exception before merge; do not weaken the scan.
 
 No protected release/authorisation acceptance is claimed by this PR.
+
+## 6. 8 November 2026 — Foundation image vulnerability remediation
+
+- The earlier exact-head Foundation build ran its **real Trivy image scan**, and reported three HIGH Alpine 3.24.2 findings: musl/musl-utils **CVE-2026-107891** and zlib **CVE-2026-85091**. The independent result was BLOCKED, despite the estate CI, Security, Action Pinning and Dependabot-policy jobs being successful. The Foundation result must not be waived or presented as green.
+- Alpine 3.24 published security fixes for musl **1.2.6-r3** and zlib **1.3.2-r1**. Runtime inheritance from the common Dockerfile `base` stage now executes `apk --no-cache upgrade` before installation/build and before the shipped runtime stage; the Docker build logs disclose the actual musl/zlib versions. The full final image scan, not this Dockerfile expression, decides whether the patch is effective.
+- The application/Playwright quality checks, private BXS dependencies and Next.js confidentiality remain unchanged; **no production deployment, registry secret, suppression, Foundation exception or scanner waiver is introduced**. The root Node 24 image remains tag-pinned rather than digest-pinned; published digest verification is still separately outstanding before protected deployment.
+- Shared #429's strict validator is now accepted and independently SHA-pinned in **both** policy workflows; the previously documented unmerged-draft limitation is superseded. Merge qualification requires a fresh real Container/Trivy PASS along with every other exact-head check.

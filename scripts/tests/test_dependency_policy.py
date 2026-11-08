@@ -178,6 +178,22 @@ class EstateDependencyMaintenancePolicyTests(unittest.TestCase):
         parsed = yaml.safe_load(text)
         self.assertNotIn("auditConfig", parsed, "Global audit exceptions require explicit approved expiry")
 
+    def test_runtime_image_receives_patched_alpine_packages_before_shipping(self):
+        docker = DOCKERFILE.read_text(encoding="utf-8")
+        self.assertIn("FROM node:24.21.0-alpine3.24 AS base", docker)
+        self.assertRegex(docker, r"RUN apk --no-cache upgrade")
+        self.assertIn("apk info -v musl zlib", docker)
+        self.assertIn("FROM base AS runtime", docker)
+
+    def test_ci_and_dedicated_policy_both_use_pinned_approved_strict_shared_gate(self):
+        ci = (ROOT / ".github/workflows/ci.yml").read_text(encoding="utf-8")
+        workflow = POLICY_CALLER.read_text(encoding="utf-8")
+        merged_sha = "8ddeb8de53980b50e7c0b9d3e43d32f6d27b182c"
+        for source in (ci, workflow):
+            self.assertIn(f"enforce-dependabot-config.yml@{merged_sha}", source)
+            self.assertIn('required-ecosystems: "github-actions,npm,docker"', source)
+            self.assertIn('policy-level: "strict"', source)
+
     def test_daily_full_dependency_audit_remains_active(self):
         source = SECURITY.read_text(encoding="utf-8")
         self.assertIn("pnpm audit --audit-level high", source)
@@ -192,7 +208,7 @@ class EstateDependencyMaintenancePolicyTests(unittest.TestCase):
         source = POLICY_CALLER.read_text(encoding="utf-8")
         self.assertRegex(source, r'enforce-dependabot-config\.yml@[a-f0-9]{40}')
         self.assertIn('required-ecosystems: "github-actions,npm,docker"', source)
-        self.assertNotIn('policy-level: "strict"', source)
+        self.assertIn('policy-level: "strict"', source)
 
     def test_owners_include_independent_security_review(self):
         owners = OWNERS.read_text(encoding="utf-8")
