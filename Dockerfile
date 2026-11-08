@@ -1,4 +1,4 @@
-FROM node:24.21.0-alpine3.24 AS base
+FROM node:26.12.1-alpine3.24 AS base
 # CVE-2026-107891 (musl), CVE-2026-85091 (zlib): the Node
 # Alpine 3.24.2 tag pre-dates the security fixes in Alpine 3.24.3.
 # Upgrade installed Alpine packages in the shared base for *all* stages,
