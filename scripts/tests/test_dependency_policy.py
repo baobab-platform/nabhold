@@ -180,10 +180,15 @@ class EstateDependencyMaintenancePolicyTests(unittest.TestCase):
 
     def test_runtime_image_receives_patched_alpine_packages_before_shipping(self):
         docker = DOCKERFILE.read_text(encoding="utf-8")
-        self.assertIn("FROM node:24.21.0-alpine3.24 AS base", docker)
-        self.assertRegex(docker, r"RUN apk --no-cache upgrade")
-        self.assertIn("apk info -v musl zlib", docker)
+        # Node patch versions can advance without modifying this policy test.
+        # Ensure the OS security upgrade happens in the shared base stage
+        # so the final runtime cannot accidentally inherit vulnerable packages.
+        self.assertIn(" AS base", docker)
+        self.assertIn("FROM base AS dependencies", docker)
         self.assertIn("FROM base AS runtime", docker)
+        base = docker.split("FROM base AS dependencies", 1)[0]
+        self.assertIn("RUN apk --no-cache upgrade", base)
+        self.assertIn("apk info -v musl zlib", base)
 
     def test_ci_and_dedicated_policy_both_use_pinned_approved_strict_shared_gate(self):
         ci = (ROOT / ".github/workflows/ci.yml").read_text(encoding="utf-8")
