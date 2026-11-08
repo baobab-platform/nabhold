@@ -1,4 +1,10 @@
 FROM node:24.21.0-alpine3.24 AS base
+# CVE-2026-107891 (musl), CVE-2026-85091 (zlib): the Node
+# Alpine 3.24.2 tag pre-dates the security fixes in Alpine 3.24.3.
+# Upgrade installed Alpine packages in the shared base for *all* stages,
+# particularly the shipped runtime. Trivy still scans the actual built image.
+RUN apk --no-cache upgrade \
+ && apk info -v musl zlib
 ENV PNPM_HOME=/pnpm
 ENV PATH=$PNPM_HOME:$PATH
 RUN corepack enable
