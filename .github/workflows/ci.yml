@@ -243,7 +243,7 @@ jobs:
 
   dependabot-policy:
     name: Enforce Dependabot policy
-    uses: baobab-platform/shared/.github/workflows/enforce-dependabot-config.yml@8ddeb8de53980b50e7c0b9d3e43d32f6d27b182c # BA-SEC-DEP-001 approved strict
+    uses: baobab-platform/shared/.github/workflows/enforce-dependabot-config.yml@4ea2cbb5638a5605e057a02665bc7360864fc253 # BA-SEC-DEP-001 approved strict
     permissions:
       contents: read
     with:
