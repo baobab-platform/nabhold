@@ -30,7 +30,7 @@ jobs:
   baseline:
     permissions:
       contents: read
-    uses: baobab-platform/shared/.github/workflows/enforce-dependabot-config.yml@8ddeb8de53980b50e7c0b9d3e43d32f6d27b182c # merged Shared #429 approved strict policy
+    uses: baobab-platform/shared/.github/workflows/enforce-dependabot-config.yml@75b1fa96462f5e5148f842c47ace805ec8e679b5 # merged Shared #429 approved strict policy
     with:
       required-ecosystems: "github-actions,npm,docker"
       policy-level: "strict"
