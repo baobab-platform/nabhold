@@ -1,6 +1,6 @@
 {
   "name": "Nabhold Digital Estate — private GHCR/npm",
-  "image": "ghcr.io/baobab-platform/baobab-dev:1.4.4-frontend@sha256:1b3165067912eacbca96b576efb67e0428850b1ff1a953aa9013127a01635371",
+  "image": "ghcr.io/baobab-platform/baobab-dev:1.4.4",
   "remoteUser": "vscode",
   "updateRemoteUserUID": true,
   "init": true,
@@ -28,9 +28,7 @@
     "onAutoForward": "silent",
     "visibility": "private"
   },
-  "updateContentCommand": "node --test scripts/codespaces/*.node.mjs",
-  "postCreateCommand": "node scripts/codespaces/bootstrap.mjs && baobab-verify --contract && pnpm typecheck && pnpm test",
-  "postStartCommand": "node scripts/codespaces/configure-private-npm.mjs",
+  "postCreateCommand": "node --version",
   "waitFor": "postCreateCommand",
   "customizations": {
     "codespaces": {
@@ -72,6 +70,11 @@
           "editor.defaultFormatter": "esbenp.prettier-vscode"
         }
       }
+    }
+  },
+  "features": {
+    "ghcr.io/devcontainers/features/node:1": {
+      "version": "24.21.0"
     }
   }
 }

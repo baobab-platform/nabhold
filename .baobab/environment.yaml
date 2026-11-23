@@ -19,8 +19,8 @@ application:
 
 environment:
   provider: "baobab-dev"
-  profile: "frontend"
-  minimum_version: "1.4.4-frontend"
+  profile: "full"
+  minimum_version: "1.4.4"
   contract_minimum_version: "1.0"
 
 compatibility_policy:
@@ -53,6 +53,6 @@ validation:
       reason: "Image signing belongs to the baobab-dev publication pipeline."
 
 notes:
-  - "GitHub Codespaces and local Dev Containers use ghcr.io/baobab-platform/baobab-dev:1.4.4-frontend."
+  - "GitHub Codespaces and local Dev Containers use ghcr.io/baobab-platform/baobab-dev:1.4.4 with Node 24.21.0 layered by a Dev Container feature."
   - "Browser-dependent CI uses the separately published 1.4.4-frontend-e2e profile."
   - "This repository consumes Baobab capabilities through APIs and canonical contracts; it never accesses Baobab-owned databases."
